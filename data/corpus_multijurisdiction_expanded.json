@@ -1,0 +1,473 @@
+[
+  {
+    "id": "in_patent_definition",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 2",
+    "section": "Section 2(1)(j)",
+    "page": "Web section",
+    "url": "https://www.ipindia.gov.in/acts/patent-act-1970/section-2-5",
+    "text": "The Patents Act defines an invention as a new product or process involving an inventive step and capable of industrial application.",
+    "keywords": [
+      "invention",
+      "new product",
+      "new process",
+      "inventive step",
+      "industrial application",
+      "patentability",
+      "novelty"
+    ]
+  },
+  {
+    "id": "in_s3",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 3",
+    "section": "Section 3",
+    "page": "Web section",
+    "url": "https://ipindia.gov.in/acts/patent-act-1970/section-3",
+    "text": "Section 3 lists subject matter that is not treated as an invention under the Indian Patents Act, including specified exclusions relevant to patentability.",
+    "keywords": [
+      "section 3",
+      "not inventions",
+      "patent exclusions",
+      "patentability",
+      "Ayurveda",
+      "treatment",
+      "traditional knowledge"
+    ]
+  },
+  {
+    "id": "in_s3_p",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 3",
+    "section": "Section 3(p)",
+    "page": "Web section",
+    "url": "https://ipindia.gov.in/acts/patent-act-1970/section-3",
+    "text": "Section 3(p) excludes an invention which in effect is traditional knowledge, or an aggregation or duplication of known properties of traditionally known component or components.",
+    "keywords": [
+      "section 3(p)",
+      "traditional knowledge",
+      "traditional formulation",
+      "indigenous knowledge",
+      "known properties",
+      "Ayurveda",
+      "patentability"
+    ]
+  },
+  {
+    "id": "in_s3_d",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 3",
+    "section": "Section 3(d)",
+    "page": "Web section",
+    "url": "https://ipindia.gov.in/acts/patent-act-1970/section-3",
+    "text": "Section 3(d) addresses certain new forms or new uses of known substances and sets conditions under which such subject matter is not treated as an invention.",
+    "keywords": [
+      "section 3(d)",
+      "known substance",
+      "new form",
+      "new use",
+      "Ayurvedic medicine",
+      "patentability"
+    ]
+  },
+  {
+    "id": "in_s3_i",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 3",
+    "section": "Section 3(i)",
+    "page": "Web section",
+    "url": "https://ipindia.gov.in/acts/patent-act-1970/section-3",
+    "text": "Section 3(i) excludes specified methods of medicinal, surgical, curative, prophylactic, diagnostic or therapeutic treatment.",
+    "keywords": [
+      "section 3(i)",
+      "treatment",
+      "therapeutic",
+      "medicinal",
+      "diagnostic",
+      "Ayurvedic treatment"
+    ]
+  },
+  {
+    "id": "in_s8",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 8",
+    "section": "Section 8",
+    "page": "Web section",
+    "url": "https://ipindia.gov.in/acts/patent-act-1970/section-8",
+    "text": "Applicants prosecuting the same or substantially the same invention abroad must provide prescribed information and an undertaking regarding foreign applications.",
+    "keywords": [
+      "section 8",
+      "foreign application",
+      "international patent",
+      "same invention",
+      "foreign filing",
+      "PCT"
+    ]
+  },
+  {
+    "id": "in_s10",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 10",
+    "section": "Section 10",
+    "page": "Web section",
+    "url": "https://www.ipindia.gov.in/acts/patent-act-1970/section-10",
+    "text": "A complete specification must fully and particularly describe the invention, disclose the best method known to the applicant, and end with claims defining the scope of protection.",
+    "keywords": [
+      "section 10",
+      "complete specification",
+      "claims",
+      "disclosure",
+      "best method",
+      "biological material",
+      "source",
+      "geographical origin"
+    ]
+  },
+  {
+    "id": "in_s25",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 25",
+    "section": "Section 25",
+    "page": "Web section",
+    "url": "https://www.ipindia.gov.in/acts/patent-act-1970/section-25",
+    "text": "Section 25 provides opposition grounds including lack of novelty, lack of inventive step, insufficient disclosure, and certain disclosure failures involving biological material and traditional knowledge.",
+    "keywords": [
+      "section 25",
+      "opposition",
+      "novelty",
+      "inventive step",
+      "biological material",
+      "traditional knowledge"
+    ]
+  },
+  {
+    "id": "in_s64",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Act, 1970 — Section 64",
+    "section": "Section 64",
+    "page": "Web section",
+    "url": "https://ipindia.gov.in/acts/patent-act-1970/section-64",
+    "text": "Section 64 lists grounds for revocation including lack of novelty, lack of inventive step, insufficient disclosure, and anticipation based on knowledge available within a local or indigenous community.",
+    "keywords": [
+      "section 64",
+      "revocation",
+      "novelty",
+      "inventive step",
+      "insufficient disclosure",
+      "traditional knowledge",
+      "indigenous community"
+    ]
+  },
+  {
+    "id": "in_rules",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "IP India",
+    "title": "Patents Rules, 2003 — Official Rules Resource",
+    "section": "Patent Rules",
+    "page": "Rules resource",
+    "url": "https://www.ipindia.gov.in/resource/patents-resources-rules",
+    "text": "IP India publishes the Patents Rules, 2003 and amendment materials through its official patent rules resources.",
+    "keywords": [
+      "patent rules",
+      "rules 2003",
+      "amendments",
+      "forms",
+      "procedure",
+      "IP India",
+      "filing procedure"
+    ]
+  },
+  {
+    "id": "us_101",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "USPTO",
+    "title": "35 U.S.C. § 101 — Patentable Subject Matter",
+    "section": "35 U.S.C. § 101",
+    "page": "USPTO MPEP",
+    "url": "https://www.uspto.gov/web/offices/pac/mpep/s2106.html",
+    "text": "USPTO guidance explains that eligible patent subject matter includes processes, machines, manufactures, and compositions of matter, subject to judicial exceptions.",
+    "keywords": [
+      "35 USC 101",
+      "patent eligible",
+      "process",
+      "composition of matter",
+      "subject matter eligibility",
+      "US patent"
+    ]
+  },
+  {
+    "id": "us_102",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "USPTO",
+    "title": "35 U.S.C. § 102 — Novelty",
+    "section": "35 U.S.C. § 102",
+    "page": "USPTO Patent Laws / MPEP",
+    "url": "https://www.uspto.gov/web/offices/pac/mpep/mpep-9015-appx-l.html",
+    "text": "U.S. patent law includes novelty requirements under 35 U.S.C. § 102, with patentability affected by qualifying prior-art disclosures.",
+    "keywords": [
+      "35 USC 102",
+      "novelty",
+      "prior art",
+      "new invention",
+      "US patentability",
+      "anticipation"
+    ]
+  },
+  {
+    "id": "us_103",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "USPTO",
+    "title": "35 U.S.C. § 103 — Non-Obviousness",
+    "section": "35 U.S.C. § 103",
+    "page": "USPTO MPEP",
+    "url": "https://www.uspto.gov/web/offices/pac/mpep/s2141.html",
+    "text": "USPTO guidance explains that a claimed invention may be unpatentable when differences from prior art would have been obvious to a person of ordinary skill in the art.",
+    "keywords": [
+      "35 USC 103",
+      "obviousness",
+      "non-obvious",
+      "inventive step",
+      "prior art",
+      "US patentability"
+    ]
+  },
+  {
+    "id": "us_112",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "USPTO",
+    "title": "35 U.S.C. § 112 — Specification and Claims",
+    "section": "35 U.S.C. § 112",
+    "page": "USPTO MPEP",
+    "url": "https://www.uspto.gov/web/offices/pac/mpep/mpep-9015-appx-l.html",
+    "text": "U.S. patent law requires a specification that supports the claimed invention, with requirements addressing description, enablement, and claims.",
+    "keywords": [
+      "35 USC 112",
+      "specification",
+      "claims",
+      "enablement",
+      "written description",
+      "US patent application"
+    ]
+  },
+  {
+    "id": "uk_s1",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 1: Patentable Inventions",
+    "section": "Section 1",
+    "page": "GOV.UK guidance",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-1-patentable-inventions",
+    "text": "UK patentability under Section 1 requires an invention to be new, involve an inventive step, be capable of industrial application, and not fall within statutory exclusions.",
+    "keywords": [
+      "section 1",
+      "patentable invention",
+      "novelty",
+      "inventive step",
+      "industrial application",
+      "UK patent"
+    ]
+  },
+  {
+    "id": "uk_s2",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 2: Novelty",
+    "section": "Section 2",
+    "page": "GOV.UK guidance",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-2-novelty",
+    "text": "Under UK Section 2, an invention is new when it does not form part of the state of the art before the relevant priority date.",
+    "keywords": [
+      "section 2",
+      "novelty",
+      "state of the art",
+      "prior art",
+      "priority date",
+      "UK patentability"
+    ]
+  },
+  {
+    "id": "uk_s3",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 3: Inventive Step",
+    "section": "Section 3",
+    "page": "GOV.UK guidance",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-3-inventive-step",
+    "text": "Under UK Section 3, an invention involves an inventive step when it is not obvious to a person skilled in the art, having regard to the state of the art.",
+    "keywords": [
+      "section 3",
+      "inventive step",
+      "obviousness",
+      "skilled person",
+      "state of the art",
+      "UK patent"
+    ]
+  },
+  {
+    "id": "uk_s4",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 4: Industrial Application",
+    "section": "Section 4",
+    "page": "GOV.UK guidance",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-4-industrial-application",
+    "text": "Under UK Section 4, an invention has industrial application when it can be made or used in any kind of industry, including agriculture.",
+    "keywords": [
+      "section 4",
+      "industrial application",
+      "agriculture",
+      "UK patentability"
+    ]
+  },
+  {
+    "id": "wipo_pct_intro",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "WIPO",
+    "title": "Patent Cooperation Treaty — Introduction",
+    "section": "PCT System",
+    "page": "WIPO web page",
+    "url": "https://www.wipo.int/en/web/pct-system/introduction",
+    "text": "The PCT provides an international filing system allowing an applicant to seek patent protection in multiple Contracting States through one international application.",
+    "keywords": [
+      "PCT",
+      "international application",
+      "WIPO",
+      "multiple countries",
+      "contracting states",
+      "international patent"
+    ]
+  },
+  {
+    "id": "wipo_pct_system",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "WIPO",
+    "title": "PCT — International Patent System",
+    "section": "PCT System Resources",
+    "page": "WIPO web page",
+    "url": "https://www.wipo.int/en/web/pct-system",
+    "text": "WIPO provides PCT legal texts, the PCT Applicant's Guide, forms, official notices, fees information and other resources for international patent filing.",
+    "keywords": [
+      "PCT legal texts",
+      "applicant guide",
+      "PCT forms",
+      "fees",
+      "official notices",
+      "international filing"
+    ]
+  },
+  {
+    "id": "wipo_tk",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "WIPO",
+    "title": "Traditional Knowledge and Intellectual Property",
+    "section": "Traditional Knowledge",
+    "page": "WIPO resources",
+    "url": "https://www.wipo.int/en/web/traditional-knowledge/resources/publications",
+    "text": "WIPO provides resources on intellectual property and traditional knowledge, including traditional medical knowledge, documentation, and defensive protection.",
+    "keywords": [
+      "traditional knowledge",
+      "traditional medical knowledge",
+      "IP",
+      "defensive protection",
+      "Ayurveda",
+      "community knowledge"
+    ]
+  },
+  {
+    "id": "wipo_gr_tk",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "WIPO",
+    "title": "Patent Disclosure Requirements for Genetic Resources and Traditional Knowledge",
+    "section": "Genetic Resources and TK Disclosure",
+    "page": "WIPO database",
+    "url": "https://www.wipo.int/en/web/traditional-knowledge/databases/pdr/index",
+    "text": "WIPO maintains an up-to-date resource of national legislative and administrative measures on disclosure requirements related to genetic resources and traditional knowledge.",
+    "keywords": [
+      "genetic resources",
+      "traditional knowledge",
+      "disclosure requirements",
+      "patent applications",
+      "WIPO",
+      "prior art"
+    ]
+  },
+  {
+    "title": "ayurveda_test_knowledge_source.pdf",
+    "source": "Demo Ayurveda Research Institute",
+    "authority": "Demo Ayurveda Research Institute",
+    "document_type": "Regulatory",
+    "jurisdiction": "India",
+    "section": "Uploaded document",
+    "text": "AYURVEDA TEST KNOWLEDGE SOURCE\nPrototype test document for IP-SAKTI Sahayak\nTitle: Standardized Ayurvedic Herbal Formulation\nAuthority: Demo Ayurveda Research Institute\nDocument Type: Regulatory\nJurisdiction: India\nThis test document describes a hypothetical Ayurvedic herbal formulation\ncontaining Ashwagandha, Brahmi, and Turmeric extracts.\nThe formulation is designed for oral administration and uses standardized\nbotanical extracts with controlled proportions.\nThis source is intended to test the Knowledge Base upload, text extraction,\nmetadata handling, persistence, and retrieval workflow in the prototype.\nKey terms:\nAyurveda, Ashwagandha, Brahmi, Turmeric, herbal formulation,\nstandardized extract, oral formulation, medicinal plant, patent",
+    "keywords": [
+      "Demo Ayurveda Research Institute",
+      "Regulatory",
+      "India"
+    ],
+    "url": "/static/uploads/ayurveda_test_knowledge_source.pdf",
+    "status": "Indexed"
+  },
+  {
+    "title": "ayurveda_test_knowledge_source.pdf",
+    "source": "Ayurveda",
+    "authority": "Ayurveda",
+    "document_type": "Regulatory",
+    "jurisdiction": "India",
+    "section": "Uploaded document",
+    "text": "AYURVEDA TEST KNOWLEDGE SOURCE\nPrototype test document for IP-SAKTI Sahayak\nTitle: Standardized Ayurvedic Herbal Formulation\nAuthority: Demo Ayurveda Research Institute\nDocument Type: Regulatory\nJurisdiction: India\nThis test document describes a hypothetical Ayurvedic herbal formulation\ncontaining Ashwagandha, Brahmi, and Turmeric extracts.\nThe formulation is designed for oral administration and uses standardized\nbotanical extracts with controlled proportions.\nThis source is intended to test the Knowledge Base upload, text extraction,\nmetadata handling, persistence, and retrieval workflow in the prototype.\nKey terms:\nAyurveda, Ashwagandha, Brahmi, Turmeric, herbal formulation,\nstandardized extract, oral formulation, medicinal plant, patent",
+    "keywords": [
+      "Ayurveda",
+      "Regulatory",
+      "India"
+    ],
+    "url": "/static/uploads/ayurveda_test_knowledge_source.pdf",
+    "status": "Indexed"
+  },
+  {
+    "title": "IP_SAKTI_proper_test_source_regulatory.pdf",
+    "source": "Demo Ayurveda Research Institute",
+    "authority": "Demo Ayurveda Research Institute",
+    "document_type": "Regulatory",
+    "jurisdiction": "India",
+    "section": "Uploaded document",
+    "text": "IP-SAKTI Sahayak – Test Knowledge Source\nDocument title: Ayurvedic Herbal Formulation – Prototype Regulatory Note\nAuthority: Demo Ayurveda Research Institute\nDocument Type: Regulatory\nJurisdiction: India\nPurpose\nThis document is a synthetic test source for the IP-SAKTI Sahayak knowledge-base ingestion\nand retrieval workflow.\nIt contains structured information about an Ayurvedic herbal formulation and its\npreparation.\nFormulation\nThe formulation contains Ashwagandha root extract, Brahmi leaf extract, and Turmeric\nrhizome extract.\nThe ingredients are combined in a fixed proportion and prepared as a standardized oral\nherbal formulation.\nProcessing\nThe botanical ingredients are cleaned, dried, powdered, and extracted.\nThe extracts are filtered and blended before final formulation.\nThe process is intended to maintain consistent composition between batches.\n\nIP-SAKTI Sahayak – Test Knowledge Source\nIntended Use\nThe formulation is described for general wellness support in this test document.\nThis document does not establish clinical efficacy, medical claims, or patentability.\nRecord-Keeping\nFor a production knowledge base, each source should retain its authority, document type,\njurisdiction, version, and page-level provenance.\nRetrieval Keywords\nAshwagandha, Brahmi, Turmeric, standardized oral formulation, botanical extract, fixed\nproportion, extraction process, regulatory source, India.\nImportant Notice\nThis is a synthetic demonstration document created for testing the IP-SAKTI prototype.\nIt is not an official legal or regulatory publication and should not be treated as legal\nadvice.",
+    "keywords": [
+      "Demo Ayurveda Research Institute",
+      "Regulatory",
+      "India"
+    ],
+    "url": "/static/uploads/IP_SAKTI_proper_test_source_regulatory.pdf",
+    "status": "Indexed"
+  }
+]

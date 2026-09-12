@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP-SAKTI Sahayak</title>
+
+<link rel="stylesheet" href="static/style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ======================================================
+         GLOBAL TOP BAR
+         ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-mark">🌿</div>
+            <div class="brand-name" id="brandText">IP-SAKTI Sahayak</div>
+        </div>
+
+        <div class="top-actions">
+
+            <button
+                id="startButton"
+                class="start-button"
+                onclick="openApp('ask')">
+                Start Asking
+            </button>
+
+            <select
+                id="lang"
+                class="lang-select"
+                onchange="changeLanguage()">
+
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="mr">मराठी</option>
+                <option value="bn">বাংলা</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="ml">മലയാളം</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="sa">संस्कृतम्</option>
+
+            </select>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         LANDING PAGE
+         ====================================================== -->
+
+    <section id="landing" class="landing">
+
+        <div class="landing-inner">
+
+            <div class="hero">
+
+                <div class="eyebrow" id="heroEyebrow">
+                    MULTILINGUAL • SOURCE-CITED AI
+                </div>
+
+                <h1 id="heroTitle">
+                    Understand Ayurveda IP with evidence you can verify.
+                </h1>
+
+                <p id="heroSubtitle">
+                    Ask IP and regulatory questions in your language
+                    and receive answers grounded in sources.
+                </p>
+
+                <div class="hero-actions">
+
+                    <button
+                        class="primary"
+                        id="landingAsk"
+                        onclick="openApp('ask')">
+                        Ask IP-SAKTI →
+                    </button>
+
+                    <button
+                        class="secondary"
+                        id="landingPatents"
+                        onclick="openApp('patents')">
+                        Explore Patents
+                    </button>
+
+                </div>
+
+
+                <div class="trust-strip">
+
+                    <div class="trust-item" id="trust1">
+                        Multilingual
+                    </div>
+
+                    <div class="trust-item" id="trust2">
+                        Source-Cited
+                    </div>
+
+                    <div class="trust-item" id="trust3">
+                        Ayurveda-Focused
+                    </div>
+
+                </div>
+
+
+                <div class="workflow">
+
+                    <span id="wf1">ASK</span>
+                    <span class="arrow">→</span>
+                    <span id="wf2">UNDERSTAND</span>
+                    <span class="arrow">→</span>
+                    <span id="wf3">RETRIEVE</span>
+                    <span class="arrow">→</span>
+                    <span id="wf4">VERIFY</span>
+                    <span class="arrow">→</span>
+                    <span id="wf5">EVIDENCE</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         APPLICATION SHELL
+         ====================================================== -->
+
+    <section id="application" class="shell hidden">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="side-title">
+                IP-SAKTI
+            </div>
+
+            <button
+                id="navAsk"
+                class="nav-btn active"
+                onclick="openApp('ask')">
+                Ask IP-SAKTI
+            </button>
+
+            <button
+                id="navPatents"
+                class="nav-btn"
+                onclick="openApp('patents')">
+                Patents
+            </button>
+
+            <button
+                id="navKB"
+                class="nav-btn"
+                onclick="openApp('kb')">
+                Knowledge Base
+            </button>
+
+        </aside>
+
+
+        <main class="main">
+
+            <div class="content">
+
+                <!-- ==================================================
+                     ASK SCREEN
+                     ================================================== -->
+
+                <section id="screenAsk">
+
+                    <div class="page-heading">
+
+                        <h2 id="askHeading">
+                            Ask IP-SAKTI
+                        </h2>
+
+                        <p id="askSubheading">
+                            Ask an IP or regulatory question about Ayurveda.
+                        </p>
+
+                    </div>
+
+
+                    <div class="card ask-card">
+
+                        <h3
+                            class="composer-title"
+                            id="composerTitle">
+                            What would you like to understand?
+                        </h3>
+
+                        <p
+                            class="composer-help"
+                            id="composerHelp">
+                            Ask about Ayurveda IP, patents or regulatory guidance...
+                        </p>
+
+
+                        <textarea
+                            id="query"
+                            class="query"
+                            placeholder="Ask about Ayurveda IP, patents or regulatory guidance..."></textarea>
+
+
+                        <div class="composer-row">
+
+                            <div class="jurisdiction">
+
+                                <span id="jurisdictionLabel">
+                                    Jurisdiction:
+                                </span>
+
+                                <select id="jurisdiction" onchange="changeJurisdiction()">
+                                    <option value="IN">India</option>
+                                    <option value="US">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="WIPO">International (WIPO/PCT)</option>
+                                </select>
+
+                            </div>
+
+                            <div id="jurisdictionScope" class="jurisdiction-scope"></div>
+
+                            <button
+                                class="primary"
+                                id="askButton"
+                                onclick="submitQuestion()">
+                                Ask IP-SAKTI →
+                            </button>
+
+                        </div>
+
+
+                        <div class="suggestions">
+
+                            <div
+                                class="suggestions-title"
+                                id="tryAsking">
+                                Try asking
+                            </div>
+
+                            <div class="suggestion-list">
+
+                                <button
+                                    class="suggestion"
+                                    data-suggestion="Can this Ayurvedic formulation be patented?"
+                                    onclick="useSuggestion(this)">
+                                    Can this Ayurvedic formulation be patented?
+                                </button>
+
+                                <button
+                                    class="suggestion"
+                                    data-suggestion="How is traditional knowledge considered in patent examination?"
+                                    onclick="useSuggestion(this)">
+                                    How is traditional knowledge considered in patent examination?
+                                </button>
+
+                                <button
+                                    class="suggestion"
+                                    data-suggestion="What IP protection may apply to an Ayurveda product?"
+                                    onclick="useSuggestion(this)">
+                                    What IP protection may apply to an Ayurveda product?
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==================================================
+                     PROCESSING SCREEN
+                     ================================================== -->
+
+                <section id="screenProcessing" class="hidden">
+
+                    <div class="processing-wrap">
+
+                        <div class="card processing-card">
+
+                            <div
+                                class="processing-label"
+                                id="understandingTitle">
+                                Understanding your query
+                            </div>
+
+                            <div
+                                id="processingQuery"
+                                class="query-preview">
+                            </div>
+
+
+                            <div class="understanding-grid">
+
+                                <div class="chip-card">
+                                    <div class="chip-label" id="chipLanguageLabel">Language</div>
+                                    <div id="chipLanguage" class="chip-value">English</div>
+                                </div>
+
+                                <div class="chip-card">
+                                    <div class="chip-label" id="chipIntentLabel">Intent</div>
+                                    <div id="chipIntent" class="chip-value">Patentability</div>
+                                </div>
+
+                                <div class="chip-card">
+                                    <div class="chip-label" id="chipIPTypeLabel">IP Type</div>
+                                    <div id="chipIPType" class="chip-value">Patent</div>
+                                </div>
+
+                                <div class="chip-card">
+                                    <div class="chip-label" id="chipJurisdictionLabel">Jurisdiction</div>
+                                    <div id="chipJurisdiction" class="chip-value">India</div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="steps">
+
+                                <div id="step1" class="step active-step">
+                                    <span class="indicator">●</span>
+                                    <span id="step1Text">Understanding query</span>
+                                </div>
+
+                                <div id="step2" class="step pending">
+                                    <span class="indicator">○</span>
+                                    <span id="step2Text">Reformulating query</span>
+                                </div>
+
+                                <div id="step3" class="step pending">
+                                    <span class="indicator">○</span>
+                                    <span id="step3Text">Searching authoritative sources</span>
+                                </div>
+
+                                <div id="step4" class="step pending">
+                                    <span class="indicator">○</span>
+                                    <span id="step4Text">Hybrid retrieval</span>
+                                </div>
+
+                                <div id="step5" class="step pending">
+                                    <span class="indicator">○</span>
+                                    <span id="step5Text">Reranking evidence</span>
+                                </div>
+
+                                <div id="step6" class="step pending">
+                                    <span class="indicator">○</span>
+                                    <span id="step6Text">Generating grounded response</span>
+                                </div>
+
+                                <div id="step7" class="step pending">
+                                    <span class="indicator">○</span>
+                                    <span id="step7Text">Verifying citations</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==================================================
+                     ANSWER + EVIDENCE SCREEN
+                     ================================================== -->
+
+                <section id="screenResult" class="hidden">
+
+                    <div class="result-layout">
+
+                        <article class="card answer-pane">
+
+                            <div class="section-head">
+
+                                <h3 id="answerHeading">
+                                    ✦ IP-SAKTI Response
+                                </h3>
+
+                                <span
+                                    class="badge"
+                                    id="resultMode">
+                                    RAG-MVP
+                                </span>
+
+                            </div>
+
+
+                            <div class="understood">
+
+                                <div
+                                    class="understood-title"
+                                    id="understoodTitle">
+                                    Understood as
+                                </div>
+
+                                <div
+                                    class="understood-chips"
+                                    id="understoodChips">
+                                </div>
+
+                            </div>
+
+
+                            <p
+                                id="answerText"
+                                class="answer-text">
+                            </p>
+
+
+                            <div
+                                id="citationRow"
+                                class="citation-row">
+                            </div>
+
+
+                            <details class="generation">
+
+                                <summary id="generationTitle">
+                                    How this answer was generated
+                                </summary>
+
+                                <ol>
+                                    <li id="generation1">Your Question</li>
+                                    <li id="generation2">Understand intent and context</li>
+                                    <li id="generation3">Retrieve authoritative evidence</li>
+                                    <li id="generation4">Rank supporting evidence</li>
+                                    <li id="generation5">Generate grounded response</li>
+                                    <li id="generation6">Verify citations</li>
+                                </ol>
+
+                            </details>
+
+
+                            <div class="followup">
+
+                                <input
+                                    id="followupInput"
+                                    placeholder="Ask a follow-up question...">
+
+                                <button
+                                    class="primary"
+                                    id="followupButton"
+                                    onclick="submitFollowup()">
+                                    Ask
+                                </button>
+
+                            </div>
+
+                        </article>
+
+
+                        <aside class="card evidence-pane">
+
+                            <div class="section-head">
+
+                                <h3 id="evidenceHeading">
+                                    Evidence
+                                </h3>
+
+                            </div>
+
+                            <div
+                                class="evidence-status"
+                                id="evidenceStatus">
+                                ✓ Evidence Matched
+                            </div>
+
+
+                            <div class="metadata">
+
+                                <div class="meta-row">
+                                    <div class="meta-key" id="authorityKey">Authority</div>
+                                    <div class="meta-value" id="authorityValue">IP India</div>
+                                </div>
+
+                                <div class="meta-row">
+                                    <div class="meta-key" id="documentKey">Document</div>
+                                    <div class="meta-value" id="documentValue">—</div>
+                                </div>
+
+                                <div class="meta-row">
+                                    <div class="meta-key" id="jurisdictionKey">Jurisdiction</div>
+                                    <div class="meta-value" id="resultJurisdiction">India</div>
+                                </div>
+
+                                <div class="meta-row">
+                                    <div class="meta-key" id="sectionKey">Section / Page</div>
+                                    <div class="meta-value" id="sectionValue">—</div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="supporting">
+
+                                <div
+                                    class="supporting-title"
+                                    id="supportingTitle">
+                                    Supporting passage
+                                </div>
+
+                                <div
+                                    id="passage"
+                                    class="passage">
+                                </div>
+
+                                <div
+                                    id="localizedEvidence"
+                                    class="localized">
+                                </div>
+
+
+                                <div class="source-actions">
+
+                                    <button
+                                        id="viewSourceButton"
+                                        class="source-button"
+                                        onclick="openCurrentSource()">
+                                        View Source ↗
+                                    </button>
+
+                                    <button
+                                        id="verifyButton"
+                                        class="source-button"
+                                        onclick="showVerifyPanel()">
+                                        Verify Evidence
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="disclaimer"
+                                id="resultDisclaimer">
+                                This prototype provides preliminary information from a curated corpus.
+                                It is not legal advice or a legal determination.
+                            </div>
+
+                            <div id="jurisdictionEvidenceNote" class="jurisdiction-scope"></div>
+
+                        </aside>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==================================================
+                     PATENT EXPLORER
+                     ================================================== -->
+
+                <section id="screenPatents" class="hidden">
+
+                    <div class="page-heading">
+
+                        <h2 id="patentHeading">
+                            Patent & Innovation Explorer
+                        </h2>
+
+                        <p id="patentSubheading">
+                            Describe your innovation and explore potentially similar patent records.
+                        </p>
+
+                    </div>
+
+
+                    <div class="card explorer-card">
+
+                        <h3 id="innovationHeading">
+                            Describe your innovation
+                        </h3>
+
+                        <textarea
+                            id="innovationInput"
+                            class="innovation-input"
+                            placeholder="Describe the formulation, process, ingredients, intended use, or technical innovation..."></textarea>
+
+
+                        <div style="margin-top:12px;">
+
+                            <button
+                                class="primary"
+                                id="findPatentsButton"
+                                onclick="findSimilarPatents()">
+                                Find Similar Patents →
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="patentResults"
+                            class="result-section hidden">
+
+                            <h3 id="innovationUnderstandingHeading">
+                                Innovation Understanding
+                            </h3>
+
+                            <div
+                                id="innovationConcepts"
+                                class="concepts">
+                            </div>
+
+
+                            <h3 id="similarRecordsHeading">
+                                Similar Patent Records
+                            </h3>
+
+                            <div
+                                id="patentMetricNote"
+                                class="jurisdiction-scope">
+                                Prototype similarity uses TF-IDF cosine similarity. It indicates textual/conceptual relevance and does not determine patentability.
+                            </div>
+
+                            <div id="patentList">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==================================================
+                     KNOWLEDGE BASE
+                     ================================================== -->
+
+                <section id="screenKB" class="hidden">
+
+                    <div class="page-heading">
+
+                        <h2 id="kbHeading">
+                            Knowledge Base
+                        </h2>
+
+                        <p id="kbSubheading">
+                            View indexed sources and demonstrate how authoritative sources can be updated.
+                        </p>
+
+                    </div>
+
+
+                    <div class="card kb-card">
+
+                        <div class="kb-header">
+
+                            <h3 id="kbTitle">
+                                Knowledge Base
+                            </h3>
+
+                            <button
+                                class="primary"
+                                id="addSourceButton"
+                                onclick="openKBModal()">
+                                + Add Source
+                            </button>
+
+                        </div>
+
+
+                        <table class="kb-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th id="kbSourceHeader">Source</th>
+                                    <th id="kbTypeHeader">Type</th>
+                                    <th id="kbStatusHeader">Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="kbBody">
+                                <!-- Documents are loaded dynamically -->
+                            </tbody>
+                                
+
+                        </table>
+
+
+                        <div
+                            class="count"
+                            id="kbCount">
+                            3 Sources Indexed
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </section>
+
+
+    <!-- ======================================================
+         PATENT DRAWER
+         ====================================================== -->
+
+    <div
+    id="drawerOverlay"
+    class="drawer-overlay hidden">
+
+        <aside
+    class="drawer"
+    onclick="event.stopPropagation();">
+
+            <div class="drawer-head">
+
+                <h3 id="drawerTitle">
+                    Patent Details
+                </h3>
+
+              <button
+    class="close"
+    type="button"
+    aria-label="Close patent details"
+    onclick="
+        document.getElementById('drawerOverlay').classList.add('hidden');
+        if (typeof currentPatent !== 'undefined') {
+            currentPatent = null;
+        }
+        return false;
+    ">
+    ×
+</button>
+
+            </div>
+
+
+            <div style="margin-top:18px;">
+
+                <div class="meta-row">
+                    <div class="meta-key" id="drawerPatentTitleKey">Patent Title</div>
+                    <div class="meta-value" id="drawerPatentTitle">—</div>
+                </div>
+
+                <div class="meta-row" style="margin-top:10px;">
+                    <div class="meta-key" id="drawerPublicationKey">Publication Number</div>
+                    <div class="meta-value" id="drawerPublication">—</div>
+                </div>
+
+                <div class="meta-row" style="margin-top:10px;">
+                    <div class="meta-key" id="drawerJurisdictionKey">Jurisdiction</div>
+                    <div class="meta-value" id="drawerJurisdiction">India</div>
+                </div>
+
+                <div class="meta-row" style="margin-top:10px;">
+                    <div class="meta-key" id="drawerApplicantKey">Applicant</div>
+                    <div class="meta-value" id="drawerApplicant">—</div>
+                </div>
+
+            </div>
+
+
+            <div class="similarity-box">
+
+                <div
+                    class="meta-key"
+                    id="similarityLabel">
+                    Semantic Similarity
+                </div>
+
+                <div
+                    id="drawerSimilarity"
+                    class="similarity-number">
+                    0%
+                </div>
+
+                <div class="meter">
+                    <div
+                        id="drawerMeter"
+                        class="meter-fill">
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div style="margin-top:18px;">
+
+                <h4
+                    id="whyResultHeading"
+                    style="margin:0;color:var(--navy);">
+                    Why this result appeared
+                </h4>
+
+                <ul
+                    id="drawerReasons"
+                    class="reason-list">
+                </ul>
+
+            </div>
+
+
+            <div style="margin-top:20px;">
+
+                <h4
+                    id="relevantTextHeading"
+                    style="margin:0 0 8px;color:var(--navy);">
+                    Relevant Text
+                </h4>
+
+                <div
+                    id="drawerRelevantText"
+                    class="passage">
+                </div>
+
+            </div>
+
+
+            <div style="margin-top:14px;">
+
+                <button
+                    id="drawerSourceButton"
+                    class="source-button"
+                    onclick="openDrawerSource()">
+                    View Source ↗
+                </button>
+
+            </div>
+
+
+            <div
+                class="disclaimer"
+                id="drawerDisclaimer">
+                Semantic similarity indicates textual/conceptual relevance and does not determine patentability.
+            </div>
+
+        </aside>
+
+    </div>
+
+
+    <!-- ======================================================
+         KB MODAL
+         ====================================================== -->
+
+    <div
+        id="kbModal"
+        class="modal-overlay hidden">
+
+        <div class="modal">
+
+            <h3 id="addKnowledgeTitle">
+                Add Knowledge Source
+            </h3>
+
+            <div
+    class="dropzone"
+    id="kbDropzone"
+    onclick="document.getElementById('kbFile').click()">
+
+    <input
+        type="file"
+        id="kbFile"
+        accept=".pdf,application/pdf"
+        hidden>
+
+    <strong id="uploadPDF">
+        Upload PDF
+    </strong>
+
+    <div
+        style="margin-top:8px;"
+        id="dragDrop">
+        Drag & Drop or choose a file
+    </div>
+
+    <div
+        id="kbSelectedFile"
+        class="small"
+        style="margin-top:10px;">
+    </div>
+
+</div>
+
+            <div class="field">
+                <label id="authorityLabel">Authority</label>
+                <input id="kbAuthority" placeholder="Source / authority name">
+            </div>
+
+            <div class="field">
+                <label id="documentTypeLabel">Document Type</label>
+                <select id="kbType">
+                    <option>IP</option>
+                    <option>Regulatory</option>
+                    <option>International</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label id="kbJurisdictionLabel">Jurisdiction</label>
+                <input id="kbJurisdiction" value="India">
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="cancel"
+                    id="cancelKBButton"
+                    onclick="closeKBModal()">
+                    Cancel
+                </button>
+
+               <button
+    class="primary"
+    id="indexKBButton"
+    onclick="uploadKnowledgeSource()">
+    Add & Index
+</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         VERIFY MODAL
+         ====================================================== -->
+
+    <div
+        id="verifyModal"
+        class="modal-overlay hidden"
+        onclick="closeVerifyModal(event)">
+
+        <div class="modal">
+
+            <h3 id="verifyModalTitle">
+                Evidence Verification
+            </h3>
+
+            <div
+                id="verifyModalBody"
+                class="passage">
+            </div>
+
+            <div
+                id="verifyModalLocalized"
+                class="localized">
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="primary"
+                    onclick="closeVerifyModal()"
+                    id="verifyCloseButton">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="static/app.js" defer></script>
+
+
+</body>
+</html>
