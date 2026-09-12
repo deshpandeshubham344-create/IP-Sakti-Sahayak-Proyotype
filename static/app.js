@@ -291,7 +291,7 @@ let lastSources = [];
 let activeSourceIndex = 0;
 let currentPatent = null;
 let lastQuestion = "";
-let currentJurisdiction = localStorage.getItem("ipSaktiJurisdiction") || "IN";
+let currentJurisdiction = "IN";
 
 
 /* ============================================================
@@ -485,11 +485,32 @@ function applyTranslations(){
     document.getElementById("verifyCloseButton").textContent=x.close;
 }
 
-
 function changeJurisdiction() {
 
-    const jurisdiction =
-        document.getElementById("jurisdiction").value;
+    const select =
+        document.getElementById("jurisdiction");
+
+    if (!select) {
+        return;
+    }
+
+    // Get the newly selected jurisdiction
+    currentJurisdiction = select.value;
+
+    // Save the selection
+    localStorage.setItem(
+        "ipSaktiJurisdiction",
+        currentJurisdiction
+    );
+
+    console.log(
+        "Selected jurisdiction:",
+        currentJurisdiction
+    );
+
+    // ============================================================
+    // JURISDICTION-SPECIFIC SUGGESTED QUESTIONS
+    // ============================================================
 
     const suggestions = {
 
@@ -516,11 +537,16 @@ function changeJurisdiction() {
             "How does the international patent system support patent applicants?",
             "What IP information can be explored through WIPO and PCT sources?"
         ]
+
     };
 
-    const selected =
-        suggestions[jurisdiction] ||
+    const selectedSuggestions =
+        suggestions[currentJurisdiction] ||
         suggestions.IN;
+
+    // ============================================================
+    // UPDATE THE THREE BUTTONS
+    // ============================================================
 
     const buttons =
         document.querySelectorAll(
@@ -530,13 +556,21 @@ function changeJurisdiction() {
     buttons.forEach(
         function(button, index) {
 
+            if (!selectedSuggestions[index]) {
+                return;
+            }
+
             button.textContent =
-                selected[index];
+                selectedSuggestions[index];
 
             button.dataset.suggestion =
-                selected[index];
+                selectedSuggestions[index];
         }
     );
+
+    // ============================================================
+    // UPDATE JURISDICTION LABEL
+    // ============================================================
 
     const scope =
         document.getElementById(
@@ -546,15 +580,20 @@ function changeJurisdiction() {
     if (scope) {
 
         const labels = {
+
             IN: "India",
             US: "United States",
             UK: "United Kingdom",
             WIPO: "International (WIPO/PCT)"
+
         };
 
         scope.textContent =
             "Suggested questions for " +
-            (labels[jurisdiction] || "India");
+            (
+                labels[currentJurisdiction] ||
+                "India"
+            );
     }
 }
 
@@ -779,7 +818,7 @@ async function submitQuestion(){
             await wait(350);
             setProcessingStep(step + 1);
         }
-
+        
         const response =
             await fetch("/api/chat",{
                 method:"POST",
@@ -789,7 +828,9 @@ async function submitQuestion(){
                 body:JSON.stringify({
                     query,
                     language:currentLanguage,
-                    jurisdiction:currentJurisdiction
+                    jurisdiction:
+                        document.getElementById(
+                         "jurisdiction" ).value
                 })
             });
 

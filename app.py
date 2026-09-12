@@ -460,7 +460,7 @@ def retrieve(
             similarities[index]
         )
 
-        # Ignore irrelevant matches
+        # Ignore irrelevant documents
         if score <= 0:
             continue
 
@@ -485,7 +485,7 @@ def retrieve(
             "in": ["in", "india"],
             "uk": ["uk", "united kingdom", "gb"],
             "us": ["us", "usa", "united states"],
-            "wo": ["wo", "wipo", "international"]
+            "wipo": ["wipo", "wo", "international"]
         }
 
         allowed_values = jurisdiction_aliases.get(
@@ -515,7 +515,6 @@ def retrieve(
             break
 
     return results
-
 # ============================================================
 # ANSWER LOGIC
 # ============================================================
@@ -1425,7 +1424,7 @@ def chat(req: ChatRequest):
     )
 
     hits = retrieve(
-        query,
+        req.query,
         jurisdiction=jurisdiction,
         k=4,
     )
