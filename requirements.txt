@@ -1,3 +1,5 @@
 fastapi
 uvicorn[standard]
 scikit-learn
+PyMuPDF
+python-multipart
