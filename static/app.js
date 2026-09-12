@@ -486,30 +486,106 @@ function applyTranslations(){
 }
 
 
-function changeJurisdiction(){
+function changeJurisdiction() {
 
-    const select =
-        document.getElementById("jurisdiction");
+    const jurisdiction =
+        document.getElementById("jurisdiction").value;
 
-    currentJurisdiction =
-        select.value;
+    const suggestions = {
 
-    localStorage.setItem(
-        "ipSaktiJurisdiction",
-        currentJurisdiction
+        IN: [
+            "Can an Ayurvedic invention based on traditional knowledge be patented in India?",
+            "How is traditional knowledge treated during patent examination in India?",
+            "What IP protection may apply to an Ayurvedic product in India?"
+        ],
+
+        US: [
+            "What are the basic patentability requirements in the United States?",
+            "What requirements must a new invention satisfy for US patent protection?",
+            "Can the name of an Ayurvedic product be protected as a trademark in the United States?"
+        ],
+
+        UK: [
+            "What are the basic patentability requirements in the United Kingdom?",
+            "What does UK patent law require for a new invention?",
+            "Can the name of an Ayurvedic product be protected as a trademark in the United Kingdom?"
+        ],
+
+        WIPO: [
+            "What are the basic requirements for international patent protection?",
+            "How does the international patent system support patent applicants?",
+            "What IP information can be explored through WIPO and PCT sources?"
+        ]
+    };
+
+    const selected =
+        suggestions[jurisdiction] ||
+        suggestions.IN;
+
+    const buttons =
+        document.querySelectorAll(
+            ".suggestion"
+        );
+
+    buttons.forEach(
+        function(button, index) {
+
+            button.textContent =
+                selected[index];
+
+            button.dataset.suggestion =
+                selected[index];
+        }
     );
 
-    updateJurisdictionPreview();
+    const scope =
+        document.getElementById(
+            "jurisdictionScope"
+        );
 
-    // The old result belongs to the previous jurisdiction.
-    patentResults = [];
+    if (scope) {
 
-    const panel =
-        document.getElementById("patentResults");
+        const labels = {
+            IN: "India",
+            US: "United States",
+            UK: "United Kingdom",
+            WIPO: "International (WIPO/PCT)"
+        };
 
-    if(panel){
-        panel.classList.add("hidden");
+        scope.textContent =
+            "Suggested questions for " +
+            (labels[jurisdiction] || "India");
     }
+}
+
+function getSourceUrl(source) {
+
+    if (!source) {
+        return "#";
+    }
+
+    const url =
+        source.url || "";
+
+    if (
+        url.startsWith(
+            "/static/uploads/"
+        )
+    ) {
+
+        const filename =
+            url.substring(
+                "/static/uploads/".length
+            );
+
+        return (
+            "/api/documents/" +
+            encodeURIComponent(filename) +
+            "/source"
+        );
+    }
+
+    return url || "#";
 }
 
 function updateJurisdictionPreview(){
@@ -911,13 +987,33 @@ function openCurrentSource(){
     const source =
         lastSources[activeSourceIndex];
 
-    if(source.url){
-        window.open(
-            source.url,
-            "_blank",
-            "noopener,noreferrer"
-        );
+   if (source.url) {
+
+    let sourceUrl = source.url;
+
+    if (
+        sourceUrl.startsWith(
+            "/static/uploads/"
+        )
+    ) {
+
+        const filename =
+            sourceUrl.substring(
+                "/static/uploads/".length
+            );
+
+        sourceUrl =
+            "/api/documents/" +
+            encodeURIComponent(filename) +
+            "/source";
     }
+
+    window.open(
+        sourceUrl,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
 }
 
 function showVerifyPanel(){
