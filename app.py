@@ -63,6 +63,8 @@ with DATA.open("r", encoding="utf-8") as f:
 with PATENTS_DATA.open("r", encoding="utf-8") as f:
     PATENTS: List[Dict[str, Any]] = json.load(f)
 
+
+
 if not DOCUMENTS:
     raise ValueError("corpus.json is empty.")
 
@@ -296,7 +298,22 @@ RETRIEVAL_TEXTS: List[str] = []
 VECTORIZER = None
 MATRIX = None
 
+PATENT_TEXTS = [
+    normalize_multilingual(
+        patent.get("text", "")
+    )
+    for patent in PATENTS
+]
 
+PATENT_VECTORIZER = TfidfVectorizer(
+    lowercase=True,
+    ngram_range=(1, 2),
+    stop_words="english",
+)
+
+PATENT_MATRIX = PATENT_VECTORIZER.fit_transform(
+    PATENT_TEXTS
+)
 def rebuild_retrieval_index():
 
     global RETRIEVAL_TEXTS
@@ -363,6 +380,7 @@ def rebuild_retrieval_index():
     )
 
 
+# Build the normal document retrieval index
 rebuild_retrieval_index()
 
 
@@ -437,6 +455,25 @@ EVIDENCE_TRANSLATIONS = {
         "sa": "धारा 64 मध्ये तादृशः आधारः अस्ति यत्र प्रयुक्तस्य जैविकपदार्थस्य स्रोतः वा भौगोलिकमूलं पूर्णविनिर्देशे न प्रकाश्यते अथवा मिथ्या निर्दिश्यते।",
     },
 }
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+PATENT_VECTORIZER = TfidfVectorizer(
+    lowercase=True,
+    ngram_range=(1, 2),
+    stop_words="english",
+)
+
+PATENT_TEXTS = [
+    normalize_multilingual(
+        patent.get("text", "")
+    )
+    for patent in PATENTS
+]
+
+PATENT_MATRIX = PATENT_VECTORIZER.fit_transform(
+    PATENT_TEXTS
+)
 
 # ============================================================
 # RETRIEVE EVIDENCE
@@ -452,81 +489,130 @@ def retrieve(
         query
     )
 
-    # Convert query into TF-IDF vector
     query_vector = VECTORIZER.transform(
         [normalized_query]
     )
 
-    # Calculate similarity against all documents
     similarities = cosine_similarity(
         query_vector,
         MATRIX
     ).flatten()
 
-    # Highest similarity first
-    ranked_indices = similarities.argsort()[::-1]
+    requested = str(
+        jurisdiction
+    ).strip().upper()
 
-    results = []
+    jurisdiction_aliases = {
+        "IN": {
+            "codes": {"IN"},
+            "names": {"india"},
+        },
+        "US": {
+            "codes": {"US"},
+            "names": {
+                "united states",
+                "united states of america",
+                "usa",
+                "us",
+            },
+        },
+        "UK": {
+            "codes": {"UK", "GB"},
+            "names": {
+                "united kingdom",
+                "great britain",
+                "uk",
+                "gb",
+            },
+        },
+        "WIPO": {
+            "codes": {"WIPO", "WO"},
+            "names": {
+                "wipo",
+                "wo",
+                "international",
+                "international (wipo/pct)",
+            },
+        },
+        "ALL": {
+            "codes": {"IN", "US", "UK", "GB", "WIPO", "WO"},
+            "names": {
+                "india",
+                "united states",
+                "united states of america",
+                "usa",
+                "united kingdom",
+                "great britain",
+                "uk",
+                "wipo",
+                "wo",
+                "international",
+                "international (wipo/pct)",
+            },
+        },
+    }
 
-    for index in ranked_indices:
+    rule = jurisdiction_aliases.get(
+        requested,
+        jurisdiction_aliases["IN"]
+    )
 
-        score = float(
-            similarities[index]
-        )
+    candidates = []
 
-        # Ignore irrelevant documents
-        if score <= 0:
-            continue
+    for index, score in enumerate(similarities):
 
         document = DOCUMENTS[index]
 
-        # ----------------------------------------------------
-        # Jurisdiction filtering
-        # ----------------------------------------------------
-
-        doc_jurisdiction = str(
+        doc_name = str(
             document.get(
                 "jurisdiction",
                 ""
             )
         ).strip().lower()
 
-        requested_jurisdiction = str(
-            jurisdiction
-        ).strip().lower()
+        doc_code = str(
+            document.get(
+                "jurisdiction_code",
+                ""
+            )
+        ).strip().upper()
 
-        jurisdiction_aliases = {
-            "in": ["in", "india"],
-            "uk": ["uk", "united kingdom", "gb"],
-            "us": ["us", "usa", "united states"],
-            "wipo": [ "wipo", "wo","international","wipo/pct","international (wipo/pct)"]
-        }
+        if requested != "ALL":
 
-        allowed_values = jurisdiction_aliases.get(
-            requested_jurisdiction,
-            [requested_jurisdiction]
+            if (
+                doc_code not in rule["codes"]
+                and doc_name not in rule["names"]
+            ):
+                continue
+
+        score_value = float(score)
+
+        candidates.append(
+            (
+                score_value,
+                document
+            )
         )
 
-        if (
-            doc_jurisdiction
-            and doc_jurisdiction not in allowed_values
-        ):
-            continue
+    candidates.sort(
+        key=lambda item: item[0],
+        reverse=True
+    )
 
-        # Copy document so we don't modify DOCUMENTS itself
+    results = []
+
+    for score_value, document in candidates[:k]:
+
         item = dict(document)
 
         item["score"] = round(
-            score,
+            score_value,
             4
         )
 
         results.append(
             item
         )
-
-        if len(results) >= k:
-            break
 
     return results
 # ============================================================
@@ -1132,7 +1218,7 @@ def search_patents(
     )
 
     query_vector = PATENT_VECTORIZER.transform(
-        [normalized]
+    [normalized]
     )
 
     scores = cosine_similarity(
@@ -1155,7 +1241,8 @@ def search_patents(
 
         score_value = float(score)
 
-        # Keep low-score results out if there is enough evidence.
+        if score_value < 0.05:
+            continue
         candidates.append(
             (
                 score_value,
@@ -1575,6 +1662,7 @@ def chat(req: ChatRequest):
     normalized_query = normalize_multilingual(
         query
     )
+    
 
     hits = retrieve(
         req.query,

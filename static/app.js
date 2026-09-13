@@ -1115,66 +1115,6 @@ function applyTranslations(){
     };
 
 
-    const p =
-        prototypeStatusTranslations[currentLanguage] ||
-        prototypeStatusTranslations.en;
-
-    document.getElementById("prototypeStatusTitle").textContent =
-        p.title;
-
-    document.getElementById("prototypeDescription").textContent =
-        p.description;
-
-    document.getElementById("implementedTitle").textContent =
-        p.implementedTitle;
-
-    document.getElementById("implemented1").textContent =
-        p.implemented1;
-
-    document.getElementById("implemented2").textContent =
-        p.implemented2;
-
-    document.getElementById("implemented3").textContent =
-        p.implemented3;
-
-    document.getElementById("implemented4").textContent =
-        p.implemented4;
-
-    document.getElementById("implemented5").textContent =
-        p.implemented5;
-
-    document.getElementById("implemented6").textContent =
-        p.implemented6;
-
-    document.getElementById("implemented7").textContent =
-        p.implemented7;
-
-    document.getElementById("implemented8").textContent =
-        p.implemented8;
-
-    document.getElementById("roadmapTitle").textContent =
-        p.roadmapTitle;
-
-    document.getElementById("roadmap1").textContent =
-        p.roadmap1;
-
-    document.getElementById("roadmap2").textContent =
-        p.roadmap2;
-
-    document.getElementById("roadmap3").textContent =
-        p.roadmap3;
-
-    document.getElementById("roadmap4").textContent =
-        p.roadmap4;
-
-    document.getElementById("roadmap5").textContent =
-        p.roadmap5;
-
-    document.getElementById("roadmap6").textContent =
-        p.roadmap6;
-
-    document.getElementById("roadmap7").textContent =
-        p.roadmap7;
 }
 
 function changeJurisdiction() {
