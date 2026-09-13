@@ -725,7 +725,7 @@ def choose_answer(
             "sa": "अमेरिकी-पेटेण्ट्-कानूनः"
         },
 
-        "WO": {
+        "WIPO": {
             "en": "international patent sources",
             "hi": "अंतरराष्ट्रीय पेटेंट स्रोत",
             "mr": "आंतरराष्ट्रीय पेटंट स्रोत",
@@ -739,6 +739,8 @@ def choose_answer(
             "sa": "अन्ताराष्ट्रिय-पेटेण्ट्-स्रोतांसि"
         }
     }
+
+    
 
     jurisdiction_text = (
         jurisdiction_names
