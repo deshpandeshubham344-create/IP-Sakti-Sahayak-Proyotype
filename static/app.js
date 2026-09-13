@@ -483,6 +483,698 @@ function applyTranslations(){
     document.getElementById("indexKBButton").textContent=x.addIndex;
     document.getElementById("verifyModalTitle").textContent=x.verifyTitle;
     document.getElementById("verifyCloseButton").textContent=x.close;
+
+    const prototypeStatusTranslations = {
+
+        en: {
+            title: "Prototype Status",
+            description:
+                "The current demo proves the core IP research and evidence-verification workflow.",
+
+            implementedTitle: "Currently Implemented",
+
+            implemented1:
+                "Multilingual Ayurveda IP interaction across 11 supported languages",
+
+            implemented2:
+                "Jurisdiction-aware IP and regulatory retrieval",
+
+            implemented3:
+                "Evidence-grounded answers with traceable source citations",
+
+            implemented4:
+                "Curated India, UK, US and WIPO knowledge sources",
+
+            implemented5:
+                "User PDF upload, text extraction and indexing",
+
+            implemented6:
+                "Short evidence excerpts with source verification and View Source",
+
+            implemented7:
+                "Dynamic Ayurveda patent similarity search",
+
+            implemented8:
+                "ASK · EXPLORE · VERIFY workflow",
+
+            roadmapTitle:
+                "Full Implementation Roadmap",
+
+            roadmap1:
+                "LLM-powered grounded answer generation and synthesis",
+
+            roadmap2:
+                "Multilingual embeddings with hybrid retrieval and advanced reranking",
+
+            roadmap3:
+                "Qdrant vector database for scalable semantic search",
+
+            roadmap4:
+                "PostgreSQL for production-grade document and user data management",
+
+            roadmap5:
+                "OCR and large-scale document ingestion for scanned sources",
+
+            roadmap6:
+                "Expanded authoritative sources, languages and jurisdictions",
+
+            roadmap7:
+                "Continuous source updating and provenance/version management"
+        },
+
+
+        hi: {
+            title: "प्रोटोटाइप स्थिति",
+            description:
+                "वर्तमान डेमो मुख्य IP अनुसंधान और प्रमाण-सत्यापन कार्यप्रवाह को प्रदर्शित करता है।",
+
+            implementedTitle: "वर्तमान में लागू",
+
+            implemented1:
+                "11 समर्थित भाषाओं में बहुभाषी आयुर्वेद IP इंटरैक्शन",
+
+            implemented2:
+                "अधिकार क्षेत्र के अनुसार IP और नियामक जानकारी की खोज",
+
+            implemented3:
+                "प्रमाण-आधारित उत्तर और ट्रेस करने योग्य स्रोत संदर्भ",
+
+            implemented4:
+                "भारत, यूके, अमेरिका और WIPO के चयनित ज्ञान स्रोत",
+
+            implemented5:
+                "उपयोगकर्ता PDF अपलोड, टेक्स्ट निष्कर्षण और इंडेक्सिंग",
+
+            implemented6:
+                "संक्षिप्त प्रमाण अंश, स्रोत सत्यापन और View Source",
+
+            implemented7:
+                "डायनेमिक आयुर्वेद पेटेंट समानता खोज",
+
+            implemented8:
+                "पूछें · खोजें · सत्यापित करें कार्यप्रवाह",
+
+            roadmapTitle:
+                "पूर्ण कार्यान्वयन रोडमैप",
+
+            roadmap1:
+                "LLM-आधारित ग्राउंडेड उत्तर निर्माण और संश्लेषण",
+
+            roadmap2:
+                "बहुभाषी एम्बेडिंग, हाइब्रिड रिट्रीवल और उन्नत रीरैंकिंग",
+
+            roadmap3:
+                "स्केलेबल सिमेंटिक खोज के लिए Qdrant वेक्टर डेटाबेस",
+
+            roadmap4:
+                "प्रोडक्शन-ग्रेड दस्तावेज़ और उपयोगकर्ता डेटा प्रबंधन के लिए PostgreSQL",
+
+            roadmap5:
+                "स्कैन किए गए स्रोतों के लिए OCR और बड़े पैमाने पर दस्तावेज़ इनजेशन",
+
+            roadmap6:
+                "अधिक आधिकारिक स्रोत, भाषाएँ और अधिकार क्षेत्र",
+
+            roadmap7:
+                "निरंतर स्रोत अपडेट और प्रोवेनेंस/संस्करण प्रबंधन"
+        },
+
+
+        mr: {
+            title: "प्रोटोटाइप स्थिती",
+            description:
+                "सध्याचा डेमो मुख्य IP संशोधन आणि पुरावा-पडताळणी कार्यप्रवाह दाखवतो.",
+
+            implementedTitle: "सध्या कार्यान्वित",
+
+            implemented1:
+                "11 समर्थित भाषांमध्ये बहुभाषिक आयुर्वेद IP संवाद",
+
+            implemented2:
+                "अधिकारक्षेत्रानुसार IP आणि नियामक माहितीचे रिट्रीव्हल",
+
+            implemented3:
+                "पुराव्यावर आधारित उत्तरे आणि ट्रेस करता येणारे स्रोत संदर्भ",
+
+            implemented4:
+                "भारत, यूके, अमेरिका आणि WIPO मधील निवडक ज्ञानस्रोत",
+
+            implemented5:
+                "वापरकर्ता PDF अपलोड, मजकूर निष्कर्षण आणि इंडेक्सिंग",
+
+            implemented6:
+                "संक्षिप्त पुरावा अंश, स्रोत पडताळणी आणि View Source",
+
+            implemented7:
+                "डायनॅमिक आयुर्वेद पेटंट समानता शोध",
+
+            implemented8:
+                "विचारा · शोधा · पडताळा कार्यप्रवाह",
+
+            roadmapTitle:
+                "पूर्ण अंमलबजावणी रोडमॅप",
+
+            roadmap1:
+                "LLM-आधारित ग्राउंडेड उत्तर निर्मिती आणि संश्लेषण",
+
+            roadmap2:
+                "बहुभाषिक एम्बेडिंग, हायब्रिड रिट्रीव्हल आणि प्रगत रीरँकिंग",
+
+            roadmap3:
+                "स्केलेबल सिमेंटिक शोधासाठी Qdrant वेक्टर डेटाबेस",
+
+            roadmap4:
+                "प्रोडक्शन-ग्रेड दस्तऐवज आणि वापरकर्ता डेटा व्यवस्थापनासाठी PostgreSQL",
+
+            roadmap5:
+                "स्कॅन केलेल्या स्रोतांसाठी OCR आणि मोठ्या प्रमाणातील दस्तऐवज इनजेशन",
+
+            roadmap6:
+                "अधिकृत स्रोत, भाषा आणि अधिकारक्षेत्रांचा विस्तार",
+
+            roadmap7:
+                "सतत स्रोत अद्ययावत करणे आणि प्रोव्हनन्स/आवृत्ती व्यवस्थापन"
+        },
+
+
+        bn: {
+            title: "প্রোটোটাইপের অবস্থা",
+            description:
+                "বর্তমান ডেমো মূল IP গবেষণা এবং প্রমাণ যাচাইকরণ কার্যপ্রবাহ প্রদর্শন করে।",
+
+            implementedTitle: "বর্তমানে বাস্তবায়িত",
+
+            implemented1:
+                "১১টি সমর্থিত ভাষায় বহুভাষিক আয়ুর্বেদ IP ইন্টারঅ্যাকশন",
+
+            implemented2:
+                "অধিক্ষেত্রভিত্তিক IP এবং নিয়ন্ত্রক তথ্য অনুসন্ধান",
+
+            implemented3:
+                "প্রমাণভিত্তিক উত্তর এবং ট্রেসযোগ্য উৎস উদ্ধৃতি",
+
+            implemented4:
+                "ভারত, যুক্তরাজ্য, যুক্তরাষ্ট্র এবং WIPO-এর নির্বাচিত জ্ঞান উৎস",
+
+            implemented5:
+                "ব্যবহারকারীর PDF আপলোড, টেক্সট নিষ্কাশন এবং ইনডেক্সিং",
+
+            implemented6:
+                "সংক্ষিপ্ত প্রমাণাংশ, উৎস যাচাই এবং View Source",
+
+            implemented7:
+                "ডায়নামিক আয়ুর্বেদ পেটেন্ট সাদৃশ্য অনুসন্ধান",
+
+            implemented8:
+                "জিজ্ঞাসা · অনুসন্ধান · যাচাই কার্যপ্রবাহ",
+
+            roadmapTitle:
+                "পূর্ণ বাস্তবায়ন রোডম্যাপ",
+
+            roadmap1:
+                "LLM-চালিত ভিত্তিসম্পন্ন উত্তর তৈরি ও সংশ্লেষণ",
+
+            roadmap2:
+                "বহুভাষিক এমবেডিং, হাইব্রিড রিট্রিভাল এবং উন্নত রির‍্যাঙ্কিং",
+
+            roadmap3:
+                "স্কেলযোগ্য সেমান্টিক অনুসন্ধানের জন্য Qdrant ভেক্টর ডেটাবেস",
+
+            roadmap4:
+                "প্রোডাকশন-গ্রেড ডকুমেন্ট এবং ব্যবহারকারী ডেটা ব্যবস্থাপনার জন্য PostgreSQL",
+
+            roadmap5:
+                "স্ক্যান করা উৎসের জন্য OCR এবং বৃহৎ পরিসরের ডকুমেন্ট ইনজেশন",
+
+            roadmap6:
+                "আরও প্রামাণিক উৎস, ভাষা এবং অধিক্ষেত্র",
+
+            roadmap7:
+                "নিয়মিত উৎস আপডেট এবং প্রোভেন্যান্স/সংস্করণ ব্যবস্থাপনা"
+        },
+
+
+        ta: {
+            title: "முன்மாதிரி நிலை",
+            description:
+                "தற்போதைய டெமோ முக்கிய IP ஆராய்ச்சி மற்றும் ஆதார சரிபார்ப்பு பணிச்சுற்றை நிரூபிக்கிறது.",
+
+            implementedTitle: "தற்போது செயல்பாட்டில்",
+
+            implemented1:
+                "11 ஆதரிக்கப்படும் மொழிகளில் பல்மொழி ஆயுர்வேத IP தொடர்பு",
+
+            implemented2:
+                "சட்டஅதிகார அடிப்படையிலான IP மற்றும் ஒழுங்குமுறை தகவல் மீட்டெடுப்பு",
+
+            implemented3:
+                "ஆதார அடிப்படையிலான பதில்கள் மற்றும் கண்காணிக்கக்கூடிய மூல மேற்கோள்கள்",
+
+            implemented4:
+                "இந்தியா, UK, US மற்றும் WIPO-வின் தேர்ந்தெடுக்கப்பட்ட அறிவு ஆதாரங்கள்",
+
+            implemented5:
+                "பயனர் PDF பதிவேற்றம், உரை பிரித்தெடுத்தல் மற்றும் இன்டெக்சிங்",
+
+            implemented6:
+                "சுருக்கமான ஆதாரப் பகுதிகள், மூல சரிபார்ப்பு மற்றும் View Source",
+
+            implemented7:
+                "டைனமிக் ஆயுர்வேத காப்புரிமை ஒற்றுமை தேடல்",
+
+            implemented8:
+                "கேள் · ஆராய் · சரிபார் பணிச்சுற்று",
+
+            roadmapTitle:
+                "முழுமையான செயல்படுத்தல் திட்டம்",
+
+            roadmap1:
+                "LLM அடிப்படையிலான ஆதாரமூலமான பதில் உருவாக்கம் மற்றும் தொகுப்பு",
+
+            roadmap2:
+                "பல்மொழி embeddings, hybrid retrieval மற்றும் மேம்பட்ட reranking",
+
+            roadmap3:
+                "அளவிடக்கூடிய semantic search க்கான Qdrant vector database",
+
+            roadmap4:
+                "Production-grade ஆவண மற்றும் பயனர் தரவு மேலாண்மைக்கான PostgreSQL",
+
+            roadmap5:
+                "ஸ்கேன் செய்யப்பட்ட ஆதாரங்களுக்கான OCR மற்றும் பெரிய அளவிலான document ingestion",
+
+            roadmap6:
+                "மேலும் அதிகாரப்பூர்வ ஆதாரங்கள், மொழிகள் மற்றும் சட்டஅதிகாரங்கள்",
+
+            roadmap7:
+                "தொடர்ச்சியான மூல புதுப்பிப்புகள் மற்றும் provenance/version management"
+        },
+
+
+        te: {
+            title: "ప్రోటోటైప్ స్థితి",
+            description:
+                "ప్రస్తుత డెమో ప్రధాన IP పరిశోధన మరియు ఆధార ధృవీకరణ వర్క్‌ఫ్లోను చూపిస్తుంది.",
+
+            implementedTitle: "ప్రస్తుతం అమలులో ఉన్నవి",
+
+            implemented1:
+                "11 మద్దతు ఉన్న భాషల్లో బహుభాషా ఆయుర్వేద IP ఇంటరాక్షన్",
+
+            implemented2:
+                "జ్యూరిస్డిక్షన్ ఆధారిత IP మరియు నియంత్రణ సమాచార రిట్రీవల్",
+
+            implemented3:
+                "ఆధార ఆధారిత సమాధానాలు మరియు ట్రేస్ చేయగల మూల సూచనలు",
+
+            implemented4:
+                "భారత్, UK, US మరియు WIPO ఎంపిక చేసిన జ్ఞాన మూలాలు",
+
+            implemented5:
+                "వినియోగదారు PDF అప్లోడ్, టెక్స్ట్ ఎక్స్‌ట్రాక్షన్ మరియు ఇండెక్సింగ్",
+
+            implemented6:
+                "సంక్షిప్త ఆధార భాగాలు, మూల ధృవీకరణ మరియు View Source",
+
+            implemented7:
+                "డైనమిక్ ఆయుర్వేద పేటెంట్ సాదృశ్య శోధన",
+
+            implemented8:
+                "అడుగు · అన్వేషించు · ధృవీకరించు వర్క్‌ఫ్లో",
+
+            roadmapTitle:
+                "పూర్తి అమలు రోడ్‌మ్యాప్",
+
+            roadmap1:
+                "LLM ఆధారిత గ్రౌండెడ్ సమాధానాల తయారీ మరియు సింథసిస్",
+
+            roadmap2:
+                "బహుభాషా embeddings, hybrid retrieval మరియు advanced reranking",
+
+            roadmap3:
+                "స్కేలబుల్ semantic search కోసం Qdrant vector database",
+
+            roadmap4:
+                "production-grade పత్రాలు మరియు వినియోగదారు డేటా నిర్వహణకు PostgreSQL",
+
+            roadmap5:
+                "స్కాన్ చేసిన మూలాల కోసం OCR మరియు పెద్ద స్థాయి document ingestion",
+
+            roadmap6:
+                "మరిన్ని అధికారిక మూలాలు, భాషలు మరియు జ్యూరిస్డిక్షన్లు",
+
+            roadmap7:
+                "నిరంతర మూల నవీకరణలు మరియు provenance/version management"
+        },
+
+
+        kn: {
+            title: "ಪ್ರೋಟೋಟೈಪ್ ಸ್ಥಿತಿ",
+            description:
+                "ಪ್ರಸ್ತುತ ಡೆಮೋ ಮುಖ್ಯ IP ಸಂಶೋಧನೆ ಮತ್ತು ಪುರಾವೆ ಪರಿಶೀಲನೆ ಕಾರ್ಯಪ್ರವಾಹವನ್ನು ತೋರಿಸುತ್ತದೆ.",
+
+            implementedTitle: "ಪ್ರಸ್ತುತ ಜಾರಿಯಲ್ಲಿರುವವು",
+
+            implemented1:
+                "11 ಬೆಂಬಲಿತ ಭಾಷೆಗಳಲ್ಲಿ ಬಹುಭಾಷಾ ಆಯುರ್ವೇದ IP ಸಂವಹನ",
+
+            implemented2:
+                "ಅಧಿಕಾರ ಕ್ಷೇತ್ರ ಆಧಾರಿತ IP ಮತ್ತು ನಿಯಂತ್ರಣ ಮಾಹಿತಿಯ ರಿಟ್ರೀವಲ್",
+
+            implemented3:
+                "ಪುರಾವೆ ಆಧಾರಿತ ಉತ್ತರಗಳು ಮತ್ತು ಪತ್ತೆಹಚ್ಚಬಹುದಾದ ಮೂಲ ಉಲ್ಲೇಖಗಳು",
+
+            implemented4:
+                "ಭಾರತ, UK, US ಮತ್ತು WIPO ಆಯ್ಕೆ ಮಾಡಿದ ಜ್ಞಾನ ಮೂಲಗಳು",
+
+            implemented5:
+                "ಬಳಕೆದಾರ PDF ಅಪ್‌ಲೋಡ್, ಪಠ್ಯ ಹೊರತೆಗೆಯುವಿಕೆ ಮತ್ತು ಇಂಡೆಕ್ಸಿಂಗ್",
+
+            implemented6:
+                "ಸಂಕ್ಷಿಪ್ತ ಪುರಾವೆ ಭಾಗಗಳು, ಮೂಲ ಪರಿಶೀಲನೆ ಮತ್ತು View Source",
+
+            implemented7:
+                "ಡೈನಮಿಕ್ ಆಯುರ್ವೇದ ಪೇಟೆಂಟ್ ಸಾಮ್ಯತೆ ಹುಡುಕಾಟ",
+
+            implemented8:
+                "ಕೇಳಿ · ಅನ್ವೇಷಿಸಿ · ಪರಿಶೀಲಿಸಿ ಕಾರ್ಯಪ್ರವಾಹ",
+
+            roadmapTitle:
+                "ಸಂಪೂರ್ಣ ಅನುಷ್ಠಾನ ರೋಡ್‌ಮ್ಯಾಪ್",
+
+            roadmap1:
+                "LLM ಆಧಾರಿತ ಗ್ರೌಂಡೆಡ್ ಉತ್ತರ ನಿರ್ಮಾಣ ಮತ್ತು ಸಂಯೋಜನೆ",
+
+            roadmap2:
+                "ಬಹುಭಾಷಾ embeddings, hybrid retrieval ಮತ್ತು advanced reranking",
+
+            roadmap3:
+                "ಸ್ಕೇಲಬಲ್ semantic search ಗಾಗಿ Qdrant vector database",
+
+            roadmap4:
+                "production-grade ದಾಖಲೆ ಮತ್ತು ಬಳಕೆದಾರ ಡೇಟಾ ನಿರ್ವಹಣೆಗೆ PostgreSQL",
+
+            roadmap5:
+                "ಸ್ಕ್ಯಾನ್ ಮಾಡಿದ ಮೂಲಗಳಿಗಾಗಿ OCR ಮತ್ತು ದೊಡ್ಡ ಪ್ರಮಾಣದ document ingestion",
+
+            roadmap6:
+                "ಹೆಚ್ಚುವರಿ ಅಧಿಕೃತ ಮೂಲಗಳು, ಭಾಷೆಗಳು ಮತ್ತು ಅಧಿಕಾರ ಕ್ಷೇತ್ರಗಳು",
+
+            roadmap7:
+                "ನಿರಂತರ ಮೂಲ ನವೀಕರಣ ಮತ್ತು provenance/version management"
+        },
+
+
+        gu: {
+            title: "પ્રોટોટાઇપ સ્થિતિ",
+            description:
+                "વર્તમાન ડેમો મુખ્ય IP સંશોધન અને પુરાવા ચકાસણી વર્કફ્લો દર્શાવે છે.",
+
+            implementedTitle: "હાલમાં અમલમાં",
+
+            implemented1:
+                "11 સપોર્ટેડ ભાષાઓમાં બહુભાષી આયુર્વેદ IP ઇન્ટરૅક્શન",
+
+            implemented2:
+                "અધિકારક્ષેત્ર આધારિત IP અને નિયમનકારી માહિતી રિટ્રિવલ",
+
+            implemented3:
+                "પુરાવા આધારિત જવાબો અને ટ્રેસ કરી શકાય તેવા સ્રોત સંદર્ભો",
+
+            implemented4:
+                "ભારત, UK, US અને WIPOના પસંદ કરેલા જ્ઞાન સ્રોતો",
+
+            implemented5:
+                "વપરાશકર્તા PDF અપલોડ, ટેક્સ્ટ નિષ્કર્ષણ અને ઇન્ડેક્સિંગ",
+
+            implemented6:
+                "ટૂંકા પુરાવા અંશો, સ્રોત ચકાસણી અને View Source",
+
+            implemented7:
+                "ડાયનેમિક આયુર્વેદ પેટન્ટ સમાનતા શોધ",
+
+            implemented8:
+                "પૂછો · શોધો · ચકાસો વર્કફ્લો",
+
+            roadmapTitle:
+                "સંપૂર્ણ અમલીકરણ રોડમૅપ",
+
+            roadmap1:
+                "LLM આધારિત ગ્રાઉન્ડેડ જવાબ જનરેશન અને સિન્થેસિસ",
+
+            roadmap2:
+                "બહુભાષી embeddings, hybrid retrieval અને advanced reranking",
+
+            roadmap3:
+                "સ્કેલેબલ સેમેન્ટિક શોધ માટે Qdrant vector database",
+
+            roadmap4:
+                "પ્રોડક્શન-ગ્રેડ દસ્તાવેજ અને વપરાશકર્તા ડેટા મેનેજમેન્ટ માટે PostgreSQL",
+
+            roadmap5:
+                "સ્કેન કરેલા સ્રોતો માટે OCR અને મોટા પાયે document ingestion",
+
+            roadmap6:
+                "વધુ અધિકૃત સ્રોતો, ભાષાઓ અને અધિકારક્ષેત્રો",
+
+            roadmap7:
+                "સતત સ્રોત અપડેટ અને provenance/version management"
+        },
+
+
+        ml: {
+            title: "പ്രോട്ടോടൈപ്പ് നില",
+            description:
+                "നിലവിലെ ഡെമോ പ്രധാന IP ഗവേഷണവും തെളിവ് പരിശോധനാ പ്രവർത്തനരീതിയും കാണിക്കുന്നു.",
+
+            implementedTitle: "നിലവിൽ നടപ്പാക്കിയിരിക്കുന്നത്",
+
+            implemented1:
+                "11 പിന്തുണയ്ക്കുന്ന ഭാഷകളിലെ ബഹുഭാഷാ ആയുർവേദ IP ഇടപെടൽ",
+
+            implemented2:
+                "അധികാരപരിധി അടിസ്ഥാനമാക്കിയുള്ള IP, നിയന്ത്രണ വിവര റിട്രീവൽ",
+
+            implemented3:
+                "തെളിവ് അടിസ്ഥാനമാക്കിയുള്ള ഉത്തരങ്ങളും പിന്തുടരാവുന്ന ഉറവിട ഉദ്ധരണികളും",
+
+            implemented4:
+                "ഇന്ത്യ, UK, US, WIPO എന്നിവയുടെ തെരഞ്ഞെടുത്ത ജ്ഞാന ഉറവിടങ്ങൾ",
+
+            implemented5:
+                "ഉപയോക്തൃ PDF അപ്‌ലോഡ്, ടെക്സ്റ്റ് എക്സ്ട്രാക്ഷൻ, ഇൻഡെക്സിംഗ്",
+
+            implemented6:
+                "ചുരുക്കിയ തെളിവ് ഭാഗങ്ങൾ, ഉറവിട പരിശോധന, View Source",
+
+            implemented7:
+                "ഡൈനാമിക് ആയുർവേദ പേറ്റന്റ് സാമ്യം തിരച്ചിൽ",
+
+            implemented8:
+                "ചോദിക്കുക · പരിശോധിക്കുക · ഉറപ്പാക്കുക പ്രവർത്തനരീതി",
+
+            roadmapTitle:
+                "പൂർണ്ണ നടപ്പാക്കൽ റോഡ്മാപ്പ്",
+
+            roadmap1:
+                "LLM അടിസ്ഥാനമാക്കിയുള്ള തെളിവ്-ആധാരിത ഉത്തര നിർമ്മാണവും സംയോജനവും",
+
+            roadmap2:
+                "ബഹുഭാഷാ embeddings, hybrid retrieval, advanced reranking",
+
+            roadmap3:
+                "സ്കെയിലബിൾ semantic search നായി Qdrant vector database",
+
+            roadmap4:
+                "production-grade ഡോക്യുമെന്റ്, ഉപയോക്തൃ ഡാറ്റ മാനേജ്മെന്റിനായി PostgreSQL",
+
+            roadmap5:
+                "സ്കാൻ ചെയ്ത ഉറവിടങ്ങൾക്കായി OCR, വലിയ തോതിലുള്ള document ingestion",
+
+            roadmap6:
+                "കൂടുതൽ ഔദ്യോഗിക ഉറവിടങ്ങൾ, ഭാഷകൾ, അധികാരപരിധികൾ",
+
+            roadmap7:
+                "തുടർച്ചയായ ഉറവിട അപ്ഡേറ്റുകളും provenance/version management"
+        },
+
+
+        pa: {
+            title: "ਪ੍ਰੋਟੋਟਾਈਪ ਸਥਿਤੀ",
+            description:
+                "ਮੌਜੂਦਾ ਡੈਮੋ ਮੁੱਖ IP ਖੋਜ ਅਤੇ ਸਬੂਤ-ਜਾਂਚ ਵਰਕਫਲੋ ਨੂੰ ਦਰਸਾਉਂਦਾ ਹੈ।",
+
+            implementedTitle: "ਮੌਜੂਦਾ ਤੌਰ 'ਤੇ ਲਾਗੂ",
+
+            implemented1:
+                "11 ਸਮਰਥਿਤ ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਬਹੁਭਾਸ਼ੀ ਆਯੁਰਵੇਦ IP ਇੰਟਰੈਕਸ਼ਨ",
+
+            implemented2:
+                "ਅਧਿਕਾਰ-ਖੇਤਰ ਅਨੁਸਾਰ IP ਅਤੇ ਨਿਯਮਕ ਜਾਣਕਾਰੀ ਦੀ ਖੋਜ",
+
+            implemented3:
+                "ਸਬੂਤ-ਆਧਾਰਿਤ ਜਵਾਬ ਅਤੇ ਟ੍ਰੇਸ ਕੀਤੇ ਜਾ ਸਕਣ ਵਾਲੇ ਸਰੋਤ ਹਵਾਲੇ",
+
+            implemented4:
+                "ਭਾਰਤ, UK, US ਅਤੇ WIPO ਦੇ ਚੁਣੇ ਹੋਏ ਗਿਆਨ ਸਰੋਤ",
+
+            implemented5:
+                "ਯੂਜ਼ਰ PDF ਅੱਪਲੋਡ, ਟੈਕਸਟ ਐਕਸਟ੍ਰੈਕਸ਼ਨ ਅਤੇ ਇੰਡੈਕਸਿੰਗ",
+
+            implemented6:
+                "ਛੋਟੇ ਸਬੂਤ ਅੰਸ਼, ਸਰੋਤ ਜਾਂਚ ਅਤੇ View Source",
+
+            implemented7:
+                "ਡਾਇਨਾਮਿਕ ਆਯੁਰਵੇਦ ਪੇਟੈਂਟ ਸਮਾਨਤਾ ਖੋਜ",
+
+            implemented8:
+                "ਪੁੱਛੋ · ਖੋਜੋ · ਜਾਂਚੋ ਵਰਕਫਲੋ",
+
+            roadmapTitle:
+                "ਪੂਰਾ ਲਾਗੂਕਰਨ ਰੋਡਮੈਪ",
+
+            roadmap1:
+                "LLM-ਅਧਾਰਿਤ ਗ੍ਰਾਊਂਡਡ ਜਵਾਬ ਤਿਆਰ ਕਰਨਾ ਅਤੇ ਸੰਸ਼ਲੇਸ਼ਣ",
+
+            roadmap2:
+                "ਬਹੁਭਾਸ਼ੀ embeddings, hybrid retrieval ਅਤੇ advanced reranking",
+
+            roadmap3:
+                "ਸਕੇਲੇਬਲ semantic search ਲਈ Qdrant vector database",
+
+            roadmap4:
+                "production-grade ਦਸਤਾਵੇਜ਼ ਅਤੇ ਯੂਜ਼ਰ ਡੇਟਾ ਪ੍ਰਬੰਧਨ ਲਈ PostgreSQL",
+
+            roadmap5:
+                "ਸਕੈਨ ਕੀਤੇ ਸਰੋਤਾਂ ਲਈ OCR ਅਤੇ ਵੱਡੇ ਪੱਧਰ ਦਾ document ingestion",
+
+            roadmap6:
+                "ਹੋਰ ਅਧਿਕਾਰਤ ਸਰੋਤ, ਭਾਸ਼ਾਵਾਂ ਅਤੇ ਅਧਿਕਾਰ ਖੇਤਰ",
+
+            roadmap7:
+                "ਲਗਾਤਾਰ ਸਰੋਤ ਅਪਡੇਟ ਅਤੇ provenance/version management"
+        },
+
+
+        sa: {
+            title: "प्रोटोटाइप-स्थितिः",
+            description:
+                "वर्तमान-प्रदर्शनं मुख्यं IP-अनुसन्धानं प्रमाण-सत्यापन-कार्यप्रवाहं च प्रदर्शयति।",
+
+            implementedTitle: "वर्तमानतः कार्यान्वितम्",
+
+            implemented1:
+                "एकादशसमर्थितभाषासु बहुभाषिकम् आयुर्वेद-IP-संवादम्",
+
+            implemented2:
+                "अधिकारक्षेत्रानुसारं IP तथा नियामक-सूचना-अन्वेषणम्",
+
+            implemented3:
+                "प्रमाणाधारिताः उत्तराः तथा अनुगम्याः स्रोत-सन्दर्भाः",
+
+            implemented4:
+                "भारत-यूके-अमेरिका-WIPO चयनिताः ज्ञानस्रोताः",
+
+            implemented5:
+                "उपयोक्तृ-PDF-अपलोड्, पाठ-निष्कर्षणम् तथा अनुक्रमणम्",
+
+            implemented6:
+                "संक्षिप्ताः प्रमाणांशाः, स्रोत-सत्यापनम् तथा View Source",
+
+            implemented7:
+                "गतिशीलम् आयुर्वेद-पेटेण्ट्-सादृश्य-अन्वेषणम्",
+
+            implemented8:
+                "पृच्छतु · अन्वेषयतु · सत्यापयतु कार्यप्रवाहः",
+
+            roadmapTitle:
+                "पूर्ण-कार्यान्वयन-रोडमैप",
+
+            roadmap1:
+                "LLM-आधारितं प्रमाणसमर्थित-उत्तर-निर्माणं संश्लेषणं च",
+
+            roadmap2:
+                "बहुभाषिकानि embeddings, hybrid retrieval तथा उन्नतं reranking",
+
+            roadmap3:
+                "स्केलेबल-सिमान्टिक-अन्वेषणाय Qdrant vector database",
+
+            roadmap4:
+                "production-grade दस्तावेज-उपयोक्तृ-दत्तांश-व्यवस्थापनाय PostgreSQL",
+
+            roadmap5:
+                "स्कैन्-स्रोतेभ्यः OCR तथा बृहद्-दस्तावेज-आयातः",
+
+            roadmap6:
+                "अधिकाः प्रामाणिकाः स्रोताः, भाषाः तथा अधिकारक्षेत्राणि",
+
+            roadmap7:
+                "निरन्तर-स्रोत-अद्यतनं तथा provenance/version management"
+        }
+
+    };
+
+
+    const p =
+        prototypeStatusTranslations[currentLanguage] ||
+        prototypeStatusTranslations.en;
+
+    document.getElementById("prototypeStatusTitle").textContent =
+        p.title;
+
+    document.getElementById("prototypeDescription").textContent =
+        p.description;
+
+    document.getElementById("implementedTitle").textContent =
+        p.implementedTitle;
+
+    document.getElementById("implemented1").textContent =
+        p.implemented1;
+
+    document.getElementById("implemented2").textContent =
+        p.implemented2;
+
+    document.getElementById("implemented3").textContent =
+        p.implemented3;
+
+    document.getElementById("implemented4").textContent =
+        p.implemented4;
+
+    document.getElementById("implemented5").textContent =
+        p.implemented5;
+
+    document.getElementById("implemented6").textContent =
+        p.implemented6;
+
+    document.getElementById("implemented7").textContent =
+        p.implemented7;
+
+    document.getElementById("implemented8").textContent =
+        p.implemented8;
+
+    document.getElementById("roadmapTitle").textContent =
+        p.roadmapTitle;
+
+    document.getElementById("roadmap1").textContent =
+        p.roadmap1;
+
+    document.getElementById("roadmap2").textContent =
+        p.roadmap2;
+
+    document.getElementById("roadmap3").textContent =
+        p.roadmap3;
+
+    document.getElementById("roadmap4").textContent =
+        p.roadmap4;
+
+    document.getElementById("roadmap5").textContent =
+        p.roadmap5;
+
+    document.getElementById("roadmap6").textContent =
+        p.roadmap6;
+
+    document.getElementById("roadmap7").textContent =
+        p.roadmap7;
 }
 
 function changeJurisdiction() {
