@@ -2777,7 +2777,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     applyTranslations();
     updateJurisdictionPreview();
 
-    openApp("landing");
+    openApp("ask");
 
 });
 
