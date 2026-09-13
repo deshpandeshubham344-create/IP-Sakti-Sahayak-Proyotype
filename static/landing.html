@@ -31,7 +31,13 @@
             <option value="sa">संस्कृतम्</option>
         </select>
 
-        <a href="/app" class="top-cta" id="topCta">Start Asking</a>
+       <button
+    type="button"
+    class="top-cta"
+    id="topCta"
+    onclick="openApp('ask')">
+    Start Asking
+</button>
     </div>
 </header>
 
@@ -49,16 +55,26 @@
             Ask IP and regulatory questions in multiple Indian languages and
             receive answers grounded in inspectable sources.
         </p>
-
         <div class="hero-actions">
-            <a href="/app" class="primary-cta" id="primaryCta">
-                Ask IP-SAKTI <span aria-hidden="true">→</span>
-            </a>
 
-            <a href="/app" class="secondary-cta" id="secondaryCta">
-                Explore Patents
-            </a>
-        </div>
+    <button
+        type="button"
+        class="primary-cta"
+        id="primaryCta"
+        onclick="openApp('ask')">
+        Ask IP-SAKTI
+        <span aria-hidden="true">→</span>
+    </button>
+
+    <button
+        type="button"
+        class="secondary-cta"
+        id="secondaryCta"
+        onclick="openApp('patents')">
+        Explore Patents
+    </button>
+
+</div>
 
         <div class="trust-strip" aria-label="Trust indicators">
             <div class="trust-item">
