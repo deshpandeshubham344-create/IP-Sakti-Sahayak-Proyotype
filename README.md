@@ -1,4 +1,4 @@
-# IP-SAKTI Sahayak — 2-Hour MVP Starter
+# IP-SAKTI Sahayak — Prototype
 
 This is a **working retrieval-grounded prototype** designed for the urgent SIH submission.
 
