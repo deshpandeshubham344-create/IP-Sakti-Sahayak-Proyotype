@@ -3,6 +3,8 @@ import json
 import re
 import shutil
 from typing import List, Dict, Any
+import os
+from supabase import create_client, Client
 
 from fastapi import (
     FastAPI,
@@ -31,6 +33,18 @@ UPLOADS = BASE / "data" / "uploads"
 UPLOADS.mkdir(
     parents=True,
     exist_ok=True
+)
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise RuntimeError(
+        "SUPABASE_URL and SUPABASE_KEY must be configured."
+    )
+
+supabase: Client = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
 )
 
 # ============================================================
@@ -485,7 +499,7 @@ def retrieve(
             "in": ["in", "india"],
             "uk": ["uk", "united kingdom", "gb"],
             "us": ["us", "usa", "united states"],
-            "wipo": ["wipo", "wo", "international"]
+            "wipo": [ "wipo", "wo","international","wipo/pct","international (wipo/pct)"]
         }
 
         allowed_values = jurisdiction_aliases.get(
@@ -834,62 +848,164 @@ def choose_answer(
             )
         ).strip()
 
+        # --------------------------------------------------------
+        # SHORT SOURCE-GROUNDED FALLBACK
+        # --------------------------------------------------------
+        # Uploaded documents can contain many pages of extracted
+        # text. Do not dump the entire document into the answer.
+        # Instead, select a small number of sentences that overlap
+        # with the user's query. This keeps the answer concise
+        # without inventing new facts.
+        # --------------------------------------------------------
+
+        import re
+
+        query_terms = [
+            term
+            for term in re.findall(
+                r"[A-Za-z0-9][A-Za-z0-9/-]*",
+                normalized_query.lower()
+            )
+            if len(term) > 2
+        ]
+
+        raw_sentences = re.split(
+            r"(?<=[.!?])\s+|\n{2,}",
+            source_text
+        )
+
+        sentences = []
+
+        for sentence in raw_sentences:
+
+            cleaned = re.sub(
+                r"\s+",
+                " ",
+                sentence
+            ).strip()
+
+            if cleaned:
+                sentences.append(
+                    cleaned
+                )
+
+        scored_sentences = []
+
+        for position, sentence in enumerate(sentences):
+
+            sentence_lower = sentence.lower()
+
+            score = sum(
+                1
+                for term in query_terms
+                if term in sentence_lower
+            )
+
+            scored_sentences.append(
+                (
+                    score,
+                    position,
+                    sentence
+                )
+            )
+
+        scored_sentences.sort(
+            key=lambda item: (
+                -item[0],
+                item[1]
+            )
+        )
+
+        selected_sentences = [
+            item[2]
+            for item in scored_sentences[:4]
+            if item[0] > 0
+        ]
+
+        # If no sentence directly overlaps with the query,
+        # fall back to the first few source sentences.
+        if not selected_sentences:
+            selected_sentences = sentences[:3]
+
+        short_source_text = " ".join(
+            selected_sentences[:4]
+        ).strip()
+
+        # Hard safety limit for the prototype UI.
+        if len(short_source_text) > 900:
+            short_source_text = (
+                short_source_text[:900]
+                .rsplit(" ", 1)[0]
+                + "..."
+            )
+
         fallback_answers = {
 
             "en":
                 f"The retrieved {jurisdiction_text} source "
                 f"contains a relevant provision under {section}. "
-                f"The available source states: {source_text}",
+                f"The relevant source evidence indicates: "
+                f"{short_source_text}",
 
             "hi":
                 f"प्राप्त {jurisdiction_text} स्रोत में {section} "
                 f"के अंतर्गत आपके प्रश्न से संबंधित प्रावधान मिला है। "
-                f"उपलब्ध स्रोत में कहा गया है: {source_text}",
+                f"प्रासंगिक स्रोत-साक्ष्य के अनुसार: "
+                f"{short_source_text}",
 
             "mr":
                 f"प्राप्त {jurisdiction_text} स्रोतामध्ये {section} "
                 f"अंतर्गत तुमच्या प्रश्नाशी संबंधित तरतूद आढळली. "
-                f"उपलब्ध स्रोतामध्ये असे नमूद आहे: {source_text}",
+                f"संबंधित स्रोत-साक्ष्यानुसार: "
+                f"{short_source_text}",
 
             "bn":
                 f"প্রাপ্ত {jurisdiction_text} উৎসে {section}-এর অধীনে "
                 f"আপনার প্রশ্নের সঙ্গে সম্পর্কিত একটি বিধান পাওয়া গেছে। "
-                f"উৎসে বলা হয়েছে: {source_text}",
+                f"প্রাসঙ্গিক উৎস-প্রমাণ অনুযায়ী: "
+                f"{short_source_text}",
 
             "ta":
                 f"பெறப்பட்ட {jurisdiction_text} ஆதாரத்தில் {section} "
                 f"கீழ் உங்கள் கேள்விக்கு தொடர்புடைய விதி உள்ளது. "
-                f"ஆதாரம் கூறுவது: {source_text}",
+                f"தொடர்புடைய ஆதாரத்தின் படி: "
+                f"{short_source_text}",
 
             "te":
                 f"పొందిన {jurisdiction_text} మూలంలో {section} "
                 f"కింద మీ ప్రశ్నకు సంబంధించిన నిబంధన ఉంది. "
-                f"మూలంలో ఇలా ఉంది: {source_text}",
+                f"సంబంధిత మూలాధారం ప్రకారం: "
+                f"{short_source_text}",
 
             "kn":
                 f"ಪಡೆಯಲಾದ {jurisdiction_text} ಮೂಲದಲ್ಲಿ {section} "
                 f"ಅಡಿಯಲ್ಲಿ ನಿಮ್ಮ ಪ್ರಶ್ನೆಗೆ ಸಂಬಂಧಿಸಿದ ವಿಧಿ ಇದೆ. "
-                f"ಮೂಲದಲ್ಲಿ ಹೀಗೆ ಹೇಳಲಾಗಿದೆ: {source_text}",
+                f"ಸಂಬಂಧಿತ ಮೂಲಾಧಾರದ ಪ್ರಕಾರ: "
+                f"{short_source_text}",
 
             "gu":
                 f"પ્રાપ્ત {jurisdiction_text} સ્ત્રોતમાં {section} "
                 f"હેઠળ તમારા પ્રશ્ન સાથે સંબંધિત જોગવાઈ મળી છે. "
-                f"સ્ત્રોતમાં કહેવામાં આવ્યું છે: {source_text}",
+                f"સંબંધિત સ્ત્રોત પુરાવા મુજબ: "
+                f"{short_source_text}",
 
             "ml":
                 f"ലഭിച്ച {jurisdiction_text} ഉറവിടത്തിൽ {section} "
                 f"പ്രകാരം നിങ്ങളുടെ ചോദ്യവുമായി ബന്ധപ്പെട്ട വ്യവസ്ഥയുണ്ട്. "
-                f"ഉറവിടത്തിൽ പറയുന്നത്: {source_text}",
+                f"ബന്ധപ്പെട്ട ഉറവിട തെളിവ് പ്രകാരം: "
+                f"{short_source_text}",
 
             "pa":
                 f"ਪ੍ਰਾਪਤ {jurisdiction_text} ਸਰੋਤ ਵਿੱਚ {section} "
                 f"ਅਧੀਨ ਤੁਹਾਡੇ ਸਵਾਲ ਨਾਲ ਸੰਬੰਧਿਤ ਧਾਰਾ ਮਿਲੀ ਹੈ। "
-                f"ਸਰੋਤ ਵਿੱਚ ਕਿਹਾ ਗਿਆ ਹੈ: {source_text}",
+                f"ਸੰਬੰਧਿਤ ਸਰੋਤ ਸਬੂਤ ਅਨੁਸਾਰ: "
+                f"{short_source_text}",
 
             "sa":
-                f"प्राप्ते {jurisdiction_text} -स्रोति {section} "
+                f"प्राप्ते {jurisdiction_text}-स्रोति {section} "
                 f"अन्तर्गते भवतः प्रश्नसम्बद्धा धारा प्राप्ता। "
-                f"स्रोतस्य वचनम् अस्ति: {source_text}"
+                f"सम्बद्ध-स्रोत-प्रमाणानुसारम्: "
+                f"{short_source_text}"
         }
 
         answer = fallback_answers.get(
@@ -1197,18 +1313,50 @@ async def upload_document(
         file.filename
     ).name
 
-    upload_path = UPLOADS / safe_name
-
     try:
 
-        with upload_path.open(
-            "wb"
-        ) as buffer:
+        # ----------------------------------------------------
+        # Read uploaded PDF into memory
+        # ----------------------------------------------------
 
-            shutil.copyfileobj(
-                file.file,
-                buffer
+        file_bytes = await file.read()
+
+        if not file_bytes:
+            raise HTTPException(
+                status_code=400,
+                detail="Uploaded file is empty."
             )
+
+        # ----------------------------------------------------
+        # Upload PDF to Supabase Storage
+        # ----------------------------------------------------
+
+        storage_path = (
+            f"uploads/{safe_name}"
+        )
+
+        supabase.storage \
+            .from_("ip-sakti-documents") \
+            .upload(
+                storage_path,
+                file_bytes,
+                {
+                    "content-type": "application/pdf",
+                    "upsert": "true"
+                }
+            )
+
+        # ----------------------------------------------------
+        # Get public PDF URL
+        # ----------------------------------------------------
+
+        public_url = (
+            supabase.storage
+            .from_("ip-sakti-documents")
+            .get_public_url(
+                storage_path
+            )
+        )
 
         # ----------------------------------------------------
         # Extract PDF text
@@ -1217,7 +1365,8 @@ async def upload_document(
         import fitz
 
         pdf_document = fitz.open(
-            upload_path
+            stream=file_bytes,
+            filetype="pdf"
         )
 
         pages = []
@@ -1255,7 +1404,8 @@ async def upload_document(
 
         new_document = {
 
-            "title": safe_name,
+            "title":
+                safe_name,
 
             "source":
                 authority.strip(),
@@ -1283,7 +1433,7 @@ async def upload_document(
                 ],
 
             "url":
-                f"/static/uploads/{safe_name}",
+                public_url,
 
             "status":
                 "Indexed"
@@ -1321,7 +1471,8 @@ async def upload_document(
 
         return {
 
-            "success": True,
+            "success":
+                True,
 
             "message":
                 "Source successfully indexed.",

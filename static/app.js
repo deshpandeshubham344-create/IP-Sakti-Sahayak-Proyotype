@@ -979,9 +979,35 @@ function updateEvidencePanel(index){
         [source.section, source.page]
             .filter(Boolean)
             .join(" · ") || "—";
+    
+    function getShortEvidence(text, maxSentences = 3) {
 
-    document.getElementById("passage").innerHTML =
-        `<strong>${esc(t().originalEvidence)}:</strong><br><br>${esc(source.text || "")}`;
+    if (!text) {
+        return "";
+    }
+
+    const cleaned =
+        String(text)
+            .replace(/\s+/g, " ")
+            .trim();
+
+    const sentences =
+        cleaned.match(/[^.!?]+[.!?]+/g) || [cleaned];
+
+    return sentences
+        .slice(0, maxSentences)
+        .join(" ")
+        .trim();
+}
+
+    const shortEvidence =
+    getShortEvidence(
+        source.text,
+        3
+    );
+
+document.getElementById("passage").innerHTML =
+    `<strong>${esc(t().originalEvidence)}:</strong><br><br>${esc(shortEvidence)}`;
 
     document.getElementById("localizedEvidence").innerHTML =
     source.localized_explanation

@@ -17,7 +17,8 @@
       "industrial application",
       "patentability",
       "novelty"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s3",
@@ -37,7 +38,8 @@
       "Ayurveda",
       "treatment",
       "traditional knowledge"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s3_p",
@@ -57,7 +59,8 @@
       "known properties",
       "Ayurveda",
       "patentability"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s3_d",
@@ -76,7 +79,8 @@
       "new use",
       "Ayurvedic medicine",
       "patentability"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s3_i",
@@ -95,7 +99,8 @@
       "medicinal",
       "diagnostic",
       "Ayurvedic treatment"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s8",
@@ -114,7 +119,8 @@
       "same invention",
       "foreign filing",
       "PCT"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s10",
@@ -135,7 +141,8 @@
       "biological material",
       "source",
       "geographical origin"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s25",
@@ -154,7 +161,8 @@
       "inventive step",
       "biological material",
       "traditional knowledge"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_s64",
@@ -174,7 +182,8 @@
       "insufficient disclosure",
       "traditional knowledge",
       "indigenous community"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "in_rules",
@@ -194,7 +203,8 @@
       "procedure",
       "IP India",
       "filing procedure"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "us_101",
@@ -213,7 +223,8 @@
       "composition of matter",
       "subject matter eligibility",
       "US patent"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "us_102",
@@ -232,7 +243,8 @@
       "new invention",
       "US patentability",
       "anticipation"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "us_103",
@@ -251,7 +263,8 @@
       "inventive step",
       "prior art",
       "US patentability"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "us_112",
@@ -270,7 +283,8 @@
       "enablement",
       "written description",
       "US patent application"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "uk_s1",
@@ -289,7 +303,8 @@
       "inventive step",
       "industrial application",
       "UK patent"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "uk_s2",
@@ -308,7 +323,8 @@
       "prior art",
       "priority date",
       "UK patentability"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "uk_s3",
@@ -327,7 +343,8 @@
       "skilled person",
       "state of the art",
       "UK patent"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "uk_s4",
@@ -344,7 +361,8 @@
       "industrial application",
       "agriculture",
       "UK patentability"
-    ]
+    ],
+    "document_type": "IP"
   },
   {
     "id": "wipo_pct_intro",
@@ -363,7 +381,8 @@
       "multiple countries",
       "contracting states",
       "international patent"
-    ]
+    ],
+    "document_type": "International"
   },
   {
     "id": "wipo_pct_system",
@@ -382,7 +401,8 @@
       "fees",
       "official notices",
       "international filing"
-    ]
+    ],
+    "document_type": "International"
   },
   {
     "id": "wipo_tk",
@@ -401,7 +421,8 @@
       "defensive protection",
       "Ayurveda",
       "community knowledge"
-    ]
+    ],
+    "document_type": "Traditional Knowledge"
   },
   {
     "id": "wipo_gr_tk",
@@ -420,7 +441,8 @@
       "patent applications",
       "WIPO",
       "prior art"
-    ]
+    ],
+    "document_type": "Traditional Knowledge"
   },
   {
     "title": "ayurveda_test_knowledge_source.pdf",
@@ -436,7 +458,8 @@
       "India"
     ],
     "url": "/static/uploads/ayurveda_test_knowledge_source.pdf",
-    "status": "Indexed"
+    "status": "Indexed",
+    "id": "uploaded_ayurveda_test_knowledge_source_1"
   },
   {
     "title": "ayurveda_test_knowledge_source.pdf",
@@ -452,7 +475,8 @@
       "India"
     ],
     "url": "/static/uploads/ayurveda_test_knowledge_source.pdf",
-    "status": "Indexed"
+    "status": "Indexed",
+    "id": "uploaded_ayurveda_test_knowledge_source_2"
   },
   {
     "title": "IP_SAKTI_proper_test_source_regulatory.pdf",
@@ -468,6 +492,517 @@
       "India"
     ],
     "url": "/static/uploads/IP_SAKTI_proper_test_source_regulatory.pdf",
-    "status": "Indexed"
+    "status": "Indexed",
+    "id": "uploaded_ip_sakti_regulatory_test_source"
+  },
+  {
+    "title": "patent_basics.pdf",
+    "source": "United States Patent and Trademark Office (USPTO)",
+    "authority": "United States Patent and Trademark Office (USPTO)",
+    "document_type": "IP",
+    "jurisdiction": "United States",
+    "section": "Uploaded document",
+    "text": "Patent basics presentation\nNicholas Jensen\nAcademy Supervisory Patent Examiner Trainer \nOffice of Patent Training\nMarch 1, 2024\n\nLearning objectives\n3\n• Recall the three types of patents.\n• Understand the features of a patent.\n• List three differences between a patent \nand a trade secret.\n• Determine the patent term of a \ncontinuation or divisional patent \napplication\n\nWhat is a patent?\n4\n• The right to exclude others from:\n– making, using, selling, offering for sale, \nor importing the claimed invention\n• Limited term\n• Territorial: A U.S. patent provides protection only in \nthe United States\n– No worldwide patents\n\nWhy invention matters and\nwhat this means to you\n5\nPatents can:\n•\nPromote innovation and help \nsafeguard inventions\n•\nHelp companies grow  \n•\nBenefit the community by making \nnew goods and services available\n•\nBe licensed to others so that the \ninvention can be more widely used\n\nThe patent bargain\n6\n•\nUtility and design patents give the patent owner the right to \nexclude others from making, using, importing, or selling the \ninvention for a limited time period.\n•\nA plant patent precludes others from asexually reproducing, \nselling, offering for sale, or using the patented plant or any \nof its parts in the United States or importing them into the \nUnited States.\n•\nThe inventor must fully disclose the invention so the public \ncan benefit from it and expand on it. \n35 U.S.C. § 112\n\nTypes of patents  \n7\nDesign\n\nIs the invention eligible for utility patent protection?\n8\n35 U.S.C. § 101\nprocess\nmachine \ncomposition of matter\nmanufacture\n\nProtections for plants\n9\n• Plant patents: asexually propagated plants \nexcept for edible tubers\n• Utility patents: genes, traits, methods, \nplant parts, or varieties\n• Plant variety protections:  seed, tuber, and \nasexually propagated plants (issued by \nPlant Variety Protection Office, USDA)\n\nAnatomy of a patent\n10\n•\nAbstract\n–\nA short summary of the invention.\n•\nWritten description\n–\nHow does it work? \nHow is it made or used?\n•\nDrawings\n–\nWhat does it look like?\n•\nClaims\n–\nThe claim(s) define(s) the legal \nboundaries of the invention, \nsimilar to a deed to a property.\nInvention title\nInventor’s Name\nIssue date\nFiling date\nDrawings\nAbstract\nDocuments \nreferenced by \nexaminer or applicant\n*Example only – not a real patent\n\nSample claim\n11\nClaim 1. A chair comprising:\n– a seat, \n– a back support attached to \nthe seat,\n– support arms attached to the \nseat and back support, and\n– a base comprising a plurality \nof legs attached to the seat.\n*Example only – not a real patent\n\nThe path to a patent\n12\n\nThe patent application roadmap \nBack and forth\nwith the USPTO\n13\n\nHow long does a patent last?\n14\nPatent term adjustment – the \n20-year term may be adjusted\nas a result of delays by the \nUSPTO to examine the \napplication\nPatent term extension - the \nterm may be further extended\nas a result of the regulatory \nreview process before a \nproduct can be commercially \nmarketed\nPatent term = up to 20 years \nfrom earliest filing date of \nnon-provisional application\n\nThree main options\n15\nInventors have several options when they invent something:\n•\nApply for a patent\n•\nKeep their invention as a trade secret\n•\nDisclose their invention without a patent application, which \nmakes it public and therefore, prior art.  Examples of disclosure:\n– Marketing and selling\n– Sharing videos online\n– Publishing\n– Using the invention in public spaces\n\nLet’s talk Trade Secrets!\n\nWhat is a trade secret?\n17\n• A trade secret is information that: \n– Has actual or potential independent economic \nvalue because it is generally unknown to others \n– Is valuable to others who can’t legitimately \nobtain the information, and \n– Is maintained as secret through reasonable \nefforts taken by the trade secret owner.\n\nWhat is a trade secret?\n18\n• A trade secret can be formulas or recipes, \nproduct designs, customer lists, pricing \nschedules, manufacturing techniques, and \nmarketing strategies.\n\nWhy use a trade secret?\n19\nTrade secret basics:\n–\nProtect commercially valuable proprietary information, e.g., formulas or \nbusiness information that gives a competitive advantage\n–\nTrade secrets are not generally known and must be subject to reasonable \nefforts to preserve confidentiality\nCommon ways to lose a trade secret: \n–\nFailure to take adequate steps to prevent disclosure\n–\nOwner or owner-authorized disclosure\n–\nReverse engineering\n–\nIndependent development\n\nTrade secret examples\n20\nSome famous products are or were subject to claims of trade secret protection: \n•\nCoca-Cola  \n•\nWD-40 \n•\nKentucky Fried Chicken \n•\nLena Blackburne Rubbing Mud\n•\nTwinkies\n•\nNew York Times Best Sellers list\nSome of the claimed trade secrets at the hearts of these products have been \nsecret for a long time, demonstrating the long-term benefits trade secret \nprotection can provide owners who vigilantly guard their trade secrets.\n\nPatents vs trade secrets\n21\nPatents\n•\nInformation is published and, after \nexpiration of the patent term, is in \nthe public domain\n•\nRequire an application process, \nwhich will not always result in a \ngranted patent\n•\nA key remedy for violation of patent \nrights is a suit for patent \ninfringement\nTrade secrets\n•\nCan remain a secret indefinitely\n•\nDo not require filing of an \napplication\n•\nA key remedy for violations of trade \nsecret rights is a suit for \nmisappropriation of trade secrets\n\nLet’s talk about patents\n\nPatent disclosure\n23\n• A patent application can disclose multiple \ninventions but only one will be examined \nper application.\n• Continuing or divisional patent \napplications may be used to claim \nadditional features or inventions disclosed \nin the earlier application.\n\nMultiple inventions per product\n24\nA product\ncan be \ncovered by \nmore than \none patent.\nOriginal application\nDisclosure\nActive \ningredient\nFormulation\nMethod of \nmaking drug\nClaims\nActive \ningredient\nDivisional application\nDisclosure\nActive \ningredient\nFormulation\nMethod of \nmaking drug\nClaims\nFormulation\nDivisional  application\nDisclosure\nActive \ningredient\nFormulation\nMethod of \nmaking drug\nClaims\nMethod of \nmaking drug\n\n25\nImportant fact\nContinuation applications \ndo not extend the term of \nprotection on an \ninvention\nOriginal Patent \nApplication Filed\n20 years\nOriginal Patent \nGranted\nContinuation \nApplication Filed\nPatent Granted\nBoth Patents \nExpire\n\nContinuing and divisional applications\n26\n•\nA continuation application is an application for the invention(s) \ndisclosed in a prior-filed co-pending application\n•\nThe disclosure presented in the continuation must not include \nany new subject matter\n•\nPatents on continuation and divisional applications do not extend \nthe term of patent protection of an invention (both patents expire \n20 years from the earliest filing date)\n\nLater-filed applications\n27\nLater-filed continuation or divisional applications (“child” \napplication) may claim the benefit of earlier application \n(“parent” application) if the parent application is still \npending\nChild #1\nApplication Filed\nParent \nApplication Filed\nJanuary 28, 2011\nAugust 31, 2012\nMay 19, 2014                 February 6, 2015\nChild #2\nApplication Filed\nPatent Granted from \nParent\n\nContinuum of innovation\n28\nExample: addition of a coffee grinder to a coffee machine\nLater-filed patent applications that are new and non-\nobvious over previously patented inventions, and area not a \ncontinuation or divisional of a previously filed application, \ncould lead to a new patent term.\nLater improvements on a \npatented invention may be \nentitled to a new patent\n\nThank you!\nwww.uspto.gov\nImages used in this presentation are for educational purposes only.\nNicholas Jensen\nAcademy Supervisory \nPatent Examiner Trainer",
+    "keywords": [
+      "United States Patent and Trademark Office (USPTO)",
+      "IP",
+      "United States"
+    ],
+    "url": "https://wmuxlsntvngbbnzglrsq.supabase.co/storage/v1/object/public/ip-sakti-documents/uploads/patent_basics.pdf",
+    "status": "Indexed",
+    "id": "uploaded_uspto_patent_basics"
+  },
+  {
+    "id": "uk_patentability_section_1",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 1",
+    "section": "Section 1(1)",
+    "page": "Web section",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-1-patentable-inventions",
+    "text": "A patent may be granted only for an invention that is new, involves an inventive step, is capable of industrial application, and is not excluded by the Act.",
+    "keywords": [
+      "UK patent",
+      "patentability",
+      "new",
+      "novelty",
+      "inventive step",
+      "industrial application",
+      "patent"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "uk_patent_novelty_section_2",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 2",
+    "section": "Section 2(1)",
+    "page": "Web section",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-2-novelty",
+    "text": "An invention is new if it does not form part of the state of the art. The state of the art includes matter made available to the public before the priority date.",
+    "keywords": [
+      "UK patent",
+      "novelty",
+      "new invention",
+      "state of the art",
+      "prior art",
+      "patentability"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "uk_patent_inventive_step_section_3",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 3",
+    "section": "Section 3",
+    "page": "Web section",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-3-inventive-step",
+    "text": "An invention involves an inventive step if it is not obvious to a person skilled in the art, having regard to the relevant state of the art.",
+    "keywords": [
+      "UK patent",
+      "inventive step",
+      "obvious",
+      "person skilled in the art",
+      "patentability"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "uk_patent_industrial_application_section_4",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Patents Act 1977 — Section 4",
+    "section": "Section 4(1)",
+    "page": "Web section",
+    "url": "https://www.gov.uk/guidance/the-patent-act-1977/section-4-industrial-application",
+    "text": "An invention is capable of industrial application if it can be made or used in any kind of industry, including agriculture.",
+    "keywords": [
+      "UK patent",
+      "industrial application",
+      "industry",
+      "agriculture",
+      "patentability"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "uk_trademark_definition",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "UK Intellectual Property Office",
+    "title": "Trade Marks Act 1994 — Section 1",
+    "section": "Section 1(1)",
+    "page": "Web section",
+    "url": "https://www.gov.uk/guidance/trade-marks-manual/the-examination-guide",
+    "text": "A trade mark is a sign capable of being represented in the register and capable of distinguishing the goods or services of one undertaking from those of other undertakings.",
+    "keywords": [
+      "UK trademark",
+      "trade mark",
+      "brand",
+      "logo",
+      "distinguishing goods",
+      "distinguishing services",
+      "trademark registration"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "us_patent_section_101",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "United States Code",
+    "title": "35 U.S.C. § 101 — Inventions Patentable",
+    "section": "35 U.S.C. § 101",
+    "page": "Web section",
+    "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title35-section101",
+    "text": "A person who invents or discovers a new and useful process, machine, manufacture, or composition of matter, or a new and useful improvement thereof, may obtain a patent subject to the requirements of the patent laws.",
+    "keywords": [
+      "US patent",
+      "patentable subject matter",
+      "process",
+      "machine",
+      "manufacture",
+      "composition of matter",
+      "patentability"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "us_patent_section_102",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "United States Code",
+    "title": "35 U.S.C. § 102 — Novelty",
+    "section": "35 U.S.C. § 102",
+    "page": "Web section",
+    "url": "https://uscode.house.gov/view.xhtml?edition=prelim&req=granuleid:USC-prelim-title35-section102",
+    "text": "A claimed invention is not entitled to a patent when the relevant invention was patented, described in a printed publication, in public use, on sale, or otherwise available to the public before the effective filing date, subject to statutory exceptions.",
+    "keywords": [
+      "US patent",
+      "novelty",
+      "prior art",
+      "public use",
+      "publication",
+      "patentability"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "us_patent_section_103",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "United States Code",
+    "title": "35 U.S.C. § 103 — Non-Obvious Subject Matter",
+    "section": "35 U.S.C. § 103",
+    "page": "Web section",
+    "url": "https://uscode.house.gov/view.xhtml?edition=prelim&req=granuleid:USC-prelim-title35-section103",
+    "text": "A patent may not be obtained when the differences between the claimed invention and the prior art would have made the invention obvious to a person having ordinary skill in the art.",
+    "keywords": [
+      "US patent",
+      "non-obviousness",
+      "obviousness",
+      "prior art",
+      "patentability",
+      "person having ordinary skill in the art"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "us_patent_section_112",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "United States Code",
+    "title": "35 U.S.C. § 112 — Specification",
+    "section": "35 U.S.C. § 112",
+    "page": "Web section",
+    "url": "https://uscode.house.gov/view.xhtml?req=(title:35%20section:112%20edition:prelim)",
+    "text": "The specification must contain a written description of the invention and explain how to make and use it in clear and sufficient terms, and the specification must conclude with one or more claims defining the invention.",
+    "keywords": [
+      "US patent",
+      "specification",
+      "written description",
+      "claims",
+      "enablement",
+      "patent application"
+    ],
+    "document_type": "IP"
+  },
+  {
+    "id": "wipo_pct_overview",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "World Intellectual Property Organization (WIPO)",
+    "title": "Patent Cooperation Treaty — System Overview",
+    "section": "PCT System Overview",
+    "page": "Web section",
+    "url": "https://www.wipo.int/en/web/pct-system/introduction",
+    "text": "The PCT system allows an applicant to file one international patent application that has the same legal effect as filing separate national applications in PCT Contracting States, followed by international search and other international-phase procedures.",
+    "keywords": [
+      "WIPO",
+      "PCT",
+      "international patent",
+      "international application",
+      "patent protection",
+      "Contracting States"
+    ],
+    "document_type": "International"
+  },
+  {
+    "id": "wipo_pct_international_search",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "World Intellectual Property Organization (WIPO)",
+    "title": "PCT — International Search",
+    "section": "International Search Stage",
+    "page": "Web section",
+    "url": "https://www.wipo.int/en/web/pct-system/texts/ispe/1_09_12",
+    "text": "During the international phase, an international search is carried out and results in an international search report and a written opinion relating to the patentability of the claimed invention.",
+    "keywords": [
+      "WIPO",
+      "PCT",
+      "international search",
+      "search report",
+      "written opinion",
+      "patentability"
+    ],
+    "document_type": "International"
+  },
+  {
+    "id": "wipo_pct_national_phase",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "World Intellectual Property Organization (WIPO)",
+    "title": "PCT — National Phase",
+    "section": "National Phase",
+    "page": "Web section",
+    "url": "https://www.wipo.int/en/web/pct-system/introduction",
+    "text": "After the international phase, the applicant may decide in which countries the application should proceed to the national phase, where the relevant national Offices determine whether a patent can be granted.",
+    "keywords": [
+      "WIPO",
+      "PCT",
+      "national phase",
+      "patent application",
+      "national offices",
+      "international patent"
+    ],
+    "document_type": "International"
+  },
+  {
+    "id": "in_ayu_traditional_drugs",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "CDSCO",
+    "title": "Traditional Drugs — Ayurveda, Siddha and Unani",
+    "section": "Traditional Drugs",
+    "page": "Web section",
+    "url": "https://www.cdsco.gov.in/opencms/opencms/en/Traditional_Drugs/",
+    "text": "CDSCO explains that Ayurvedic, Siddha or Unani drugs are medicines intended for internal or external use for diagnosis, treatment, mitigation or prevention of disease or disorder and manufactured according to the authoritative books specified in the legal framework.",
+    "keywords": [
+      "Ayurveda",
+      "Ayurvedic drugs",
+      "traditional drugs",
+      "Siddha",
+      "Unani",
+      "CDSCO",
+      "Drugs and Cosmetics Act",
+      "regulation"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "in_ayu_manufacture_rules",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "CDSCO",
+    "title": "Drugs and Cosmetics Rules, 1945 — Manufacture of Ayurvedic Drugs",
+    "section": "Part XVI",
+    "page": "Rules resource",
+    "url": "https://www.cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/Ethics-Committee/Guideline-Document/Drugs_CosmeticsAct1940_Rules1945.pdf",
+    "text": "The Drugs and Cosmetics Rules, 1945 contain provisions governing the manufacture for sale of Ayurvedic, Siddha and Unani drugs, including requirements associated with licensing and manufacturing premises.",
+    "keywords": [
+      "Ayurvedic medicine",
+      "manufacture",
+      "manufacturing licence",
+      "Part XVI",
+      "Drugs Rules",
+      "CDSCO",
+      "ASU drugs"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "in_ayu_labelling_rules",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "CDSCO",
+    "title": "Drugs and Cosmetics Rules, 1945 — Labelling and Packaging of Ayurvedic Drugs",
+    "section": "Part XVII",
+    "page": "Rules resource",
+    "url": "https://www.cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/Ethics-Committee/Guideline-Document/Drugs_CosmeticsAct1940_Rules1945.pdf",
+    "text": "The Drugs and Cosmetics Rules, 1945 contain provisions concerning labelling, packing and specified requirements for Ayurvedic, Siddha and Unani drugs.",
+    "keywords": [
+      "Ayurvedic medicine",
+      "labelling",
+      "label",
+      "packaging",
+      "packing",
+      "ASU drugs",
+      "CDSCO"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "in_ayu_license_evidence",
+    "jurisdiction": "India",
+    "jurisdiction_code": "IN",
+    "source": "CDSCO",
+    "title": "Drugs and Cosmetics Rules, 1945 — Licensing of Ayurveda, Siddha and Unani Drugs",
+    "section": "Rule 158B",
+    "page": "Rules resource",
+    "url": "https://www.cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/Ethics-Committee/Guideline-Document/Drugs_CosmeticsAct1940_Rules1945.pdf",
+    "text": "Rule 158B sets out categories and licensing-related requirements for Ayurveda, Siddha and Unani medicines, including requirements concerning safety studies and evidence of effectiveness for specified categories.",
+    "keywords": [
+      "Rule 158B",
+      "licence",
+      "licensing",
+      "Ayurveda",
+      "Siddha",
+      "Unani",
+      "safety study",
+      "evidence of effectiveness",
+      "ASU medicine"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "uk_traditional_herbal_medicines",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "Medicines and Healthcare products Regulatory Agency (MHRA)",
+    "title": "Traditional Herbal Medicines",
+    "section": "Traditional Herbal Registration",
+    "page": "GOV.UK guidance",
+    "url": "https://www.gov.uk/guidance/herbal-medicines",
+    "text": "The UK has a traditional herbal registration route for certain herbal medicinal products. The route is intended for products with an established traditional use and requires compliance with applicable quality, safety and registration requirements.",
+    "keywords": [
+      "UK",
+      "herbal medicine",
+      "traditional herbal medicine",
+      "MHRA",
+      "traditional herbal registration",
+      "medicinal product",
+      "Ayurvedic medicine"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "uk_food_supplement_claims",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_code": "UK",
+    "source": "GOV.UK",
+    "title": "Food Supplements, Nutrition and Health Claims",
+    "section": "Nutrition and health claims",
+    "page": "GOV.UK guidance",
+    "url": "https://www.gov.uk/food-labelling-and-packaging/nutrition-health-claims-and-supplement-labelling",
+    "text": "Food supplements sold in the UK are subject to food-labelling and health-claim requirements. A food product cannot claim or imply that it can treat, prevent or cure a disease or medical condition.",
+    "keywords": [
+      "UK",
+      "food supplement",
+      "health claim",
+      "nutrition claim",
+      "labelling",
+      "disease claim",
+      "herbal supplement"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "us_dietary_supplements",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "U.S. Food and Drug Administration (FDA)",
+    "title": "Dietary Supplements — Regulatory Overview",
+    "section": "Dietary Supplement Regulation",
+    "page": "FDA guidance",
+    "url": "https://www.fda.gov/food/dietary-supplements",
+    "text": "Dietary supplements are regulated under the Federal Food, Drug, and Cosmetic Act and related FDA requirements. Applicable requirements include provisions concerning product composition, manufacturing, labelling and claims.",
+    "keywords": [
+      "US",
+      "FDA",
+      "dietary supplement",
+      "herbal supplement",
+      "supplement regulation",
+      "labelling",
+      "claims"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "us_supplement_label_claims",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "U.S. Food and Drug Administration (FDA)",
+    "title": "Label Claims for Food and Dietary Supplements",
+    "section": "Health, Nutrient Content and Structure/Function Claims",
+    "page": "FDA guidance",
+    "url": "https://www.fda.gov/food/nutrition-food-labeling-and-critical-foods/label-claims-food-dietary-supplements",
+    "text": "FDA recognizes health claims, nutrient content claims and structure/function claims for foods and dietary supplements. Different regulatory requirements apply to each category of claim.",
+    "keywords": [
+      "US",
+      "FDA",
+      "dietary supplement",
+      "health claim",
+      "nutrient content claim",
+      "structure/function claim",
+      "labelling"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "us_structure_function_claims",
+    "jurisdiction": "United States",
+    "jurisdiction_code": "US",
+    "source": "U.S. Food and Drug Administration (FDA)",
+    "title": "Structure/Function Claims for Dietary Supplements",
+    "section": "Structure/Function Claims",
+    "page": "FDA guidance",
+    "url": "https://www.fda.gov/food/nutrition-food-labeling-and-critical-foods/structurefunction-claims",
+    "text": "Structure/function claims describe the role of a nutrient or dietary ingredient in affecting the normal structure or function of the human body. Certain such claims are subject to specific labelling and notification requirements.",
+    "keywords": [
+      "US",
+      "FDA",
+      "structure/function claim",
+      "dietary ingredient",
+      "dietary supplement",
+      "labelling",
+      "notification"
+    ],
+    "document_type": "Regulatory"
+  },
+  {
+    "id": "wipo_traditional_knowledge",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "World Intellectual Property Organization (WIPO)",
+    "title": "Traditional Knowledge and Intellectual Property",
+    "section": "Traditional Knowledge",
+    "page": "WIPO resources",
+    "url": "https://www.wipo.int/en/web/traditional-knowledge/resources/publications",
+    "text": "WIPO provides resources on intellectual property and traditional knowledge, including traditional medical knowledge, protection approaches, access and benefit-sharing, and disclosure issues.",
+    "keywords": [
+      "WIPO",
+      "traditional knowledge",
+      "traditional medical knowledge",
+      "intellectual property",
+      "Ayurveda",
+      "disclosure"
+    ],
+    "document_type": "Traditional Knowledge"
+  },
+  {
+    "id": "wipo_traditional_knowledge_databases",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "World Intellectual Property Organization (WIPO)",
+    "title": "Traditional Knowledge and Genetic Resources Databases",
+    "section": "TK and Genetic Resources Databases",
+    "page": "WIPO resources",
+    "url": "https://www.wipo.int/en/web/traditional-knowledge/resources/db_registry",
+    "text": "WIPO maintains information about databases and registries of traditional knowledge and genetic resources maintained by member states and other organizations.",
+    "keywords": [
+      "WIPO",
+      "traditional knowledge",
+      "genetic resources",
+      "databases",
+      "registries",
+      "prior art"
+    ],
+    "document_type": "Traditional Knowledge"
+  },
+  {
+    "id": "wipo_madrid_system",
+    "jurisdiction": "International (WIPO/PCT)",
+    "jurisdiction_code": "WIPO",
+    "source": "World Intellectual Property Organization (WIPO)",
+    "title": "Madrid System — International Trademark Protection",
+    "section": "International Trademark System",
+    "page": "WIPO web page",
+    "url": "https://www.wipo.int/en/web/madrid-system",
+    "text": "The Madrid System provides a centralized system for filing and managing international trademark registrations. National or regional intellectual property offices decide whether protection can be granted in each designated territory under applicable law.",
+    "keywords": [
+      "WIPO",
+      "Madrid System",
+      "international trademark",
+      "trademark registration",
+      "global trademark",
+      "brand protection"
+    ],
+    "document_type": "International"
   }
 ]
