@@ -972,8 +972,8 @@ function updateEvidencePanel(index){
     document.getElementById("documentValue").textContent =
         source.title || "—";
 
-    document.getElementById("resultJurisdiction").textContent =
-        "India";
+   document.getElementById("resultJurisdiction").textContent =
+    source.jurisdiction || "—";
 
     document.getElementById("sectionValue").textContent =
         [source.section, source.page]
