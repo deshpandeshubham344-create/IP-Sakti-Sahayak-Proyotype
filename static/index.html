@@ -947,44 +947,42 @@
     <!-- ======================================================
          VERIFY MODAL
          ====================================================== -->
+        <div 
+    id="verifyModal" 
+    class="modal-overlay hidden" 
+    onclick="closeVerifyModal(event)">
 
-    <div
-        id="verifyModal"
-        class="modal-overlay hidden"
-        onclick="closeVerifyModal(event)">
+    <div class="modal">
 
-        <div class="modal">
+        <h3 id="verifyModalTitle">
+            Evidence Verification
+        </h3>
 
-    <h3 id="verifyModalTitle">
-        Evidence Verification
-    </h3>
+        <div class="verify-scroll">
 
-    <div class="verify-scroll">
+            <div
+                id="verifyModalBody"
+                class="passage">
+            </div>
 
-        <div
-            id="verifyModalBody"
-            class="passage">
+            <div
+                id="verifyModalLocalized"
+                class="localized">
+            </div>
+
         </div>
 
-        <div
-            id="verifyModalLocalized"
-            class="localized">
+        <div class="modal-actions">
+
+            <button
+                class="primary"
+                onclick="closeVerifyModal()"
+                id="verifyCloseButton">
+                Close
+            </button>
+
         </div>
 
-    </div>
-
-    <div class="modal-actions">
-
-        <button
-            class="primary"
-            onclick="closeVerifyModal()"
-            id="verifyCloseButton">
-            Close
-        </button>
-
-    </div>
-
-</div>
     </div>
 
 </div>
