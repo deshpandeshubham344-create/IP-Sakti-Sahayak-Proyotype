@@ -422,10 +422,9 @@
                             </div>
 
 
-                            <p
-                                id="answerText"
-                                class="answer-text">
-                            </p>
+                            <div class="answer-scroll">
+    <p id="answerText" class="answer-text"></p>
+</div>
 
 
                             <div
@@ -512,27 +511,29 @@
                             </div>
 
 
-                            <div class="supporting">
+                           <div class="supporting">
 
-                                <div
-                                    class="supporting-title"
-                                    id="supportingTitle">
-                                    Supporting passage
-                                </div>
+    <div
+        class="supporting-title"
+        id="supportingTitle">
+        Supporting passage
+    </div>
 
-                                <div
-                                    id="passage"
-                                    class="passage">
-                                </div>
+    <div class="evidence-scroll">
 
-                                <div
-                                    id="localizedEvidence"
-                                    class="localized">
-                                </div>
+        <div
+            id="passage"
+            class="passage">
+        </div>
 
+        <div
+            id="localizedEvidence"
+            class="localized">
+        </div>
 
-                                <div class="source-actions">
+    </div>
 
+    <div class="source-actions">
                                     <button
                                         id="viewSourceButton"
                                         class="source-button"
@@ -954,33 +955,36 @@
 
         <div class="modal">
 
-            <h3 id="verifyModalTitle">
-                Evidence Verification
-            </h3>
+    <h3 id="verifyModalTitle">
+        Evidence Verification
+    </h3>
 
-            <div
-                id="verifyModalBody"
-                class="passage">
-            </div>
+    <div class="verify-scroll">
 
-            <div
-                id="verifyModalLocalized"
-                class="localized">
-            </div>
-
-            <div class="modal-actions">
-
-                <button
-                    class="primary"
-                    onclick="closeVerifyModal()"
-                    id="verifyCloseButton">
-                    Close
-                </button>
-
-            </div>
-
+        <div
+            id="verifyModalBody"
+            class="passage">
         </div>
 
+        <div
+            id="verifyModalLocalized"
+            class="localized">
+        </div>
+
+    </div>
+
+    <div class="modal-actions">
+
+        <button
+            class="primary"
+            onclick="closeVerifyModal()"
+            id="verifyCloseButton">
+            Close
+        </button>
+
+    </div>
+
+</div>
     </div>
 
 </div>
