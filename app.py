@@ -1,3 +1,4 @@
+from google import genai
 from pathlib import Path
 import json
 import re
@@ -36,6 +37,17 @@ UPLOADS.mkdir(
 )
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    raise RuntimeError(
+        "GEMINI_API_KEY must be configured."
+    )
+
+gemini_client = genai.Client(
+    api_key=GEMINI_API_KEY
+)
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise RuntimeError(
@@ -1206,7 +1218,89 @@ def extract_concepts(text: str) -> List[str]:
 
     return concepts[:3]
 
+# ============================================================
+# GEMINI TRANSLATION LAYER
+# ============================================================
 
+LANGUAGE_NAMES = {
+    "en": "English",
+    "hi": "Hindi",
+    "mr": "Marathi",
+    "bn": "Bengali",
+    "ta": "Tamil",
+    "te": "Telugu",
+    "kn": "Kannada",
+    "gu": "Gujarati",
+    "ml": "Malayalam",
+    "pa": "Punjabi",
+    "sa": "Sanskrit",
+}
+
+
+def translate_text(
+    text: str,
+    target_language: str,
+) -> str:
+
+    if not text:
+        return ""
+
+    if target_language == "en":
+        return text
+
+    language_name = LANGUAGE_NAMES.get(
+        target_language,
+        "English"
+    )
+
+    prompt = f"""
+Translate the following text into {language_name}.
+
+Rules:
+- Translate only.
+- Do not summarize.
+- Do not explain.
+- Do not add facts.
+- Do not remove facts.
+- Preserve legal meaning.
+- Preserve section numbers, subsection numbers, citations,
+  patent numbers, names, dates, percentages, URLs and technical terms.
+- Do not change or invent legal terminology.
+- If the text is already in {language_name}, return it unchanged.
+- Return ONLY the translated text.
+
+Text:
+{text}
+"""
+
+    try:
+
+        response = gemini_client.models.generate_content(
+        model="gemini-3.5-flash-lite",
+        contents=prompt,
+    )
+
+        translated = (response.text or "").strip()
+        print("TARGET LANGUAGE:", target_language)
+        print("GEMINI RESPONSE:", translated)
+
+
+        if translated:
+            return translated
+
+        return text
+
+    except Exception as exc:
+
+        print(
+            f"Gemini translation failed "
+            f"for {target_language}: {exc}"
+        )
+
+        # Never break the existing prototype
+        # if the translation service is unavailable.
+        return text
+        
 def search_patents(
     innovation: str,
     jurisdiction: str = "IN",
@@ -1352,7 +1446,8 @@ def health():
         "languages": SUPPORTED_LANGUAGES,
         "jurisdictions": SUPPORTED_JURISDICTIONS,
         "generator": "local evidence-grounded synthesizer",
-        "llm": False,
+        "llm": True,
+        "llm_usage": "translation-only",
         "patent_search": "TF-IDF cosine similarity",
     }
 
@@ -1672,27 +1767,45 @@ def chat(req: ChatRequest):
 
     answer = choose_answer(
     normalized_query,
-    language,
+    "en",
     hits,
     jurisdiction
 )
+
+# ------------------------------------------------------------
+# GEMINI TRANSLATION
+# ------------------------------------------------------------
+
+    translated_answer = translate_text(
+        answer,
+        language
+    )
+
     localized_sources = []
 
     for hit in hits:
 
         item = dict(hit)
 
-        item["localized_explanation"] = (
-            get_localized_explanation(
-                hit.get("section", ""),
-                language
-            )
+        # Existing predefined localized explanation
+        existing_localized = get_localized_explanation(
+            hit.get("section", ""),
+            language
         )
+
+        # Translate the actual retrieved evidence passage
+        translated_evidence = translate_text(
+            str(hit.get("text", "")).strip(),
+            language
+        )
+
+        item["localized_explanation"] = existing_localized
+        item["translated_evidence"] = translated_evidence
 
         localized_sources.append(item)
 
     return {
-        "answer": answer,
+        "answer": translated_answer,
         "detected_language": language,
         "language_name": SUPPORTED_LANGUAGES[language],
         "jurisdiction": jurisdiction,

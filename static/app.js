@@ -35,6 +35,12 @@ const translations = {
             "How is traditional knowledge considered in patent examination?",
             "What IP protection may apply to an Ayurveda product?"
         ],
+        jurisdictions:[
+    "India",
+    "United States",
+    "United Kingdom",
+    "International (WIPO/PCT)"
+],
         understanding:"Understanding your query",
         language:"Language",
         intent:"Intent",
@@ -117,6 +123,12 @@ const translations = {
             "पेटेंट परीक्षा में पारंपरिक ज्ञान को कैसे माना जाता है?",
             "आयुर्वेद उत्पाद पर कौन सा IP संरक्षण लागू हो सकता है?"
         ],
+        jurisdictions:[
+    "भारत",
+    "संयुक्त राज्य अमेरिका",
+    "यूनाइटेड किंगडम",
+    "अंतरराष्ट्रीय (WIPO/PCT)"
+],
         understanding:"आपके प्रश्न को समझा जा रहा है",language:"भाषा",intent:"उद्देश्य",ipType:"IP प्रकार",jurisdictionKey:"अधिकार क्षेत्र",
         steps:["प्रश्न को समझना","प्रश्न को पुनर्गठित करना","आधिकारिक स्रोत खोजना","हाइब्रिड रिट्रीवल","प्रमाणों की रैंकिंग","ग्राउंडेड उत्तर बनाना","उद्धरण सत्यापित करना"],
         answer:"✦ IP-SAKTI उत्तर",understood:"समझा गया",
@@ -157,6 +169,12 @@ const translations = {
             "पेटंट परीक्षेत पारंपरिक ज्ञानाचा कसा विचार केला जातो?",
             "आयुर्वेद उत्पादनाला कोणते IP संरक्षण लागू होऊ शकते?"
         ],
+        jurisdictions:[
+    "भारत",
+    "अमेरिका",
+    "युनायटेड किंगडम",
+    "आंतरराष्ट्रीय (WIPO/PCT)"
+],
         understanding:"आपला प्रश्न समजून घेतला जात आहे",language:"भाषा",intent:"उद्देश",ipType:"IP प्रकार",jurisdictionKey:"अधिकार क्षेत्र",
         steps:["प्रश्न समजून घेणे","प्रश्नाची पुनर्रचना","अधिकृत स्रोत शोधणे","हायब्रिड रिट्रीव्हल","पुराव्यांची रँकिंग","ग्राउंडेड उत्तर तयार करणे","उद्धरणे पडताळणे"],
         answer:"✦ IP-SAKTI उत्तर",understood:"समजलेले",
@@ -292,6 +310,7 @@ let activeSourceIndex = 0;
 let currentPatent = null;
 let lastQuestion = "";
 let currentJurisdiction = "IN";
+let lastSelectedSuggestionIndex = null;
 
 
 /* ============================================================
@@ -322,44 +341,277 @@ function languageName(code){
     return names[code] || "English";
 }
 
+function getLocalizedLanguageName(code){
+
+    const names = {
+
+        en: "English",
+
+        hi: "हिंदी",
+
+        mr: "मराठी",
+
+        bn: "বাংলা",
+
+        ta: "தமிழ்",
+
+        te: "తెలుగు",
+
+        kn: "ಕನ್ನಡ",
+
+        gu: "ગુજરાતી",
+
+        ml: "മലയാളം",
+
+        pa: "ਪੰਜਾਬੀ",
+
+        sa: "संस्कृत"
+    };
+
+    return names[code] || names.en;
+}
+
+function getLocalizedMeta(meta){
+
+    const labels = {
+
+        en: {
+            intent: {
+                "Patentability": "Patentability",
+                "IP Protection": "IP Protection",
+                "Traditional Knowledge": "Traditional Knowledge",
+                "Regulatory / Treatment": "Regulatory / Treatment",
+                "General IP": "General IP"
+            },
+            ipType: {
+                "Patent": "Patent",
+                "Trademark": "Trademark",
+                "Design": "Design",
+                "Other": "Other"
+            }
+        },
+
+        hi: {
+            intent: {
+                "Patentability": "पेटेंट योग्यता",
+                "IP Protection": "आईपी संरक्षण",
+                "Traditional Knowledge": "पारंपरिक ज्ञान",
+                "Regulatory / Treatment": "नियामक / उपचार",
+                "General IP": "सामान्य आईपी"
+            },
+            ipType: {
+                "Patent": "पेटेंट",
+                "Trademark": "ट्रेडमार्क",
+                "Design": "डिज़ाइन",
+                "Other": "अन्य"
+            }
+        },
+
+        mr: {
+            intent: {
+                "Patentability": "पेटंटयोग्यता",
+                "IP Protection": "बौद्धिक संपदा संरक्षण",
+                "Traditional Knowledge": "पारंपरिक ज्ञान",
+                "Regulatory / Treatment": "नियामक / उपचार",
+                "General IP": "सामान्य बौद्धिक संपदा"
+            },
+            ipType: {
+                "Patent": "पेटंट",
+                "Trademark": "ट्रेडमार्क",
+                "Design": "डिझाइन",
+                "Other": "इतर"
+            }
+        },
+
+        bn: {
+            intent: {
+                "Patentability": "পেটেন্টযোগ্যতা",
+                "IP Protection": "মেধাস্বত্ব সুরক্ষা",
+                "Traditional Knowledge": "প্রথাগত জ্ঞান",
+                "Regulatory / Treatment": "নিয়ন্ত্রক / চিকিৎসা",
+                "General IP": "সাধারণ মেধাস্বত্ব"
+            },
+            ipType: {
+                "Patent": "পেটেন্ট",
+                "Trademark": "ট্রেডমার্ক",
+                "Design": "ডিজাইন",
+                "Other": "অন্যান্য"
+            }
+        },
+
+        te: {
+            intent: {
+                "Patentability": "పేటెంట్ పొందే అర్హత",
+                "IP Protection": "మేధో సంపత్తి రక్షణ",
+                "Traditional Knowledge": "సాంప్రదాయ జ్ఞానం",
+                "Regulatory / Treatment": "నియంత్రణ / చికిత్స",
+                "General IP": "సాధారణ మేధో సంపత్తి"
+            },
+            ipType: {
+                "Patent": "పేటెంట్",
+                "Trademark": "ట్రేడ్‌మార్క్",
+                "Design": "డిజైన్",
+                "Other": "ఇతర"
+            }
+        },
+
+        ta: {
+            intent: {
+                "Patentability": "காப்புரிமை பெறும் தகுதி",
+                "IP Protection": "அறிவுசார் சொத்து பாதுகாப்பு",
+                "Traditional Knowledge": "பாரம்பரிய அறிவு",
+                "Regulatory / Treatment": "ஒழுங்குமுறை / சிகிச்சை",
+                "General IP": "பொதுவான அறிவுசார் சொத்து"
+            },
+            ipType: {
+                "Patent": "காப்புரிமை",
+                "Trademark": "வர்த்தக முத்திரை",
+                "Design": "வடிவமைப்பு",
+                "Other": "பிற"
+            }
+        },
+
+        kn: {
+            intent: {
+                "Patentability": "ಪೇಟೆಂಟ್ ಪಡೆಯುವ ಅರ್ಹತೆ",
+                "IP Protection": "ಬೌದ್ಧಿಕ ಆಸ್ತಿ ರಕ್ಷಣೆ",
+                "Traditional Knowledge": "ಸಾಂಪ್ರದಾಯಿಕ ಜ್ಞಾನ",
+                "Regulatory / Treatment": "ನಿಯಂತ್ರಣ / ಚಿಕಿತ್ಸೆ",
+                "General IP": "ಸಾಮಾನ್ಯ ಬೌದ್ಧಿಕ ಆಸ್ತಿ"
+            },
+            ipType: {
+                "Patent": "ಪೇಟೆಂಟ್",
+                "Trademark": "ಟ್ರೇಡ್‌ಮಾರ್ಕ್",
+                "Design": "ವಿನ್ಯಾಸ",
+                "Other": "ಇತರೆ"
+            }
+        },
+
+        gu: {
+            intent: {
+                "Patentability": "પેટન્ટ યોગ્યતા",
+                "IP Protection": "બૌદ્ધિક સંપદા સુરક્ષા",
+                "Traditional Knowledge": "પરંપરાગત જ્ઞાન",
+                "Regulatory / Treatment": "નિયમનકારી / સારવાર",
+                "General IP": "સામાન્ય બૌદ્ધિક સંપદા"
+            },
+            ipType: {
+                "Patent": "પેટન્ટ",
+                "Trademark": "ટ્રેડમાર્ક",
+                "Design": "ડિઝાઇન",
+                "Other": "અન્ય"
+            }
+        },
+
+        ml: {
+            intent: {
+                "Patentability": "പേറ്റന്റ് യോഗ്യത",
+                "IP Protection": "ബൗദ്ധിക സ്വത്തവകാശ സംരക്ഷണം",
+                "Traditional Knowledge": "പരമ്പരാഗത അറിവ്",
+                "Regulatory / Treatment": "നിയന്ത്രണം / ചികിത്സ",
+                "General IP": "പൊതുവായ ബൗദ്ധിക സ്വത്ത്"
+            },
+            ipType: {
+                "Patent": "പേറ്റന്റ്",
+                "Trademark": "ട്രേഡ്മാർക്ക്",
+                "Design": "ഡിസൈൻ",
+                "Other": "മറ്റുള്ളവ"
+            }
+        },
+
+        pa: {
+            intent: {
+                "Patentability": "ਪੇਟੈਂਟ ਯੋਗਤਾ",
+                "IP Protection": "ਬੌਧਿਕ ਸੰਪਤੀ ਸੁਰੱਖਿਆ",
+                "Traditional Knowledge": "ਰਵਾਇਤੀ ਗਿਆਨ",
+                "Regulatory / Treatment": "ਨਿਯਮਕ / ਇਲਾਜ",
+                "General IP": "ਆਮ ਬੌਧਿਕ ਸੰਪਤੀ"
+            },
+            ipType: {
+                "Patent": "ਪੇਟੈਂਟ",
+                "Trademark": "ਟ੍ਰੇਡਮਾਰਕ",
+                "Design": "ਡਿਜ਼ਾਈਨ",
+                "Other": "ਹੋਰ"
+            }
+        },
+
+        sa: {
+            intent: {
+                "Patentability": "पेटेण्ट-योग्यता",
+                "IP Protection": "बौद्धिकसम्पत्तिरक्षणम्",
+                "Traditional Knowledge": "पारम्परिकज्ञानम्",
+                "Regulatory / Treatment": "नियामक / चिकित्सा",
+                "General IP": "सामान्य बौद्धिकसम्पत्तिः"
+            },
+            ipType: {
+                "Patent": "पेटेण्ट",
+                "Trademark": "व्यापारचिह्नम्",
+                "Design": "रचना",
+                "Other": "अन्यत्"
+            }
+        }
+    };
+
+    const x = labels[currentLanguage] || labels.en;
+
+    return {
+        intent: x.intent[meta.intent] || meta.intent,
+        ipType: x.ipType[meta.ipType] || meta.ipType
+    };
+}
 
 /* ============================================================
    TRANSLATION / UI
    ============================================================ */
 
-function changeLanguage(){
+function changeLanguage(){ 
+ 
+    currentLanguage = 
+        document.getElementById("lang").value; 
+ 
+    localStorage.setItem( 
+        "ipSaktiLanguage", 
+        currentLanguage 
+    ); 
+ 
+    applyTranslations(); 
+ 
+    const jurisdictionSelect = 
+        document.getElementById("jurisdiction"); 
+ 
+    if(jurisdictionSelect){ 
+        jurisdictionSelect.value = 
+            ["IN","US","UK","WIPO"].includes(currentJurisdiction) 
+            ? currentJurisdiction 
+            : "IN"; 
+    } 
+ 
+    updateJurisdictionPreview(); 
+    changeJurisdiction();
 
-    currentLanguage =
-        document.getElementById("lang").value;
+    if(lastSelectedSuggestionIndex !== null){
 
-    localStorage.setItem(
-        "ipSaktiLanguage",
-        currentLanguage
-    );
+        const buttons =
+            document.querySelectorAll(".suggestion");
 
-    applyTranslations();
+        const selectedButton =
+            buttons[lastSelectedSuggestionIndex];
 
-    const jurisdictionSelect =
-        document.getElementById("jurisdiction");
+        if(selectedButton){
 
-    if(jurisdictionSelect){
-        jurisdictionSelect.value =
-            ["IN","US","UK","WIPO"].includes(currentJurisdiction)
-            ? currentJurisdiction
-            : "IN";
+            document.getElementById("query").value =
+                selectedButton.dataset.suggestion || "";
+        }
     }
-
-    updateJurisdictionPreview();
-
-    // If results already exist, only rerender labels around them.
-    if(lastSources.length){
-        renderSources(lastSources);
-        updateEvidencePanel(activeSourceIndex);
-    }
-
-    // Keep current screen; changing language should not navigate.
+ 
+    // If results already exist, only rerender labels around them. 
+    if(lastSources.length){ 
+        renderSources(lastSources); 
+        updateEvidencePanel(activeSourceIndex); 
+    } 
+ 
+    // Keep current screen; changing language should not navigate. 
 }
-
 function applyTranslations(){
     const x=t();
     document.documentElement.lang=currentLanguage;
@@ -1142,48 +1394,381 @@ function changeJurisdiction() {
 
     // ============================================================
     // JURISDICTION-SPECIFIC SUGGESTED QUESTIONS
+    // LANGUAGE + JURISDICTION
     // ============================================================
 
     const suggestions = {
 
-        IN: [
-            "Can an Ayurvedic invention based on traditional knowledge be patented in India?",
-            "How is traditional knowledge treated during patent examination in India?",
-            "What IP protection may apply to an Ayurvedic product in India?"
-        ],
+        // ========================================================
+        // ENGLISH
+        // ========================================================
 
-        US: [
-            "What are the basic patentability requirements in the United States?",
-            "What requirements must a new invention satisfy for US patent protection?",
-            "Can the name of an Ayurvedic product be protected as a trademark in the United States?"
-        ],
+        en: {
 
-        UK: [
-            "What are the basic patentability requirements in the United Kingdom?",
-            "What does UK patent law require for a new invention?",
-            "Can the name of an Ayurvedic product be protected as a trademark in the United Kingdom?"
-        ],
+            IN: [
+                "Can an Ayurvedic invention based on traditional knowledge be patented in India?",
+                "How is traditional knowledge treated during patent examination in India?",
+                "What IP protection may apply to an Ayurvedic product in India?"
+            ],
 
-        WIPO: [
-            "What are the basic requirements for international patent protection?",
-            "How does the international patent system support patent applicants?",
-            "What IP information can be explored through WIPO and PCT sources?"
-        ]
+            US: [
+                "What are the basic patentability requirements in the United States?",
+                "What requirements must a new invention satisfy for US patent protection?",
+                "Can the name of an Ayurvedic product be protected as a trademark in the United States?"
+            ],
+
+            UK: [
+                "What are the basic patentability requirements in the United Kingdom?",
+                "What does UK patent law require for a new invention?",
+                "Can the name of an Ayurvedic product be protected as a trademark in the United Kingdom?"
+            ],
+
+            WIPO: [
+                "What are the basic requirements for international patent protection?",
+                "How does the international patent system support patent applicants?",
+                "What IP information can be explored through WIPO and PCT sources?"
+            ]
+        },
+
+
+        // ========================================================
+        // HINDI
+        // ========================================================
+
+        hi: {
+
+            IN: [
+                "क्या पारंपरिक ज्ञान पर आधारित आयुर्वेदिक आविष्कार का भारत में पेटेंट कराया जा सकता है?",
+                "भारत में पेटेंट परीक्षा के दौरान पारंपरिक ज्ञान को कैसे माना जाता है?",
+                "भारत में आयुर्वेदिक उत्पाद पर कौन सा IP संरक्षण लागू हो सकता है?"
+            ],
+
+            US: [
+                "संयुक्त राज्य अमेरिका में पेटेंट योग्यता की मूल आवश्यकताएँ क्या हैं?",
+                "अमेरिकी पेटेंट संरक्षण के लिए नए आविष्कार को किन आवश्यकताओं को पूरा करना होगा?",
+                "क्या संयुक्त राज्य अमेरिका में आयुर्वेदिक उत्पाद के नाम को ट्रेडमार्क के रूप में संरक्षित किया जा सकता है?"
+            ],
+
+            UK: [
+                "यूनाइटेड किंगडम में पेटेंट योग्यता की मूल आवश्यकताएँ क्या हैं?",
+                "नए आविष्कार के लिए UK पेटेंट कानून में क्या आवश्यकताएँ हैं?",
+                "क्या यूनाइटेड किंगडम में आयुर्वेदिक उत्पाद के नाम को ट्रेडमार्क के रूप में संरक्षित किया जा सकता है?"
+            ],
+
+            WIPO: [
+                "अंतरराष्ट्रीय पेटेंट संरक्षण के लिए मूल आवश्यकताएँ क्या हैं?",
+                "अंतरराष्ट्रीय पेटेंट प्रणाली पेटेंट आवेदकों की कैसे सहायता करती है?",
+                "WIPO और PCT के माध्यम से कौन सी IP जानकारी खोजी जा सकती है?"
+            ]
+        },
+
+
+        // ========================================================
+        // MARATHI
+        // ========================================================
+
+        mr: {
+
+            IN: [
+                "पारंपरिक ज्ञानावर आधारित आयुर्वेदिक आविष्काराला भारतात पेटंट मिळू शकते का?",
+                "भारतात पेटंट परीक्षेदरम्यान पारंपरिक ज्ञानाचा कसा विचार केला जातो?",
+                "भारतात आयुर्वेदिक उत्पादनासाठी कोणते IP संरक्षण लागू होऊ शकते?"
+            ],
+
+            US: [
+                "अमेरिकेत पेटंटयोग्यतेच्या मूलभूत आवश्यकता कोणत्या आहेत?",
+                "अमेरिकेतील पेटंट संरक्षणासाठी नवीन आविष्काराने कोणत्या आवश्यकता पूर्ण कराव्यात?",
+                "अमेरिकेत आयुर्वेदिक उत्पादनाचे नाव ट्रेडमार्क म्हणून संरक्षित करता येते का?"
+            ],
+
+            UK: [
+                "युनायटेड किंगडममध्ये पेटंटयोग्यतेच्या मूलभूत आवश्यकता कोणत्या आहेत?",
+                "नवीन आविष्कारासाठी UK पेटंट कायद्यात कोणत्या आवश्यकता आहेत?",
+                "युनायटेड किंगडममध्ये आयुर्वेदिक उत्पादनाचे नाव ट्रेडमार्क म्हणून संरक्षित करता येते का?"
+            ],
+
+            WIPO: [
+                "आंतरराष्ट्रीय पेटंट संरक्षणासाठी मूलभूत आवश्यकता कोणत्या आहेत?",
+                "आंतरराष्ट्रीय पेटंट प्रणाली पेटंट अर्जदारांना कशी मदत करते?",
+                "WIPO आणि PCT द्वारे कोणती IP माहिती शोधता येते?"
+            ]
+        },
+
+
+        // ========================================================
+        // BENGALI
+        // ========================================================
+
+        bn: {
+
+            IN: [
+                "ঐতিহ্যগত জ্ঞানের উপর ভিত্তি করে কোনো আয়ুর্বেদিক উদ্ভাবনের ভারতে পেটেন্ট করা যায় কি?",
+                "ভারতে পেটেন্ট পরীক্ষার সময় ঐতিহ্যগত জ্ঞান কীভাবে বিবেচনা করা হয়?",
+                "ভারতে একটি আয়ুর্বেদিক পণ্যের জন্য কোন IP সুরক্ষা প্রযোজ্য হতে পারে?"
+            ],
+
+            US: [
+                "মার্কিন যুক্তরাষ্ট্রে পেটেন্টযোগ্যতার মৌলিক শর্তগুলি কী?",
+                "মার্কিন পেটেন্ট সুরক্ষার জন্য একটি নতুন উদ্ভাবনকে কী কী শর্ত পূরণ করতে হবে?",
+                "মার্কিন যুক্তরাষ্ট্রে একটি আয়ুর্বেদিক পণ্যের নাম কি ট্রেডমার্ক হিসেবে সুরক্ষিত করা যায়?"
+            ],
+
+            UK: [
+                "যুক্তরাজ্যে পেটেন্টযোগ্যতার মৌলিক শর্তগুলি কী?",
+                "একটি নতুন উদ্ভাবনের জন্য UK পেটেন্ট আইনে কী কী শর্ত রয়েছে?",
+                "যুক্তরাজ্যে একটি আয়ুর্বেদিক পণ্যের নাম কি ট্রেডমার্ক হিসেবে সুরক্ষিত করা যায়?"
+            ],
+
+            WIPO: [
+                "আন্তর্জাতিক পেটেন্ট সুরক্ষার জন্য মৌলিক শর্তগুলি কী?",
+                "আন্তর্জাতিক পেটেন্ট ব্যবস্থা কীভাবে পেটেন্ট আবেদনকারীদের সহায়তা করে?",
+                "WIPO এবং PCT-এর মাধ্যমে কোন IP তথ্য অনুসন্ধান করা যায়?"
+            ]
+        },
+
+
+        // ========================================================
+        // TAMIL
+        // ========================================================
+
+        ta: {
+
+            IN: [
+                "பாரம்பரிய அறிவை அடிப்படையாகக் கொண்ட ஆயுர்வேத கண்டுபிடிப்புக்கு இந்தியாவில் காப்புரிமை பெற முடியுமா?",
+                "இந்தியாவில் காப்புரிமை பரிசோதனையின் போது பாரம்பரிய அறிவு எவ்வாறு கருதப்படுகிறது?",
+                "இந்தியாவில் ஒரு ஆயுர்வேத தயாரிப்புக்கு எந்த IP பாதுகாப்பு பொருந்தலாம்?"
+            ],
+
+            US: [
+                "அமெரிக்காவில் காப்புரிமைத் தகுதியின் அடிப்படை தேவைகள் என்ன?",
+                "அமெரிக்க காப்புரிமை பாதுகாப்பைப் பெற புதிய கண்டுபிடிப்பு எந்த தேவைகளை பூர்த்தி செய்ய வேண்டும்?",
+                "அமெரிக்காவில் ஆயுர்வேத தயாரிப்பின் பெயரை வர்த்தக முத்திரையாக பாதுகாக்க முடியுமா?"
+            ],
+
+            UK: [
+                "ஐக்கிய இராச்சியத்தில் காப்புரிமைத் தகுதியின் அடிப்படை தேவைகள் என்ன?",
+                "புதிய கண்டுபிடிப்பிற்கு UK காப்புரிமை சட்டத்தில் என்ன தேவைகள் உள்ளன?",
+                "ஐக்கிய இராச்சியத்தில் ஆயுர்வேத தயாரிப்பின் பெயரை வர்த்தக முத்திரையாக பாதுகாக்க முடியுமா?"
+            ],
+
+            WIPO: [
+                "சர்வதேச காப்புரிமை பாதுகாப்பிற்கான அடிப்படை தேவைகள் என்ன?",
+                "சர்வதேச காப்புரிமை அமைப்பு விண்ணப்பதாரர்களுக்கு எவ்வாறு உதவுகிறது?",
+                "WIPO மற்றும் PCT மூலம் எந்த IP தகவல்களை ஆராயலாம்?"
+            ]
+        },
+
+
+        // ========================================================
+        // TELUGU
+        // ========================================================
+
+        te: {
+
+            IN: [
+                "సాంప్రదాయ జ్ఞానంపై ఆధారపడిన ఆయుర్వేద ఆవిష్కరణకు భారతదేశంలో పేటెంట్ పొందవచ్చా?",
+                "భారతదేశంలో పేటెంట్ పరీక్ష సమయంలో సాంప్రదాయ జ్ఞానాన్ని ఎలా పరిగణిస్తారు?",
+                "భారతదేశంలో ఆయుర్వేద ఉత్పత్తికి ఏ IP రక్షణ వర్తించవచ్చు?"
+            ],
+
+            US: [
+                "యునైటెడ్ స్టేట్స్‌లో పేటెంట్ అర్హతకు ప్రాథమిక అవసరాలు ఏమిటి?",
+                "US పేటెంట్ రక్షణ కోసం కొత్త ఆవిష్కరణ ఏ అవసరాలను పూర్తి చేయాలి?",
+                "యునైటెడ్ స్టేట్స్‌లో ఆయుర్వేద ఉత్పత్తి పేరును ట్రేడ్‌మార్క్‌గా రక్షించవచ్చా?"
+            ],
+
+            UK: [
+                "యునైటెడ్ కింగ్‌డమ్‌లో పేటెంట్ అర్హతకు ప్రాథమిక అవసరాలు ఏమిటి?",
+                "కొత్త ఆవిష్కరణకు UK పేటెంట్ చట్టం ఏ అవసరాలను నిర్దేశిస్తుంది?",
+                "యునైటెడ్ కింగ్‌డమ్‌లో ఆయుర్వేద ఉత్పత్తి పేరును ట్రేడ్‌మార్క్‌గా రక్షించవచ్చా?"
+            ],
+
+            WIPO: [
+                "అంతర్జాతీయ పేటెంట్ రక్షణకు ప్రాథమిక అవసరాలు ఏమిటి?",
+                "అంతర్జాతీయ పేటెంట్ వ్యవస్థ పేటెంట్ దరఖాస్తుదారులకు ఎలా సహాయపడుతుంది?",
+                "WIPO మరియు PCT ద్వారా ఏ IP సమాచారాన్ని అన్వేషించవచ్చు?"
+            ]
+        },
+
+
+        // ========================================================
+        // KANNADA
+        // ========================================================
+
+        kn: {
+
+            IN: [
+                "ಸಾಂಪ್ರದಾಯಿಕ ಜ್ಞಾನವನ್ನು ಆಧರಿಸಿದ ಆಯುರ್ವೇದ ಆವಿಷ್ಕಾರಕ್ಕೆ ಭಾರತದಲ್ಲಿ ಪೇಟೆಂಟ್ ಪಡೆಯಬಹುದೇ?",
+                "ಭಾರತದಲ್ಲಿ ಪೇಟೆಂಟ್ ಪರೀಕ್ಷೆಯ ಸಮಯದಲ್ಲಿ ಸಾಂಪ್ರದಾಯಿಕ ಜ್ಞಾನವನ್ನು ಹೇಗೆ ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ?",
+                "ಭಾರತದಲ್ಲಿ ಆಯುರ್ವೇದ ಉತ್ಪನ್ನಕ್ಕೆ ಯಾವ IP ರಕ್ಷಣೆಯು ಅನ್ವಯಿಸಬಹುದು?"
+            ],
+
+            US: [
+                "ಯುನೈಟೆಡ್ ಸ್ಟೇಟ್ಸ್‌ನಲ್ಲಿ ಪೇಟೆಂಟ್ ಪಡೆಯಲು ಮೂಲಭೂತ ಅರ್ಹತಾ ಅವಶ್ಯಕತೆಗಳು ಯಾವುವು?",
+                "US ಪೇಟೆಂಟ್ ರಕ್ಷಣೆಗೆ ಹೊಸ ಆವಿಷ್ಕಾರವು ಯಾವ ಅವಶ್ಯಕತೆಗಳನ್ನು ಪೂರೈಸಬೇಕು?",
+                "ಯುನೈಟೆಡ್ ಸ್ಟೇಟ್ಸ್‌ನಲ್ಲಿ ಆಯುರ್ವೇದ ಉತ್ಪನ್ನದ ಹೆಸರನ್ನು ಟ್ರೇಡ್‌ಮಾರ್ಕ್ ಆಗಿ ರಕ್ಷಿಸಬಹುದೇ?"
+            ],
+
+            UK: [
+                "ಯುನೈಟೆಡ್ ಕಿಂಗ್‌ಡಮ್‌ನಲ್ಲಿ ಪೇಟೆಂಟ್ ಪಡೆಯಲು ಮೂಲಭೂತ ಅರ್ಹತಾ ಅವಶ್ಯಕತೆಗಳು ಯಾವುವು?",
+                "ಹೊಸ ಆವಿಷ್ಕಾರಕ್ಕೆ UK ಪೇಟೆಂಟ್ ಕಾನೂನು ಯಾವ ಅವಶ್ಯಕತೆಗಳನ್ನು ಹೊಂದಿದೆ?",
+                "ಯುನೈಟೆಡ್ ಕಿಂಗ್‌ಡಮ್‌ನಲ್ಲಿ ಆಯುರ್ವೇದ ಉತ್ಪನ್ನದ ಹೆಸರನ್ನು ಟ್ರೇಡ್‌ಮಾರ್ಕ್ ಆಗಿ ರಕ್ಷಿಸಬಹುದೇ?"
+            ],
+
+            WIPO: [
+                "ಅಂತರರಾಷ್ಟ್ರೀಯ ಪೇಟೆಂಟ್ ರಕ್ಷಣೆಗೆ ಮೂಲಭೂತ ಅವಶ್ಯಕತೆಗಳು ಯಾವುವು?",
+                "ಅಂತರರಾಷ್ಟ್ರೀಯ ಪೇಟೆಂಟ್ ವ್ಯವಸ್ಥೆಯು ಅರ್ಜಿದಾರರಿಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ?",
+                "WIPO ಮತ್ತು PCT ಮೂಲಕ ಯಾವ IP ಮಾಹಿತಿಯನ್ನು ಅನ್ವೇಷಿಸಬಹುದು?"
+            ]
+        },
+
+
+        // ========================================================
+        // GUJARATI
+        // ========================================================
+
+        gu: {
+
+            IN: [
+                "પરંપરાગત જ્ઞાન પર આધારિત આયુર્વેદિક આવિષ્કારને ભારતમાં પેટન્ટ મળી શકે છે?",
+                "ભારતમાં પેટન્ટ પરીક્ષણ દરમિયાન પરંપરાગત જ્ઞાનને કેવી રીતે ધ્યાનમાં લેવામાં આવે છે?",
+                "ભારતમાં આયુર્વેદિક ઉત્પાદન માટે કઈ IP સુરક્ષા લાગુ પડી શકે છે?"
+            ],
+
+            US: [
+                "યુનાઇટેડ સ્ટેટ્સમાં પેટન્ટપાત્રતાની મૂળભૂત આવશ્યકતાઓ શું છે?",
+                "US પેટન્ટ સુરક્ષા માટે નવા આવિષ્કારે કઈ આવશ્યકતાઓ પૂર્ણ કરવી જોઈએ?",
+                "યુનાઇટેડ સ્ટેટ્સમાં આયુર્વેદિક ઉત્પાદનના નામને ટ્રેડમાર્ક તરીકે સુરક્ષિત કરી શકાય છે?"
+            ],
+
+            UK: [
+                "યુનાઇટેડ કિંગડમમાં પેટન્ટપાત્રતાની મૂળભૂત આવશ્યકતાઓ શું છે?",
+                "નવા આવિષ્કાર માટે UK પેટન્ટ કાયદામાં કઈ આવશ્યકતાઓ છે?",
+                "યુનાઇટેડ કિંગડમમાં આયુર્વેદિક ઉત્પાદનના નામને ટ્રેડમાર્ક તરીકે સુરક્ષિત કરી શકાય છે?"
+            ],
+
+            WIPO: [
+                "આંતરરાષ્ટ્રીય પેટન્ટ સુરક્ષા માટે મૂળભૂત આવશ્યકતાઓ શું છે?",
+                "આંતરરાષ્ટ્રીય પેટન્ટ સિસ્ટમ પેટન્ટ અરજદારોને કેવી રીતે મદદ કરે છે?",
+                "WIPO અને PCT દ્વારા કઈ IP માહિતી શોધી શકાય છે?"
+            ]
+        },
+
+
+        // ========================================================
+        // MALAYALAM
+        // ========================================================
+
+        ml: {
+
+            IN: [
+                "പരമ്പരാഗത അറിവിനെ അടിസ്ഥാനമാക്കിയ ആയുർവേദ കണ്ടുപിടിത്തത്തിന് ഇന്ത്യയിൽ പേറ്റന്റ് ലഭിക്കുമോ?",
+                "ഇന്ത്യയിലെ പേറ്റന്റ് പരിശോധനയിൽ പരമ്പരാഗത അറിവ് എങ്ങനെ പരിഗണിക്കുന്നു?",
+                "ഇന്ത്യയിൽ ഒരു ആയുർവേദ ഉൽപ്പന്നത്തിന് ഏത് IP സംരക്ഷണം ബാധകമായേക്കാം?"
+            ],
+
+            US: [
+                "യുണൈറ്റഡ് സ്റ്റേറ്റ്സിൽ പേറ്റന്റബിലിറ്റിയുടെ അടിസ്ഥാന ആവശ്യകതകൾ എന്തൊക്കെയാണ്?",
+                "US പേറ്റന്റ് സംരക്ഷണത്തിനായി ഒരു പുതിയ കണ്ടുപിടിത്തം എന്തെല്ലാം ആവശ്യകതകൾ നിറവേറ്റണം?",
+                "യുണൈറ്റഡ് സ്റ്റേറ്റ്സിൽ ആയുർവേദ ഉൽപ്പന്നത്തിന്റെ പേര് ട്രേഡ്‌മാർക്കായി സംരക്ഷിക്കാമോ?"
+            ],
+
+            UK: [
+                "യുണൈറ്റഡ് കിംഗ്ഡത്തിൽ പേറ്റന്റബിലിറ്റിയുടെ അടിസ്ഥാന ആവശ്യകതകൾ എന്തൊക്കെയാണ്?",
+                "ഒരു പുതിയ കണ്ടുപിടിത്തത്തിന് UK പേറ്റന്റ് നിയമം എന്തെല്ലാം ആവശ്യകതകൾ നിർദേശിക്കുന്നു?",
+                "യുണൈറ്റഡ് കിംഗ്ഡത്തിൽ ആയുർവേദ ഉൽപ്പന്നത്തിന്റെ പേര് ട്രേഡ്‌മാർക്കായി സംരക്ഷിക്കാമോ?"
+            ],
+
+            WIPO: [
+                "അന്താരാഷ്ട്ര പേറ്റന്റ് സംരക്ഷണത്തിനുള്ള അടിസ്ഥാന ആവശ്യകതകൾ എന്തൊക്കെയാണ്?",
+                "അന്താരാഷ്ട്ര പേറ്റന്റ് സംവിധാനം അപേക്ഷകരെ എങ്ങനെ സഹായിക്കുന്നു?",
+                "WIPO, PCT എന്നിവ വഴി ഏത് IP വിവരങ്ങൾ പരിശോധിക്കാം?"
+            ]
+        },
+
+
+        // ========================================================
+        // PUNJABI
+        // ========================================================
+
+        pa: {
+
+            IN: [
+                "ਕੀ ਪਰੰਪਰਾਗਤ ਗਿਆਨ 'ਤੇ ਆਧਾਰਿਤ ਆਯੁਰਵੇਦਿਕ ਖੋਜ ਨੂੰ ਭਾਰਤ ਵਿੱਚ ਪੇਟੈਂਟ ਮਿਲ ਸਕਦਾ ਹੈ?",
+                "ਭਾਰਤ ਵਿੱਚ ਪੇਟੈਂਟ ਜਾਂਚ ਦੌਰਾਨ ਪਰੰਪਰਾਗਤ ਗਿਆਨ ਨੂੰ ਕਿਵੇਂ ਵਿਚਾਰਿਆ ਜਾਂਦਾ ਹੈ?",
+                "ਭਾਰਤ ਵਿੱਚ ਆਯੁਰਵੇਦਿਕ ਉਤਪਾਦ ਲਈ ਕਿਹੜੀ IP ਸੁਰੱਖਿਆ ਲਾਗੂ ਹੋ ਸਕਦੀ ਹੈ?"
+            ],
+
+            US: [
+                "ਸੰਯੁਕਤ ਰਾਜ ਵਿੱਚ ਪੇਟੈਂਟ ਯੋਗਤਾ ਦੀਆਂ ਮੁੱਢਲੀਆਂ ਲੋੜਾਂ ਕੀ ਹਨ?",
+                "US ਪੇਟੈਂਟ ਸੁਰੱਖਿਆ ਲਈ ਨਵੀਂ ਖੋਜ ਨੂੰ ਕਿਹੜੀਆਂ ਲੋੜਾਂ ਪੂਰੀਆਂ ਕਰਣੀਆਂ ਪੈਂਦੀਆਂ ਹਨ?",
+                "ਕੀ ਸੰਯੁਕਤ ਰਾਜ ਵਿੱਚ ਆਯੁਰਵੇਦਿਕ ਉਤਪਾਦ ਦੇ ਨਾਮ ਨੂੰ ਟ੍ਰੇਡਮਾਰਕ ਵਜੋਂ ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ?"
+            ],
+
+            UK: [
+                "ਯੂਨਾਈਟਡ ਕਿੰਗਡਮ ਵਿੱਚ ਪੇਟੈਂਟ ਯੋਗਤਾ ਦੀਆਂ ਮੁੱਢਲੀਆਂ ਲੋੜਾਂ ਕੀ ਹਨ?",
+                "ਨਵੀਂ ਖੋਜ ਲਈ UK ਪੇਟੈਂਟ ਕਾਨੂੰਨ ਵਿੱਚ ਕਿਹੜੀਆਂ ਲੋੜਾਂ ਹਨ?",
+                "ਕੀ ਯੂਨਾਈਟਡ ਕਿੰਗਡਮ ਵਿੱਚ ਆਯੁਰਵੇਦਿਕ ਉਤਪਾਦ ਦੇ ਨਾਮ ਨੂੰ ਟ੍ਰੇਡਮਾਰਕ ਵਜੋਂ ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ?"
+            ],
+
+            WIPO: [
+                "ਅੰਤਰਰਾਸ਼ਟਰੀ ਪੇਟੈਂਟ ਸੁਰੱਖਿਆ ਲਈ ਮੁੱਢਲੀਆਂ ਲੋੜਾਂ ਕੀ ਹਨ?",
+                "ਅੰਤਰਰਾਸ਼ਟਰੀ ਪੇਟੈਂਟ ਪ੍ਰਣਾਲੀ ਪੇਟੈਂਟ ਅਰਜ਼ੀਕਾਰਾਂ ਦੀ ਕਿਵੇਂ ਮਦਦ ਕਰਦੀ ਹੈ?",
+                "WIPO ਅਤੇ PCT ਰਾਹੀਂ ਕਿਹੜੀ IP ਜਾਣਕਾਰੀ ਖੋਜੀ ਜਾ ਸਕਦੀ ਹੈ?"
+            ]
+        },
+
+
+        // ========================================================
+        // SANSKRIT
+        // ========================================================
+
+        sa: {
+
+            IN: [
+                "परम्परागतज्ञानाधारितस्य आयुर्वेदिकस्य आविष्कारस्य भारतदेशे पेटेण्ट् प्राप्तुं शक्यते वा?",
+                "भारतदेशे पेटेण्ट् परीक्षायां परम्परागतज्ञानस्य कथं विचारः क्रियते?",
+                "भारतदेशे आयुर्वेदिकस्य उत्पादस्य कृते कः IP संरक्षणः प्रयोज्यः भवितुम् अर्हति?"
+            ],
+
+            US: [
+                "संयुक्तराष्ट्रेषु पेटेण्ट्-योग्यतायाः मूलभूताः आवश्यकताः काः सन्ति?",
+                "US पेटेण्ट्-संरक्षणाय नूतनस्य आविष्कारस्य काः आवश्यकताः पूरणीयाः?",
+                "संयुक्तराष्ट्रेषु आयुर्वेदिकस्य उत्पादस्य नाम ट्रेडमार्करूपेण संरक्षितुं शक्यते वा?"
+            ],
+
+            UK: [
+                "यूनाइटेड् किङ्ग्डमे पेटेण्ट्-योग्यतायाः मूलभूताः आवश्यकताः काः सन्ति?",
+                "नूतनस्य आविष्कारस्य कृते UK पेटेण्ट्-कानूने काः आवश्यकताः सन्ति?",
+                "यूनाइटेड् किङ्ग्डमे आयुर्वेदिकस्य उत्पादस्य नाम ट्रेडमार्करूपेण संरक्षितुं शक्यते वा?"
+            ],
+
+            WIPO: [
+                "अन्तर्राष्ट्रीय-पेटेण्ट्-संरक्षणस्य मूलभूताः आवश्यकताः काः सन्ति?",
+                "अन्तर्राष्ट्रीय-पेटेण्ट्-व्यवस्था पेटेण्ट्-आवेदकान् कथं सहाय्यं करोति?",
+                "WIPO तथा PCT द्वारा काः IP-सूचनाः अन्वेष्टुं शक्यन्ते?"
+            ]
+        }
 
     };
 
+
+    // ============================================================
+    // SELECT QUESTIONS FOR CURRENT LANGUAGE + JURISDICTION
+    // ============================================================
+
     const selectedSuggestions =
-        suggestions[currentJurisdiction] ||
-        suggestions.IN;
+        suggestions[currentLanguage]?.[currentJurisdiction] ||
+        suggestions.en?.[currentJurisdiction] ||
+        suggestions.en.IN;
+
 
     // ============================================================
     // UPDATE THE THREE BUTTONS
     // ============================================================
 
     const buttons =
-        document.querySelectorAll(
-            ".suggestion"
-        );
+        document.querySelectorAll(".suggestion");
 
     buttons.forEach(
         function(button, index) {
@@ -1200,8 +1785,9 @@ function changeJurisdiction() {
         }
     );
 
+
     // ============================================================
-    // UPDATE JURISDICTION LABEL
+    // UPDATE JURISDICTION SCOPE TEXT
     // ============================================================
 
     const scope =
@@ -1211,22 +1797,92 @@ function changeJurisdiction() {
 
     if (scope) {
 
-        const labels = {
+        const scopeLabels = {
 
-            IN: "India",
-            US: "United States",
-            UK: "United Kingdom",
-            WIPO: "International (WIPO/PCT)"
+            en: {
+                IN: "Suggested questions for India",
+                US: "Suggested questions for United States",
+                UK: "Suggested questions for United Kingdom",
+                WIPO: "Suggested questions for International (WIPO/PCT)"
+            },
+
+            hi: {
+                IN: "भारत के लिए सुझाए गए प्रश्न",
+                US: "संयुक्त राज्य अमेरिका के लिए सुझाए गए प्रश्न",
+                UK: "यूनाइटेड किंगडम के लिए सुझाए गए प्रश्न",
+                WIPO: "अंतरराष्ट्रीय (WIPO/PCT) के लिए सुझाए गए प्रश्न"
+            },
+
+            mr: {
+                IN: "भारतासाठी सुचवलेले प्रश्न",
+                US: "अमेरिकेसाठी सुचवलेले प्रश्न",
+                UK: "युनायटेड किंगडमसाठी सुचवलेले प्रश्न",
+                WIPO: "आंतरराष्ट्रीय (WIPO/PCT) साठी सुचवलेले प्रश्न"
+            },
+
+            bn: {
+                IN: "ভারতের জন্য প্রস্তাবিত প্রশ্ন",
+                US: "মার্কিন যুক্তরাষ্ট্রের জন্য প্রস্তাবিত প্রশ্ন",
+                UK: "যুক্তরাজ্যের জন্য প্রস্তাবিত প্রশ্ন",
+                WIPO: "আন্তর্জাতিক (WIPO/PCT)-এর জন্য প্রস্তাবিত প্রশ্ন"
+            },
+
+            ta: {
+                IN: "இந்தியாவிற்கான பரிந்துரைக்கப்பட்ட கேள்விகள்",
+                US: "அமெரிக்காவிற்கான பரிந்துரைக்கப்பட்ட கேள்விகள்",
+                UK: "ஐக்கிய இராச்சியத்திற்கான பரிந்துரைக்கப்பட்ட கேள்விகள்",
+                WIPO: "சர்வதேச (WIPO/PCT) க்கான பரிந்துரைக்கப்பட்ட கேள்விகள்"
+            },
+
+            te: {
+                IN: "భారతదేశానికి సూచించిన ప్రశ్నలు",
+                US: "యునైటెడ్ స్టేట్స్‌కు సూచించిన ప్రశ్నలు",
+                UK: "యునైటెడ్ కింగ్‌డమ్‌కు సూచించిన ప్రశ్నలు",
+                WIPO: "అంతర్జాతీయ (WIPO/PCT) కోసం సూచించిన ప్రశ్నలు"
+            },
+
+            kn: {
+                IN: "ಭಾರತಕ್ಕೆ ಸೂಚಿಸಲಾದ ಪ್ರಶ್ನೆಗಳು",
+                US: "ಯುನೈಟೆಡ್ ಸ್ಟೇಟ್ಸ್‌ಗೆ ಸೂಚಿಸಲಾದ ಪ್ರಶ್ನೆಗಳು",
+                UK: "ಯುನೈಟೆಡ್ ಕಿಂಗ್‌ಡಮ್‌ಗೆ ಸೂಚಿಸಲಾದ ಪ್ರಶ್ನೆಗಳು",
+                WIPO: "ಅಂತರರಾಷ್ಟ್ರೀಯ (WIPO/PCT)ಗಾಗಿ ಸೂಚಿಸಲಾದ ಪ್ರಶ್ನೆಗಳು"
+            },
+
+            gu: {
+                IN: "ભારત માટે સૂચવેલા પ્રશ્નો",
+                US: "યુનાઇટેડ સ્ટેટ્સ માટે સૂચવેલા પ્રશ્નો",
+                UK: "યુનાઇટેડ કિંગડમ માટે સૂચવેલા પ્રશ્નો",
+                WIPO: "આંતરરાષ્ટ્રીય (WIPO/PCT) માટે સૂચવેલા પ્રશ્નો"
+            },
+
+            ml: {
+                IN: "ഇന്ത്യയ്ക്കുള്ള നിർദ്ദേശിച്ച ചോദ്യങ്ങൾ",
+                US: "യുണൈറ്റഡ് സ്റ്റേറ്റ്സിനുള്ള നിർദ്ദേശിച്ച ചോദ്യങ്ങൾ",
+                UK: "യുണൈറ്റഡ് കിംഗ്ഡത്തിനുള്ള നിർദ്ദേശിച്ച ചോദ്യങ്ങൾ",
+                WIPO: "അന്താരാഷ്ട്ര (WIPO/PCT) നുള്ള നിർദ്ദേശിച്ച ചോദ്യങ്ങൾ"
+            },
+
+            pa: {
+                IN: "ਭਾਰਤ ਲਈ ਸੁਝਾਏ ਗਏ ਸਵਾਲ",
+                US: "ਸੰਯੁਕਤ ਰਾਜ ਲਈ ਸੁਝਾਏ ਗਏ ਸਵਾਲ",
+                UK: "ਯੂਨਾਈਟਡ ਕਿੰਗਡਮ ਲਈ ਸੁਝਾਏ ਗਏ ਸਵਾਲ",
+                WIPO: "ਅੰਤਰਰਾਸ਼ਟਰੀ (WIPO/PCT) ਲਈ ਸੁਝਾਏ ਗਏ ਸਵਾਲ"
+            },
+
+            sa: {
+                IN: "भारताय निर्दिष्टाः प्रश्नाः",
+                US: "संयुक्तराष्ट्रेभ्यः निर्दिष्टाः प्रश्नाः",
+                UK: "यूनाइटेड् किङ्ग्डमाय निर्दिष्टाः प्रश्नाः",
+                WIPO: "अन्तर्राष्ट्रीय (WIPO/PCT) कृते निर्दिष्टाः प्रश्नाः"
+            }
 
         };
 
         scope.textContent =
-            "Suggested questions for " +
-            (
-                labels[currentJurisdiction] ||
-                "India"
-            );
+            scopeLabels[currentLanguage]?.[currentJurisdiction] ||
+            scopeLabels.en.IN;
     }
+
 }
 
 function getSourceUrl(source) {
@@ -1316,12 +1972,18 @@ function openApp(screen){
 
 function useSuggestion(button){
 
+    const buttons = [
+        ...document.querySelectorAll(".suggestion")
+    ];
+
+    lastSelectedSuggestionIndex =
+        buttons.indexOf(button);
+
     document.getElementById("query").value =
         button.dataset.suggestion || "";
 
     document.getElementById("query").focus();
 }
-
 
 /* ============================================================
    QUERY UNDERSTANDING HEURISTICS
@@ -1428,14 +2090,16 @@ async function submitQuestion(){
     document.getElementById("processingQuery").textContent =
         `"${query}"`;
 
-    document.getElementById("chipLanguage").textContent =
-        languageName(currentLanguage);
+    const localizedMeta = getLocalizedMeta(meta);
 
-    document.getElementById("chipIntent").textContent =
-        meta.intent;
+document.getElementById("chipLanguage").textContent =
+    getLocalizedLanguageName(currentLanguage);
 
-    document.getElementById("chipIPType").textContent =
-        meta.ipType;
+document.getElementById("chipIntent").textContent =
+    localizedMeta.intent;
+
+document.getElementById("chipIPType").textContent =
+    localizedMeta.ipType;
 
     updateJurisdictionPreview();
 
@@ -1524,12 +2188,15 @@ function renderResult(data, meta){
     document.getElementById("answerText").textContent =
         data.answer || "";
 
-    const chips = [
-        `${x.language}: ${languageName(data.detected_language || currentLanguage)}`,
-        `${x.intent}: ${meta.intent}`,
-        `${x.ipType}: ${meta.ipType}`,
-        `${x.jurisdiction2}: ${getSelectedJurisdictionLabel()}`
-    ];
+   const localizedMeta =
+    getLocalizedMeta(meta);
+
+const chips = [
+    `${x.language}: ${languageName(data.detected_language || currentLanguage)}`,
+    `${x.intent}: ${localizedMeta.intent}`,
+    `${x.ipType}: ${localizedMeta.ipType}`,
+    `${x.jurisdiction2}: ${getSelectedJurisdictionLabel()}`
+];
 
     document.getElementById("understoodChips").innerHTML =
         chips.map(c =>
@@ -1724,12 +2391,18 @@ function showVerifyPanel(){
     const source =
         lastSources[activeSourceIndex];
 
+    // Original evidence
     document.getElementById("verifyModalBody").innerHTML =
         `<strong>${esc(source.title || "")}</strong><br><br>${esc(source.text || "")}`;
 
+    // Translated evidence
     document.getElementById("verifyModalLocalized").innerHTML =
-        source.localized_explanation
-        ? `<strong>${esc(t().localized || "Localized Explanation")}:</strong><br><br>${esc(source.localized_explanation)}`
+        source.translated_evidence
+        ? `
+            <strong>🌐 ${esc(t().localized || "Translated Evidence")}:</strong>
+            <br><br>
+            ${esc(source.translated_evidence)}
+          `
         : "";
 
     document.getElementById("verifyModal")
