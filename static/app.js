@@ -102,8 +102,37 @@ const translations = {
         kbJurisdiction:"Jurisdiction",
         cancel:"Cancel",
         addIndex:"Add & Index",
-        noEvidence:"No evidence available yet."
+        noEvidence:"No evidence available yet.",
+        cancel:"Cancel",
+        addIndex:"Add & Index",
+        noEvidence:"No evidence available yet.",
+        navClassification: "Classification",
+        classificationHeading: "🧩 Formulation Classification",
+        classificationSubheading: "Identify the likely formulation and regulatory route.",
+        classificationDescribe: "Describe your formulation",
+        classificationQ1: "1. What is the primary intended use?",
+        classificationTherapeutic: "Therapeutic / medicinal",
+        classificationWellness: "Health / wellness / food",
+        classificationCosmetic: "Cosmetic",
+        classificationOther: "Other",
+        classificationQ2: "2. Is it based on an authoritative Ayurvedic/classical text?",
+        classificationQ3: "3. Is it newly developed or materially modified?",
+        classificationQ4: "4. Does it make therapeutic or disease-treatment claims?",
+        classificationYes: "Yes",
+        classificationNo: "No",
+        classificationUnknown: "Not sure",
+        classificationPlaceholder:
+            "Describe your formulation, ingredients, intended use, preparation method, or product claims...",
+        classificationButton: "Classify Formulation →",
+        classificationResult: "Preliminary Classification",
+        classificationAssessment: "Assessment",
+        classificationEvidence: "Supporting Evidence",
+        classificationOriginalEvidence: "Original Evidence",
+        classificationTranslatedEvidence: "Translated Evidence",
+        classificationViewSource: "View Source",
+        classificationNote: "Note"
     },
+
 
     hi:{
         brand:"IP-SAKTI सहायक",start:"पूछना शुरू करें",
@@ -311,8 +340,472 @@ let currentPatent = null;
 let lastQuestion = "";
 let currentJurisdiction = "IN";
 let lastSelectedSuggestionIndex = null;
+let classificationSources = [];
+
+/* ============================================================
+   CLASSIFICATION UI TRANSLATIONS
+   ============================================================ */
+
+const classificationUI = {
+
+    en: {
+        navClassification: "Classification",
+
+        classificationHeading:
+            "🧩 Formulation Classification",
+
+        classificationSubheading:
+            "Identify the likely formulation and regulatory route.",
+
+        classificationDescribe:
+            "Describe your formulation",
+
+        classificationQ1:
+            "1. What is the primary intended use?",
+
+        classificationTherapeutic:
+            "Therapeutic / medicinal",
+
+        classificationWellness:
+            "Health / wellness / food",
+
+        classificationCosmetic:
+            "Cosmetic",
+
+        classificationOther:
+            "Other",
+
+        classificationQ2:
+            "2. Is it based on an authoritative Ayurvedic/classical text?",
+
+        classificationQ3:
+            "3. Is it newly developed or materially modified?",
+
+        classificationQ4:
+            "4. Does it make therapeutic or disease-treatment claims?",
+
+        classificationYes:
+            "Yes",
+
+        classificationNo:
+            "No",
+
+        classificationUnknown:
+            "Not sure",
+
+        classificationPlaceholder:
+            "Describe your formulation, ingredients, intended use, preparation method, or product claims...",
+
+        classificationButton:
+            "Classify Formulation →",
+
+        classificationResult:
+            "Preliminary Classification",
+
+        classificationAssessment:
+            "Assessment",
+
+        classificationEvidence:
+            "Supporting Evidence",
+
+        classificationOriginalEvidence:
+            "Original Evidence",
+
+        classificationTranslatedEvidence:
+            "Translated Evidence",
+
+        classificationViewSource:
+            "View Source",
+
+        classificationNote:
+            "Note"
+    },
 
 
+    hi: {
+        navClassification: "वर्गीकरण",
+
+        classificationHeading:
+            "🧩 फॉर्मूलेशन वर्गीकरण",
+
+        classificationSubheading:
+            "संभावित फॉर्मूलेशन और नियामक मार्ग की पहचान करें।",
+
+        classificationDescribe:
+            "अपने फॉर्मूलेशन का वर्णन करें",
+
+        classificationQ1:
+            "1. प्राथमिक उपयोग क्या है?",
+
+        classificationTherapeutic:
+            "चिकित्सीय / औषधीय",
+
+        classificationWellness:
+            "स्वास्थ्य / वेलनेस / खाद्य",
+
+        classificationCosmetic:
+            "कॉस्मेटिक",
+
+        classificationOther:
+            "अन्य",
+
+        classificationQ2:
+            "2. क्या यह किसी प्रामाणिक आयुर्वेदिक/शास्त्रीय ग्रंथ पर आधारित है?",
+
+        classificationQ3:
+            "3. क्या इसे नया विकसित या महत्वपूर्ण रूप से संशोधित किया गया है?",
+
+        classificationQ4:
+            "4. क्या इसमें चिकित्सीय या रोग-उपचार संबंधी दावे हैं?",
+
+        classificationYes:
+            "हाँ",
+
+        classificationNo:
+            "नहीं",
+
+        classificationUnknown:
+            "पता नहीं",
+
+        classificationPlaceholder:
+            "अपने फॉर्मूलेशन, सामग्री, उद्देश्य, तैयारी की विधि या उत्पाद संबंधी दावों का वर्णन करें...",
+
+        classificationButton:
+            "फॉर्मूलेशन वर्गीकृत करें →",
+
+        classificationResult:
+            "प्रारंभिक वर्गीकरण",
+
+        classificationAssessment:
+            "आकलन",
+
+        classificationEvidence:
+            "सहायक साक्ष्य",
+
+        classificationOriginalEvidence:
+            "मूल साक्ष्य",
+
+        classificationTranslatedEvidence:
+            "अनूदित साक्ष्य",
+
+        classificationViewSource:
+            "स्रोत देखें",
+
+        classificationNote:
+            "टिप्पणी"
+    },
+
+
+    mr: {
+        navClassification: "वर्गीकरण",
+
+        classificationHeading:
+            "🧩 फॉर्म्युलेशन वर्गीकरण",
+
+        classificationSubheading:
+            "संभाव्य फॉर्म्युलेशन आणि नियामक मार्ग ओळखा.",
+
+        classificationDescribe:
+            "तुमच्या फॉर्म्युलेशनचे वर्णन करा",
+
+        classificationQ1:
+            "1. प्राथमिक उपयोग काय आहे?",
+
+        classificationTherapeutic:
+            "उपचारात्मक / औषधी",
+
+        classificationWellness:
+            "आरोग्य / वेलनेस / अन्न",
+
+        classificationCosmetic:
+            "कॉस्मेटिक",
+
+        classificationOther:
+            "इतर",
+
+        classificationQ2:
+            "2. हे अधिकृत आयुर्वेदिक/शास्त्रीय ग्रंथावर आधारित आहे का?",
+
+        classificationQ3:
+            "3. हे नव्याने विकसित किंवा लक्षणीयरीत्या बदललेले आहे का?",
+
+        classificationQ4:
+            "4. यात उपचारात्मक किंवा रोग-उपचाराचे दावे आहेत का?",
+
+        classificationYes:
+            "होय",
+
+        classificationNo:
+            "नाही",
+
+        classificationUnknown:
+            "माहित नाही",
+
+        classificationPlaceholder:
+            "तुमच्या फॉर्म्युलेशन, घटक, उपयोग, तयार करण्याची पद्धत किंवा उत्पादनाच्या दाव्यांचे वर्णन करा...",
+
+        classificationButton:
+            "फॉर्म्युलेशन वर्गीकृत करा →",
+
+        classificationResult:
+            "प्राथमिक वर्गीकरण",
+
+        classificationAssessment:
+            "मूल्यांकन",
+
+        classificationEvidence:
+            "सहाय्यक पुरावे",
+
+        classificationOriginalEvidence:
+            "मूळ पुरावा",
+
+        classificationTranslatedEvidence:
+            "अनुवादित पुरावा",
+
+        classificationViewSource:
+            "स्रोत पहा",
+
+        classificationNote:
+            "टीप"
+    },
+
+
+    bn: {
+        navClassification: "শ্রেণিবিন্যাস",
+        classificationHeading: "🧩 ফর্মুলেশন শ্রেণিবিন্যাস",
+        classificationSubheading: "সম্ভাব্য ফর্মুলেশন এবং নিয়ন্ত্রক পথ শনাক্ত করুন।",
+        classificationDescribe: "আপনার ফর্মুলেশন বর্ণনা করুন",
+        classificationQ1: "১. প্রাথমিক উদ্দেশ্য কী?",
+        classificationTherapeutic: "থেরাপিউটিক / ঔষধি",
+        classificationWellness: "স্বাস্থ্য / সুস্থতা / খাদ্য",
+        classificationCosmetic: "প্রসাধনী",
+        classificationOther: "অন্যান্য",
+        classificationQ2: "২. এটি কি কোনো প্রামাণিক আয়ুর্বেদিক/শাস্ত্রীয় গ্রন্থের ওপর ভিত্তি করে?",
+        classificationQ3: "৩. এটি কি নতুনভাবে তৈরি বা উল্লেখযোগ্যভাবে পরিবর্তিত?",
+        classificationQ4: "৪. এতে কি চিকিৎসা বা রোগ-চিকিৎসার দাবি রয়েছে?",
+        classificationYes: "হ্যাঁ",
+        classificationNo: "না",
+        classificationUnknown: "নিশ্চিত নই",
+        classificationPlaceholder: "আপনার ফর্মুলেশন, উপাদান, উদ্দেশ্য, প্রস্তুত প্রণালী বা পণ্যের দাবি বর্ণনা করুন...",
+        classificationButton: "ফর্মুলেশন শ্রেণিবিন্যাস করুন →",
+        classificationResult: "প্রাথমিক শ্রেণিবিন্যাস",
+        classificationAssessment: "মূল্যায়ন",
+        classificationEvidence: "সহায়ক প্রমাণ",
+        classificationOriginalEvidence: "মূল প্রমাণ",
+        classificationTranslatedEvidence: "অনূদিত প্রমাণ",
+        classificationViewSource: "উৎস দেখুন",
+        classificationNote: "নোট"
+    },
+
+
+    ta: {
+        navClassification: "வகைப்பாடு",
+        classificationHeading: "🧩 உருவாக்க வகைப்பாடு",
+        classificationSubheading: "சாத்தியமான உருவாக்கம் மற்றும் ஒழுங்குமுறை பாதையை அடையாளம் காணவும்.",
+        classificationDescribe: "உங்கள் உருவாக்கத்தை விவரிக்கவும்",
+        classificationQ1: "1. முதன்மை பயன்பாடு என்ன?",
+        classificationTherapeutic: "சிகிச்சை / மருத்துவ",
+        classificationWellness: "ஆரோக்கியம் / நலவாழ்வு / உணவு",
+        classificationCosmetic: "அழகுசாதனப் பொருள்",
+        classificationOther: "பிற",
+        classificationQ2: "2. இது ஒரு அங்கீகரிக்கப்பட்ட ஆயுர்வேத/பாரம்பரிய நூலை அடிப்படையாகக் கொண்டதா?",
+        classificationQ3: "3. இது புதிதாக உருவாக்கப்பட்டதா அல்லது குறிப்பிடத்தக்க வகையில் மாற்றப்பட்டதா?",
+        classificationQ4: "4. இது சிகிச்சை அல்லது நோய் சிகிச்சை தொடர்பான கூற்றுகளை முன்வைக்கிறதா?",
+        classificationYes: "ஆம்",
+        classificationNo: "இல்லை",
+        classificationUnknown: "தெரியவில்லை",
+        classificationPlaceholder: "உங்கள் உருவாக்கம், பொருட்கள், பயன்பாடு, தயாரிப்பு முறை அல்லது தயாரிப்பு கூற்றுகளை விவரிக்கவும்...",
+        classificationButton: "உருவாக்கத்தை வகைப்படுத்துக →",
+        classificationResult: "முதற்கட்ட வகைப்பாடு",
+        classificationAssessment: "மதிப்பீடு",
+        classificationEvidence: "ஆதாரச் சான்றுகள்",
+        classificationOriginalEvidence: "அசல் சான்று",
+        classificationTranslatedEvidence: "மொழிபெயர்க்கப்பட்ட சான்று",
+        classificationViewSource: "மூலத்தைப் பார்க்கவும்",
+        classificationNote: "குறிப்பு"
+    },
+
+
+    te: {
+        navClassification: "వర్గీకరణ",
+        classificationHeading: "🧩 ఫార్ములేషన్ వర్గీకరణ",
+        classificationSubheading: "సంభావ్య ఫార్ములేషన్ మరియు నియంత్రణ మార్గాన్ని గుర్తించండి.",
+        classificationDescribe: "మీ ఫార్ములేషన్‌ను వివరించండి",
+        classificationQ1: "1. ప్రధాన ఉపయోగం ఏమిటి?",
+        classificationTherapeutic: "చికిత్సా / ఔషధ",
+        classificationWellness: "ఆరోగ్యం / వెల్‌నెస్ / ఆహారం",
+        classificationCosmetic: "కాస్మెటిక్",
+        classificationOther: "ఇతర",
+        classificationQ2: "2. ఇది అధికారిక ఆయుర్వేద/శాస్త్రీయ గ్రంథంపై ఆధారపడి ఉందా?",
+        classificationQ3: "3. ఇది కొత్తగా అభివృద్ధి చేయబడిందా లేదా గణనీయంగా మార్చబడిందా?",
+        classificationQ4: "4. ఇది చికిత్సా లేదా వ్యాధి చికిత్సకు సంబంధించిన వాదనలు చేస్తుందా?",
+        classificationYes: "అవును",
+        classificationNo: "కాదు",
+        classificationUnknown: "తెలియదు",
+        classificationPlaceholder: "మీ ఫార్ములేషన్, పదార్థాలు, ఉద్దేశ్యం, తయారీ విధానం లేదా ఉత్పత్తి వాదనలను వివరించండి...",
+        classificationButton: "ఫార్ములేషన్‌ను వర్గీకరించండి →",
+        classificationResult: "ప్రాథమిక వర్గీకరణ",
+        classificationAssessment: "మూల్యాంకనం",
+        classificationEvidence: "మద్దతు ఇచ్చే ఆధారాలు",
+        classificationOriginalEvidence: "అసలు ఆధారం",
+        classificationTranslatedEvidence: "అనువదించిన ఆధారం",
+        classificationViewSource: "మూలాన్ని చూడండి",
+        classificationNote: "గమనిక"
+    },
+
+
+    kn: {
+        navClassification: "ವರ್ಗೀಕರಣ",
+        classificationHeading: "🧩 ಫಾರ್ಮುಲೇಶನ್ ವರ್ಗೀಕರಣ",
+        classificationSubheading: "ಸಂಭಾವ್ಯ ಫಾರ್ಮುಲೇಶನ್ ಮತ್ತು ನಿಯಂತ್ರಣ ಮಾರ್ಗವನ್ನು ಗುರುತಿಸಿ.",
+        classificationDescribe: "ನಿಮ್ಮ ಫಾರ್ಮುಲೇಶನ್ ಅನ್ನು ವಿವರಿಸಿ",
+        classificationQ1: "1. ಪ್ರಾಥಮಿಕ ಉದ್ದೇಶಿತ ಬಳಕೆ ಏನು?",
+        classificationTherapeutic: "ಚಿಕಿತ್ಸಾತ್ಮಕ / ಔಷಧೀಯ",
+        classificationWellness: "ಆರೋಗ್ಯ / ವೆಲ್‌ನೆಸ್ / ಆಹಾರ",
+        classificationCosmetic: "ಸೌಂದರ್ಯವರ್ಧಕ",
+        classificationOther: "ಇತರೆ",
+        classificationQ2: "2. ಇದು ಅಧಿಕೃತ ಆಯುರ್ವೇದಿಕ/ಶಾಸ್ತ್ರೀಯ ಗ್ರಂಥವನ್ನು ಆಧರಿಸಿದೆಯೇ?",
+        classificationQ3: "3. ಇದು ಹೊಸದಾಗಿ ಅಭಿವೃದ್ಧಿಪಡಿಸಲ್ಪಟ್ಟಿದೆಯೇ ಅಥವಾ ಗಮನಾರ್ಹವಾಗಿ ಬದಲಾಯಿಸಲ್ಪಟ್ಟಿದೆಯೇ?",
+        classificationQ4: "4. ಇದು ಚಿಕಿತ್ಸಾತ್ಮಕ ಅಥವಾ ರೋಗ ಚಿಕಿತ್ಸೆಯ ಹೇಳಿಕೆಗಳನ್ನು ಮಾಡುತ್ತದೆಯೇ?",
+        classificationYes: "ಹೌದು",
+        classificationNo: "ಇಲ್ಲ",
+        classificationUnknown: "ಖಚಿತವಿಲ್ಲ",
+        classificationPlaceholder: "ನಿಮ್ಮ ಫಾರ್ಮುಲೇಶನ್, ಪದಾರ್ಥಗಳು, ಉದ್ದೇಶ, ತಯಾರಿಕಾ ವಿಧಾನ ಅಥವಾ ಉತ್ಪನ್ನದ ಹೇಳಿಕೆಗಳನ್ನು ವಿವರಿಸಿ...",
+        classificationButton: "ಫಾರ್ಮುಲೇಶನ್ ವರ್ಗೀಕರಿಸಿ →",
+        classificationResult: "ಪ್ರಾಥಮಿಕ ವರ್ಗೀಕರಣ",
+        classificationAssessment: "ಮೌಲ್ಯಮಾಪನ",
+        classificationEvidence: "ಬೆಂಬಲಿಸುವ ಸಾಕ್ಷ್ಯ",
+        classificationOriginalEvidence: "ಮೂಲ ಸಾಕ್ಷ್ಯ",
+        classificationTranslatedEvidence: "ಅನುವಾದಿತ ಸಾಕ್ಷ್ಯ",
+        classificationViewSource: "ಮೂಲವನ್ನು ನೋಡಿ",
+        classificationNote: "ಗಮನಿಸಿ"
+    },
+
+
+    gu: {
+        navClassification: "વર્ગીકરણ",
+        classificationHeading: "🧩 ફોર્મ્યુલેશન વર્ગીકરણ",
+        classificationSubheading: "સંભવિત ફોર્મ્યુલેશન અને નિયમનકારી માર્ગ ઓળખો.",
+        classificationDescribe: "તમારા ફોર્મ્યુલેશનનું વર્ણન કરો",
+        classificationQ1: "1. મુખ્ય ઉપયોગ શું છે?",
+        classificationTherapeutic: "થેરાપ્યુટિક / ઔષધીય",
+        classificationWellness: "આરોગ્ય / વેલનેસ / ખોરાક",
+        classificationCosmetic: "કોસ્મેટિક",
+        classificationOther: "અન્ય",
+        classificationQ2: "2. શું તે અધિકૃત આયુર્વેદિક/શાસ્ત્રીય ગ્રંથ પર આધારિત છે?",
+        classificationQ3: "3. શું તે નવી રીતે વિકસાવવામાં આવ્યું છે અથવા નોંધપાત્ર રીતે બદલાયું છે?",
+        classificationQ4: "4. શું તે ઉપચારાત્મક અથવા રોગ-ઉપચારના દાવા કરે છે?",
+        classificationYes: "હા",
+        classificationNo: "ના",
+        classificationUnknown: "ખાતરી નથી",
+        classificationPlaceholder: "તમારા ફોર્મ્યુલેશન, ઘટકો, ઉપયોગ, બનાવવાની પદ્ધતિ અથવા ઉત્પાદનના દાવાઓનું વર્ણન કરો...",
+        classificationButton: "ફોર્મ્યુલેશન વર્ગીકૃત કરો →",
+        classificationResult: "પ્રાથમિક વર્ગીકરણ",
+        classificationAssessment: "મૂલ્યાંકન",
+        classificationEvidence: "સહાયક પુરાવા",
+        classificationOriginalEvidence: "મૂળ પુરાવો",
+        classificationTranslatedEvidence: "અનુવાદિત પુરાવો",
+        classificationViewSource: "સ્રોત જુઓ",
+        classificationNote: "નોંધ"
+    },
+
+
+    ml: {
+        navClassification: "വർഗ്ഗീകരണം",
+        classificationHeading: "🧩 ഫോർമുലേഷൻ വർഗ്ഗീകരണം",
+        classificationSubheading: "സാധ്യതയുള്ള ഫോർമുലേഷനും നിയന്ത്രണ പാതയും തിരിച്ചറിയുക.",
+        classificationDescribe: "നിങ്ങളുടെ ഫോർമുലേഷൻ വിവരിക്കുക",
+        classificationQ1: "1. പ്രധാന ഉദ്ദേശിച്ച ഉപയോഗം എന്താണ്?",
+        classificationTherapeutic: "ചികിത്സാ / ഔഷധ",
+        classificationWellness: "ആരോഗ്യം / വെൽനെസ് / ഭക്ഷണം",
+        classificationCosmetic: "കോസ്മെറ്റിക്",
+        classificationOther: "മറ്റുള്ളവ",
+        classificationQ2: "2. ഇത് ഒരു പ്രാമാണിക ആയുർവേദ/ശാസ്ത്രീയ ഗ്രന്ഥത്തെ അടിസ്ഥാനമാക്കിയുള്ളതാണോ?",
+        classificationQ3: "3. ഇത് പുതുതായി വികസിപ്പിച്ചതോ ഗണ്യമായി മാറ്റം വരുത്തിയതോ ആണോ?",
+        classificationQ4: "4. ഇത് ചികിത്സാ അല്ലെങ്കിൽ രോഗചികിത്സാ അവകാശവാദങ്ങൾ ഉന്നയിക്കുന്നുണ്ടോ?",
+        classificationYes: "അതെ",
+        classificationNo: "അല്ല",
+        classificationUnknown: "ഉറപ്പില്ല",
+        classificationPlaceholder: "നിങ്ങളുടെ ഫോർമുലേഷൻ, ചേരുവകൾ, ഉദ്ദേശ്യം, തയ്യാറാക്കുന്ന രീതി അല്ലെങ്കിൽ ഉൽപ്പന്ന അവകാശവാദങ്ങൾ വിവരിക്കുക...",
+        classificationButton: "ഫോർമുലേഷൻ വർഗ്ഗീകരിക്കുക →",
+        classificationResult: "പ്രാഥമിക വർഗ്ഗീകരണം",
+        classificationAssessment: "വിലയിരുത്തൽ",
+        classificationEvidence: "പിന്തുണയ്ക്കുന്ന തെളിവുകൾ",
+        classificationOriginalEvidence: "യഥാർത്ഥ തെളിവ്",
+        classificationTranslatedEvidence: "വിവർത്തനം ചെയ്ത തെളിവ്",
+        classificationViewSource: "ഉറവിടം കാണുക",
+        classificationNote: "കുറിപ്പ്"
+    },
+
+
+    pa: {
+        navClassification: "ਵਰਗੀਕਰਨ",
+        classificationHeading: "🧩 ਫਾਰਮੂਲੇਸ਼ਨ ਵਰਗੀਕਰਨ",
+        classificationSubheading: "ਸੰਭਾਵਿਤ ਫਾਰਮੂਲੇਸ਼ਨ ਅਤੇ ਨਿਯਮਕ ਮਾਰਗ ਦੀ ਪਛਾਣ ਕਰੋ।",
+        classificationDescribe: "ਆਪਣੇ ਫਾਰਮੂਲੇਸ਼ਨ ਦਾ ਵਰਣਨ ਕਰੋ",
+        classificationQ1: "1. ਮੁੱਖ ਉਦੇਸ਼ਿਤ ਵਰਤੋਂ ਕੀ ਹੈ?",
+        classificationTherapeutic: "ਥੈਰਾਪਿਊਟਿਕ / ਔਸ਼ਧੀ",
+        classificationWellness: "ਸਿਹਤ / ਵੈਲਨੈੱਸ / ਭੋਜਨ",
+        classificationCosmetic: "ਕਾਸਮੈਟਿਕ",
+        classificationOther: "ਹੋਰ",
+        classificationQ2: "2. ਕੀ ਇਹ ਕਿਸੇ ਪ੍ਰਮਾਣਿਕ ਆਯੁਰਵੇਦਿਕ/ਸ਼ਾਸਤਰੀ ਗ੍ਰੰਥ 'ਤੇ ਆਧਾਰਿਤ ਹੈ?",
+        classificationQ3: "3. ਕੀ ਇਹ ਨਵਾਂ ਤਿਆਰ ਕੀਤਾ ਗਿਆ ਜਾਂ ਮਹੱਤਵਪੂਰਨ ਤੌਰ 'ਤੇ ਬਦਲਿਆ ਗਿਆ ਹੈ?",
+        classificationQ4: "4. ਕੀ ਇਸ ਵਿੱਚ ਇਲਾਜ ਜਾਂ ਬਿਮਾਰੀ ਦੇ ਇਲਾਜ ਨਾਲ ਸੰਬੰਧਿਤ ਦਾਅਵੇ ਹਨ?",
+        classificationYes: "ਹਾਂ",
+        classificationNo: "ਨਹੀਂ",
+        classificationUnknown: "ਪਤਾ ਨਹੀਂ",
+        classificationPlaceholder: "ਆਪਣੇ ਫਾਰਮੂਲੇਸ਼ਨ, ਸਮੱਗਰੀ, ਉਦੇਸ਼, ਤਿਆਰੀ ਵਿਧੀ ਜਾਂ ਉਤਪਾਦ ਦੇ ਦਾਅਵਿਆਂ ਦਾ ਵਰਣਨ ਕਰੋ...",
+        classificationButton: "ਫਾਰਮੂਲੇਸ਼ਨ ਵਰਗੀਕ੍ਰਿਤ ਕਰੋ →",
+        classificationResult: "ਮੁੱਢਲਾ ਵਰਗੀਕਰਨ",
+        classificationAssessment: "ਮੁਲਾਂਕਣ",
+        classificationEvidence: "ਸਹਾਇਕ ਸਬੂਤ",
+        classificationOriginalEvidence: "ਮੂਲ ਸਬੂਤ",
+        classificationTranslatedEvidence: "ਅਨੁਵਾਦਿਤ ਸਬੂਤ",
+        classificationViewSource: "ਸਰੋਤ ਵੇਖੋ",
+        classificationNote: "ਨੋਟ"
+    },
+
+
+    sa: {
+        navClassification: "वर्गीकरणम्",
+        classificationHeading: "🧩 योगवर्गीकरणम्",
+        classificationSubheading: "सम्भावितस्य योगस्य नियामकमार्गस्य च परिचयं कुर्वन्तु।",
+        classificationDescribe: "स्वस्य योगस्य वर्णनं कुरुत",
+        classificationQ1: "१. मुख्यः प्रयोजितः उपयोगः कः?",
+        classificationTherapeutic: "चिकित्सात्मकः / औषधीयः",
+        classificationWellness: "आरोग्यम् / कल्याणम् / आहारः",
+        classificationCosmetic: "सौन्दर्यप्रसाधनम्",
+        classificationOther: "अन्यत्",
+        classificationQ2: "२. किं एषः प्रामाणिकस्य आयुर्वेदीयस्य/शास्त्रीयस्य ग्रन्थस्य आधारेण निर्मितः?",
+        classificationQ3: "३. किं एषः नूतनतया विकसितः अथवा महत्त्वेन परिवर्तितः?",
+        classificationQ4: "४. किं एषः चिकित्सात्मकान् वा रोगोपचारसम्बद्धान् दावान् करोति?",
+        classificationYes: "आम्",
+        classificationNo: "न",
+        classificationUnknown: "निश्चितं न",
+        classificationPlaceholder: "योगस्य, द्रव्याणां, प्रयोजनस्य, निर्माणविधेः अथवा उत्पादसम्बद्धदावानां वर्णनं कुरुत...",
+        classificationButton: "योगं वर्गीकुरुत →",
+        classificationResult: "प्रारम्भिकं वर्गीकरणम्",
+        classificationAssessment: "मूल्याङ्कनम्",
+        classificationEvidence: "समर्थनप्रमाणानि",
+        classificationOriginalEvidence: "मूलप्रमाणम्",
+        classificationTranslatedEvidence: "अनूदितप्रमाणम्",
+        classificationViewSource: "स्रोतः पश्यतु",
+        classificationNote: "टिप्पणी"
+    }
+};
+
+
+/* Merge Classification strings into the existing
+   translation system. */
+
+for (const code of Object.keys(classificationUI)) {
+
+    translations[code] = {
+        ...translations[code],
+        ...classificationUI[code]
+    };
+
+}
 /* ============================================================
    HELPERS
    ============================================================ */
@@ -577,7 +1070,7 @@ function changeLanguage(){
     applyTranslations(); 
  
     const jurisdictionSelect = 
-        document.getElementById("jurisdiction"); 
+        document.getElementById("globalJurisdiction"); 
  
     if(jurisdictionSelect){ 
         jurisdictionSelect.value = 
@@ -639,9 +1132,8 @@ function applyTranslations(){
     document.getElementById("composerHelp").textContent=x.composerHelp;
     document.getElementById("query").placeholder=x.placeholder;
     document.getElementById("jurisdictionLabel").textContent=x.jurisdiction;
-    document.getElementById("jurisdictionScope").textContent=x.scope || x.jurisdictionScope || "";
 
-    const js=document.getElementById("jurisdiction");
+    const js=document.getElementById("globalJurisdiction");
     if(js && x.jurisdictions){
         [...js.options].forEach((o,i)=>{ if(x.jurisdictions[i]) o.textContent=x.jurisdictions[i]; });
     }
@@ -1365,18 +1857,85 @@ function applyTranslations(){
         }
 
     };
+document.getElementById("navClassification").textContent =
+        x.navClassification || "Classification";
+
+    document.getElementById("classificationHeading").textContent =
+        x.classificationHeading;
+
+    document.getElementById("classificationSubheading").textContent =
+        x.classificationSubheading;
+
+    document.getElementById("classificationDescribe").textContent =
+        x.classificationDescribe;
+
+    document.getElementById("classificationQ1").textContent =
+        x.classificationQ1;
+
+    document.getElementById("classificationTherapeutic").textContent =
+        x.classificationTherapeutic;
+
+    document.getElementById("classificationWellness").textContent =
+        x.classificationWellness;
+
+    document.getElementById("classificationCosmetic").textContent =
+        x.classificationCosmetic;
+
+    document.getElementById("classificationOther").textContent =
+        x.classificationOther;
+
+    document.getElementById("classificationQ2").textContent =
+        x.classificationQ2;
+
+    document.getElementById("classificationQ3").textContent =
+        x.classificationQ3;
+
+    document.getElementById("classificationQ4").textContent =
+        x.classificationQ4;
+
+    document.getElementById("classificationClassicalYes").textContent =
+        x.classificationYes;
+
+    document.getElementById("classificationClassicalNo").textContent =
+        x.classificationNo;
+
+    document.getElementById("classificationClassicalUnknown").textContent =
+        x.classificationUnknown;
+
+    document.getElementById("classificationNovelYes").textContent =
+        x.classificationYes;
+
+    document.getElementById("classificationNovelNo").textContent =
+        x.classificationNo;
+
+    document.getElementById("classificationNovelUnknown").textContent =
+        x.classificationUnknown;
+
+    document.getElementById("classificationClaimsYes").textContent =
+        x.classificationYes;
+
+    document.getElementById("classificationClaimsNo").textContent =
+        x.classificationNo;
+
+    document.getElementById("classificationClaimsUnknown").textContent =
+        x.classificationUnknown;
+
+    document.getElementById("classificationInput").placeholder =
+        x.classificationPlaceholder;
+
+    document.getElementById("classifyFormulationButton").textContent =
+        x.classificationButton;
+
+    document.getElementById("classificationResultHeading").textContent =
+        x.classificationResult;
 
 
 }
 
 function changeJurisdiction() {
 
-    const select =
-        document.getElementById("jurisdiction");
-
-    if (!select) {
-        return;
-    }
+const select =
+    document.getElementById("globalJurisdiction");
 
     // Get the newly selected jurisdiction
     currentJurisdiction = select.value;
@@ -1916,7 +2475,7 @@ function getSourceUrl(source) {
 }
 
 function updateJurisdictionPreview(){
-    const select=document.getElementById("jurisdiction");
+    const select=document.getElementById("globalJurisdiction");
     if(select) select.value=currentJurisdiction;
     const label=select?.options[select.selectedIndex]?.textContent || "India";
     const chip=document.getElementById("chipJurisdiction");
@@ -1926,7 +2485,7 @@ function updateJurisdictionPreview(){
 }
 
 function getSelectedJurisdictionLabel(){
-    const select=document.getElementById("jurisdiction");
+    const select=document.getElementById("globalJurisdiction");
     return select?.options[select.selectedIndex]?.textContent || "India";
 }
 
@@ -1950,6 +2509,7 @@ function openApp(screen){
         processing:"screenProcessing",
         result:"screenResult",
         patents:"screenPatents",
+        classification:"screenClassification",
         kb:"screenKB"
     };
 
@@ -1962,6 +2522,7 @@ function openApp(screen){
 
     document.getElementById("navAsk").classList.toggle("active", screen === "ask" || screen === "processing" || screen === "result");
     document.getElementById("navPatents").classList.toggle("active", screen === "patents");
+    document.getElementById("navClassification").classList.toggle("active",screen === "classification");
     document.getElementById("navKB").classList.toggle("active", screen === "kb");
 }
 
@@ -2121,13 +2682,11 @@ document.getElementById("chipIPType").textContent =
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({
-                    query,
-                    language:currentLanguage,
-                    jurisdiction:
-                        document.getElementById(
-                         "jurisdiction" ).value
-                })
+                body: JSON.stringify({
+    query,
+    language: currentLanguage,
+    jurisdiction: currentJurisdiction
+})
             });
 
         if(!response.ok){
@@ -2462,6 +3021,293 @@ function formatSimilarity(value){
     return `${n.toFixed(1)}% ${words[currentLanguage] || words.en}`;
 }
 
+function renderPriorArtRadar( results,concepts,tkSignal)
+{
+
+    const radar =
+        document.getElementById("priorArtRadar");
+
+    const signal =
+        document.getElementById("radarSignal");
+
+    const summary =
+        document.getElementById("radarSummary");
+
+    const radarConcepts =
+        document.getElementById("radarConcepts");
+
+    const reasons =
+        document.getElementById("radarReasons");
+
+
+    if(!results || !results.length){
+
+        radar.classList.add("hidden");
+        return;
+    }
+
+
+    // ------------------------------------------
+    // Highest similarity result
+    // ------------------------------------------
+
+    const topPatent = results[0];
+
+    const topScore =
+        Number(topPatent.similarity) || 0;
+
+
+    // ------------------------------------------
+    // Similarity signal
+    // ------------------------------------------
+
+    let level = "";
+    let levelText = "";
+
+    if(topScore >= 70){
+
+        level = "high";
+        levelText = {
+            en: "High similarity",
+            hi: "उच्च समानता",
+            mr: "उच्च समानता",
+            bn: "উচ্চ সাদৃশ্য",
+            ta: "அதிக ஒற்றுமை",
+            te: "అధిక సారూప్యం",
+            kn: "ಹೆಚ್ಚಿನ ಸಾಮ್ಯತೆ",
+            gu: "ઉચ્ચ સમાનતા",
+            ml: "ഉയർന്ന സാമ്യം",
+            pa: "ਉੱਚ ਸਮਾਨਤਾ",
+            sa: "उच्चं सादृश्यम्"
+        };
+
+    }
+    else if(topScore >= 40){
+
+        level = "moderate";
+        levelText = {
+            en: "Moderate similarity",
+            hi: "मध्यम समानता",
+            mr: "मध्यम समानता",
+            bn: "মাঝারি সাদৃশ্য",
+            ta: "மிதமான ஒற்றுமை",
+            te: "మధ్యస్థ సారూప్యం",
+            kn: "ಮಧ್ಯಮ ಸಾಮ್ಯತೆ",
+            gu: "મધ્યમ સમાનતા",
+            ml: "മിതമായ സാമ്യം",
+            pa: "ਦਰਮਿਆਨੀ ਸਮਾਨਤਾ",
+            sa: "मध्यमं सादृश्यम्"
+        };
+
+    }
+    else{
+
+        level = "low";
+        levelText = {
+            en: "Low similarity",
+            hi: "कम समानता",
+            mr: "कमी समानता",
+            bn: "কম সাদৃশ্য",
+            ta: "குறைந்த ஒற்றுமை",
+            te: "తక్కువ సారూప్యం",
+            kn: "ಕಡಿಮೆ ಸಾಮ್ಯತೆ",
+            gu: "ઓછી સમાનતા",
+            ml: "കുറഞ്ഞ സാമ്യം",
+            pa: "ਘੱਟ ਸਮਾਨਤਾ",
+            sa: "न्यूनं सादृश्यम्"
+        };
+
+    }
+
+
+    const localizedLevel =
+        levelText[currentLanguage] ||
+        levelText.en;
+
+
+    // ------------------------------------------
+    // Radar signal
+    // ------------------------------------------
+
+    signal.textContent =
+        `${localizedLevel} · ${topScore.toFixed(1)}%`;
+
+    signal.className =
+        `radar-signal ${level}`;
+
+
+    // ------------------------------------------
+    // Summary
+    // ------------------------------------------
+
+    const summaryText = {
+
+        en: `${results.length} potentially relevant patent record${results.length === 1 ? "" : "s"} identified.`,
+        hi: `${results.length} संभावित रूप से प्रासंगिक पेटेंट रिकॉर्ड मिले।`,
+        mr: `${results.length} संभाव्य संबंधित पेटंट रेकॉर्ड आढळले.`,
+        bn: `${results.length}টি সম্ভাব্য প্রাসঙ্গিক পেটেন্ট রেকর্ড পাওয়া গেছে।`,
+        ta: `${results.length} சாத்தியமான தொடர்புடைய காப்புரிமை பதிவுகள் கண்டறியப்பட்டன.`,
+        te: `${results.length} సంబంధిత పేటెంట్ రికార్డులు గుర్తించబడ్డాయి.`,
+        kn: `${results.length} ಸಂಬಂಧಿತ ಪೇಟೆಂಟ್ ದಾಖಲೆಗಳು ಕಂಡುಬಂದಿವೆ.`,
+        gu: `${results.length} સંભવિત સંબંધિત પેટન્ટ રેકોર્ડ મળ્યા.`,
+        ml: `${results.length} പ്രസക്തമായ പേറ്റന്റ് രേഖകൾ കണ്ടെത്തി.`,
+        pa: `${results.length} ਸੰਭਾਵੀ ਸੰਬੰਧਿਤ ਪੇਟੈਂਟ ਰਿਕਾਰਡ ਮਿਲੇ।`,
+        sa: `${results.length} सम्भाविताः सम्बन्धिताः पेटेण्ट्-अभिलेखाः प्राप्ताः।`
+    };
+
+
+    summary.textContent =
+        summaryText[currentLanguage] ||
+        summaryText.en;
+
+    // ------------------------------------------
+// Traditional Knowledge / legal evidence
+// ------------------------------------------
+
+const tkLabels = {
+
+    en: "🌿 TK-related legal evidence detected",
+    hi: "🌿 पारंपरिक ज्ञान से संबंधित कानूनी साक्ष्य मिले",
+    mr: "🌿 पारंपरिक ज्ञानाशी संबंधित कायदेशीर पुरावे आढळले",
+    bn: "🌿 প্রথাগত জ্ঞান-সম্পর্কিত আইনি প্রমাণ পাওয়া গেছে",
+    ta: "🌿 பாரம்பரிய அறிவு தொடர்பான சட்ட ஆதாரம் கண்டறியப்பட்டது",
+    te: "🌿 సాంప్రదాయ జ్ఞానానికి సంబంధించిన చట్టపరమైన ఆధారాలు కనుగొనబడ్డాయి",
+    kn: "🌿 ಸಾಂಪ್ರದಾಯಿಕ ಜ್ಞಾನಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಕಾನೂನು ಸಾಕ್ಷ್ಯ ಕಂಡುಬಂದಿದೆ",
+    gu: "🌿 પરંપરાગત જ્ઞાન સંબંધિત કાનૂની પુરાવા મળ્યા",
+    ml: "🌿 പരമ്പരാഗത അറിവുമായി ബന്ധപ്പെട്ട നിയമപരമായ തെളിവുകൾ കണ്ടെത്തി",
+    pa: "🌿 ਰਵਾਇਤੀ ਗਿਆਨ ਨਾਲ ਸੰਬੰਧਿਤ ਕਾਨੂੰਨੀ ਸਬੂਤ ਮਿਲੇ",
+    sa: "🌿 पारम्परिकज्ञानसम्बद्धाः वैधानिकाः प्रमाणाः प्राप्ताः"
+};
+
+const radarTK =
+    document.getElementById("radarTK");
+
+if(radarTK){
+
+    if(tkSignal && tkSignal.detected){
+
+        const count =
+            Number(tkSignal.count || 0);
+
+        const sources =
+            tkSignal.sources || [];
+
+        const title =
+            tkLabels[currentLanguage] ||
+            tkLabels.en;
+
+        const sourceItems =
+            sources
+                .slice(0,3)
+                .map(
+                    source => `
+                        <div class="radar-tk-source">
+
+                            <strong>
+                                ${esc(source.title || "Source")}
+                            </strong>
+
+                            <div class="patent-meta">
+                                ${esc(source.section || "")}
+                            </div>
+
+                        </div>
+                    `
+                )
+                .join("");
+
+        radarTK.innerHTML = `
+            <div class="radar-tk-title">
+                ${esc(title)}
+            </div>
+
+            <div class="patent-meta"
+                 style="margin-top:6px;">
+                ${count} related legal sources found
+            </div>
+
+            <div class="radar-tk-sources">
+                ${sourceItems}
+            </div>
+        `;
+
+    }
+    else{
+
+        radarTK.innerHTML = "";
+    }
+}
+
+    // ------------------------------------------
+    // Matching concepts
+    // ------------------------------------------
+
+    const topConcepts =
+        topPatent.relevant_concepts &&
+        topPatent.relevant_concepts.length
+            ? topPatent.relevant_concepts
+            : (concepts || []).slice(0,3);
+
+
+    radarConcepts.innerHTML =
+        topConcepts
+            .slice(0,3)
+            .map(
+                c =>
+                    `<span class="mini-chip">${esc(c)}</span>`
+            )
+            .join("");
+
+
+    // ------------------------------------------
+    // Why flagged
+    // ------------------------------------------
+
+    const reasonLabels = {
+
+        en: "Why this result appeared",
+        hi: "यह परिणाम क्यों दिखाई दिया",
+        mr: "हा परिणाम का दिसला",
+        bn: "এই ফলাফল কেন দেখানো হয়েছে",
+        ta: "இந்த முடிவு ஏன் காட்டப்பட்டது",
+        te: "ఈ ఫలితం ఎందుకు చూపబడింది",
+        kn: "ಈ ಫಲಿತಾಂಶ ಏಕೆ ತೋರಿಸಲಾಗಿದೆ",
+        gu: "આ પરિણામ શા માટે દેખાયું",
+        ml: "ഈ ഫലം എന്തുകൊണ്ട് കാണിച്ചു",
+        pa: "ਇਹ ਨਤੀਜਾ ਕਿਉਂ ਦਿਖਾਇਆ ਗਿਆ",
+        sa: "अयं परिणामः कुतः प्रदर्शितः"
+    };
+
+
+    const reasonsTitle =
+        reasonLabels[currentLanguage] ||
+        reasonLabels.en;
+
+
+    const patentReasons =
+        topPatent.reasons || [];
+
+
+    reasons.innerHTML = `
+        <strong>${esc(reasonsTitle)}</strong>
+
+        <div style="margin-top:8px;">
+            ${
+                patentReasons
+                    .slice(0,3)
+                    .map(
+                        reason =>
+                            `<div>• ${esc(reason)}</div>`
+                    )
+                    .join("")
+            }
+        </div>
+    `;
+
+
+    radar.classList.remove("hidden");
+}
+
 async function findSimilarPatents(){
 
     const description =
@@ -2525,6 +3371,11 @@ async function findSimilarPatents(){
 
         patentResults =
             data.results || [];
+            renderPriorArtRadar(
+            patentResults,
+            data.concepts || [],
+            data.tk_signal || null
+        );
 
         document.getElementById("innovationConcepts")
             .innerHTML =
@@ -3386,7 +4237,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         ? currentLanguage
         : "en";
 
-    document.getElementById("jurisdiction").value = ["IN","US","UK","WIPO"].includes(currentJurisdiction) ? currentJurisdiction : "IN";
+    document.getElementById("globalJurisdiction").value = ["IN","US","UK","WIPO"].includes(currentJurisdiction) ? currentJurisdiction : "IN";
     applyTranslations();
     updateJurisdictionPreview();
 
@@ -3498,3 +4349,373 @@ document.addEventListener("DOMContentLoaded", function () {
     refreshKnowledgeBase();
 });
 applyPatentDrawerTranslation();
+
+async function classifyFormulation(){
+
+    const description =
+        document.getElementById("classificationInput")
+            .value
+            .trim();
+
+
+    const intendedUse =
+        document.querySelector(
+            'input[name="classificationUse"]:checked'
+        )?.value || "";
+
+
+    const classicalBasis =
+        document.querySelector(
+            'input[name="classificationClassical"]:checked'
+        )?.value || "";
+
+
+    const novel =
+        document.querySelector(
+            'input[name="classificationNovel"]:checked'
+        )?.value || "";
+
+
+    const therapeuticClaims =
+        document.querySelector(
+            'input[name="classificationClaims"]:checked'
+        )?.value || "";
+
+
+    if(!description){
+
+        alert(
+            "Please describe your formulation first."
+        );
+
+        document.getElementById(
+            "classificationInput"
+        ).focus();
+
+        return;
+    }
+
+
+    if(
+        !intendedUse ||
+        !classicalBasis ||
+        !novel ||
+        !therapeuticClaims
+    ){
+
+        alert(
+            "Please answer all four questions."
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "classifyFormulationButton"
+        );
+
+
+    button.disabled = true;
+    button.textContent = "Classifying...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/classification",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        description:description,
+
+                        intended_use:
+                            intendedUse,
+
+                        classical_basis:
+                            classicalBasis,
+
+                        novel:
+                            novel,
+
+                        therapeutic_claims:
+                            therapeuticClaims,
+
+                        jurisdiction:
+                            currentJurisdiction || "IN",
+
+                        language:
+                            currentLanguage || "en"
+                    })
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                `Classification failed: ${response.status}`
+            );
+        }
+
+
+        const data =
+            await response.json();
+        
+        classificationSources =
+        data.sources || [];
+
+
+        const result =
+            document.getElementById(
+                "classificationResult"
+            );
+
+
+        const content =
+            document.getElementById(
+                "classificationResultContent"
+            );
+
+
+        const reasonsHTML =
+            (data.reasons || [])
+                .map(
+                    reason =>
+                        `<li>${esc(reason)}</li>`
+                )
+                .join("");
+
+            const sourcesHTML =
+    classificationSources
+        .map(
+            (source, index) => `
+
+                <div class="classification-source">
+
+                    <strong>
+                        ${esc(source.title || "")}
+                    </strong>
+
+                    <div class="patent-meta">
+                        ${esc(source.section || "")}
+                    </div>
+
+                    <div class="classification-source-preview">
+                        ${esc(
+                            source.translated_evidence ||
+                            source.text ||
+                            ""
+                        )}
+                    </div>
+
+                    <div class="source-actions">
+
+                        <button
+                            type="button"
+                            class="source-button"
+                            onclick="openClassificationSource(${index})">
+
+                            View Source
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `
+        )
+        .join("");
+
+
+        content.innerHTML = `
+
+            <div class="classification-result-title">
+
+                ${esc(
+                    data.classification ||
+                    "Further Classification Required"
+                )}
+
+            </div>
+
+
+            <div class="classification-result-section">
+
+                <strong>
+                    Assessment
+                </strong>
+
+                <ul class="classification-result-list">
+
+                    ${reasonsHTML}
+
+                </ul>
+
+            </div>
+
+
+            ${
+                sourcesHTML
+                ? `
+                    <div class="classification-result-section">
+
+                        <strong>
+                            Supporting Evidence
+                        </strong>
+
+                        ${sourcesHTML}
+
+                    </div>
+                  `
+                : ""
+            }
+
+
+            <div class="classification-result-section">
+
+                <strong>
+                    Note
+                </strong>
+
+                <p>
+                    ${esc(
+                        data.disclaimer ||
+                        "This is a preliminary screening result."
+                    )}
+                </p>
+
+            </div>
+        `;
+
+
+        result.classList.remove("hidden");
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Classification error:",
+            error
+        );
+
+        alert(
+            "Unable to classify the formulation right now."
+        );
+
+    }
+    finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "Classify Formulation →";
+    }
+}
+function openClassificationSource(index){
+
+    const source =
+        classificationSources[index];
+
+    if(!source){
+        return;
+    }
+
+
+    document.getElementById(
+        "classificationSourceTitle"
+    ).textContent =
+        source.title || "Source";
+
+
+    document.getElementById(
+        "classificationSourceMeta"
+    ).textContent =
+        source.section || "";
+
+
+    document.getElementById(
+        "classificationSourceOriginal"
+    ).innerHTML = `
+
+        <strong>
+            Original Evidence
+        </strong>
+
+        <br><br>
+
+        ${esc(source.text || "")}
+
+    `;
+
+
+    document.getElementById(
+        "classificationSourceTranslated"
+    ).innerHTML =
+
+        source.translated_evidence
+        ? `
+
+            <strong>
+                🌐 Translated Evidence
+            </strong>
+
+            <br><br>
+
+            ${esc(
+                source.translated_evidence
+            )}
+
+          `
+        : "";
+
+
+    const external =
+        document.getElementById(
+            "classificationSourceExternal"
+        );
+
+
+    if(source.url){
+
+        external.innerHTML = `
+
+            <a
+                href="${esc(source.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="source-button">
+
+                Open Original Source ↗
+
+            </a>
+
+        `;
+
+    } else {
+
+        external.innerHTML = "";
+
+    }
+
+
+    document.getElementById(
+        "classificationSourceModal"
+    ).classList.remove("hidden");
+}
+function closeClassificationSource(){
+
+    document.getElementById(
+        "classificationSourceModal"
+    ).classList.add("hidden");
+}

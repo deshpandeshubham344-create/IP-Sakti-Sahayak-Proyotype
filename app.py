@@ -143,6 +143,14 @@ class PatentSearchRequest(BaseModel):
     jurisdiction: str = "IN"
     top_k: int = 5
 
+class ClassificationRequest(BaseModel):
+    description: str
+    intended_use: str
+    classical_basis: str
+    novel: str
+    therapeutic_claims: str
+    jurisdiction: str = "IN"
+    language: str = "en"
 
 # ============================================================
 # MULTILINGUAL QUERY NORMALIZATION
@@ -1300,6 +1308,105 @@ Text:
         # Never break the existing prototype
         # if the translation service is unavailable.
         return text
+
+def translate_texts_batch(
+    texts: List[str],
+    target_language: str,
+) -> List[str]:
+
+    if not texts:
+        return []
+
+    if target_language == "en":
+        return texts
+
+    language_name = LANGUAGE_NAMES.get(
+        target_language,
+        "English"
+    )
+
+    indexed_texts = [
+        (index, text)
+        for index, text in enumerate(texts)
+        if text
+    ]
+
+    if not indexed_texts:
+        return [""] * len(texts)
+
+    combined = "\n\n".join(
+        f"<<<TEXT_{index}>>>\n{text}\n<<<END_TEXT_{index}>>>"
+        for index, text in indexed_texts
+    )
+
+    prompt = f"""
+Translate each text into {language_name}.
+
+Rules:
+- Translate only.
+- Do not summarize.
+- Do not explain.
+- Do not add facts.
+- Do not remove facts.
+- Preserve legal meaning.
+- Preserve section numbers, subsection numbers, citations,
+  patent numbers, names, dates, percentages, URLs and technical terms.
+- Preserve the TEXT markers exactly.
+- Keep the same order.
+- Return ONLY the translated texts with their markers.
+
+{combined}
+"""
+
+    try:
+
+        response = gemini_client.models.generate_content(
+            model="gemini-3.5-flash-lite",
+            contents=prompt,
+        )
+
+        output = (response.text or "").strip()
+
+        if not output:
+            return texts
+
+        translated = list(texts)
+
+        for index, original in indexed_texts:
+
+            start_marker = f"<<<TEXT_{index}>>>"
+            end_marker = f"<<<END_TEXT_{index}>>>"
+
+            start = output.find(start_marker)
+
+            if start == -1:
+                continue
+
+            start += len(start_marker)
+
+            end = output.find(
+                end_marker,
+                start
+            )
+
+            if end == -1:
+                continue
+
+            value = output[start:end].strip()
+
+            if value:
+                translated[index] = value
+
+        return translated
+
+    except Exception as exc:
+
+        print(
+            f"Gemini batch translation failed "
+            f"for {target_language}: {exc}"
+        )
+
+        return texts
         
 def search_patents(
     innovation: str,
@@ -1412,12 +1519,276 @@ def search_patents(
             item["reasons"].append(
                 "Textual/conceptual overlap in the prototype corpus"
             )
+        # Prior-Art Radar signal
+        if score_value >= 0.70:
+            item["similarity_level"] = "High similarity"
+        elif score_value >= 0.40:
+            item["similarity_level"] = "Moderate similarity"
+        else:
+            item["similarity_level"] = "Low similarity"
+
+        item["matched_concept_count"] = len(
+            item["relevant_concepts"]
+        )
+
+        item["radar_signal"] = {
+            "similarity_level": item["similarity_level"],
+            "matched_concepts": item["relevant_concepts"],
+            "reasons": item["reasons"],
+        }
 
         results.append(item)
 
     return results
 
+def is_tk_related_document(
+    document: Dict[str, Any]
+) -> bool:
 
+    keywords = [
+        str(k).strip().lower()
+        for k in document.get("keywords", [])
+    ]
+
+    title = str(
+        document.get("title", "")
+    ).lower()
+
+    text = str(
+        document.get("text", "")
+    ).lower()
+
+    document_type = str(
+        document.get("document_type", "")
+    ).strip().lower()
+
+    # Explicit TK document classification
+    if document_type in {
+        "tk",
+        "traditional knowledge",
+        "traditional-knowledge",
+    }:
+        return True
+
+    # Strong indicators of traditional-knowledge relevance
+    tk_terms = {
+        "traditional knowledge",
+        "traditional formulation",
+        "indigenous knowledge",
+        "known properties",
+        "section 3(p)",
+        "tkdl",
+        "traditional knowledge digital library",
+    }
+
+    keyword_match = any(
+        term in keywords
+        for term in tk_terms
+    )
+
+    text_match = any(
+        term in title or term in text
+        for term in tk_terms
+    )
+
+    return keyword_match or text_match
+
+
+def classify_formulation_rule_based(
+    intended_use: str,
+    classical_basis: str,
+    novel: str,
+    therapeutic_claims: str,
+) -> Dict[str, Any]:
+
+    classification = "Further classification required"
+    confidence = "Preliminary"
+
+    reasons = []
+
+    # Cosmetic route
+    if intended_use == "cosmetic":
+
+        classification = "Likely Cosmetic Candidate"
+
+        reasons.append(
+            "The stated primary intended use is cosmetic."
+        )
+
+        return {
+            "classification": classification,
+            "confidence": confidence,
+            "reasons": reasons,
+        }
+
+    # Wellness / food route
+    if intended_use == "wellness":
+
+        classification = (
+            "Likely Ayurveda-Aahara / Wellness Candidate"
+        )
+
+        reasons.append(
+            "The stated primary intended use is health, "
+            "wellness, or food."
+        )
+
+        return {
+            "classification": classification,
+            "confidence": confidence,
+            "reasons": reasons,
+        }
+
+    # Therapeutic + classical + not modified
+    if (
+        intended_use == "therapeutic"
+        and classical_basis == "yes"
+        and novel == "no"
+    ):
+
+        classification = (
+            "Likely Classical Ayurvedic Medicine"
+        )
+
+        reasons.append(
+            "The formulation is intended for therapeutic "
+            "or medicinal use."
+        )
+
+        reasons.append(
+            "The user indicates that it is based on "
+            "an authoritative Ayurvedic/classical text."
+        )
+
+        reasons.append(
+            "The user indicates that it is not newly "
+            "developed or materially modified."
+        )
+
+        return {
+            "classification": classification,
+            "confidence": confidence,
+            "reasons": reasons,
+        }
+
+    # Therapeutic + newly developed / modified
+    if (
+        intended_use == "therapeutic"
+        and novel == "yes"
+    ):
+
+        classification = (
+            "Likely New / Modified Formulation Candidate"
+        )
+
+        reasons.append(
+            "The formulation has a therapeutic or "
+            "medicinal intended use."
+        )
+
+        reasons.append(
+            "The user indicates that the formulation "
+            "is newly developed or materially modified."
+        )
+
+        if therapeutic_claims == "yes":
+
+            reasons.append(
+                "The formulation makes therapeutic or "
+                "disease-treatment claims."
+            )
+
+        return {
+            "classification": classification,
+            "confidence": confidence,
+            "reasons": reasons,
+        }
+
+    # Therapeutic but insufficient information
+    if intended_use == "therapeutic":
+
+        classification = (
+            "Therapeutic Ayurvedic Formulation — "
+            "Further Classification Required"
+        )
+
+        reasons.append(
+            "The stated primary use is therapeutic or medicinal."
+        )
+
+        reasons.append(
+            "The available answers do not provide enough "
+            "information for a narrower preliminary category."
+        )
+
+        return {
+            "classification": classification,
+            "confidence": confidence,
+            "reasons": reasons,
+        }
+
+    return {
+        "classification": classification,
+        "confidence": confidence,
+        "reasons": [
+            "The supplied responses do not support "
+            "a narrower preliminary classification."
+        ],
+    }
+
+def get_classification_evidence_query(
+    classification: str,
+    description: str,
+) -> str:
+
+    if "Classical Ayurvedic Medicine" in classification:
+
+        return (
+            f"{description} "
+            "classical Ayurvedic medicine "
+            "authoritative Ayurvedic text "
+            "classical formulation "
+            "Ayurvedic drugs"
+        )
+
+    if "New / Modified Formulation" in classification:
+
+        return (
+            f"{description} "
+            "new formulation "
+            "new drug "
+            "modified formulation "
+            "patent proprietary medicine "
+            "Ayurvedic medicine"
+        )
+
+    if "Cosmetic Candidate" in classification:
+
+        return (
+            f"{description} "
+            "cosmetic "
+            "cosmetic product "
+            "external application "
+            "skin "
+            "beauty"
+        )
+
+    if "Ayurveda-Aahara / Wellness" in classification:
+
+        return (
+            f"{description} "
+            "Ayurveda-Aahara "
+            "food "
+            "wellness "
+            "health food "
+            "nutraceutical"
+        )
+
+    return (
+        f"{description} "
+        "Ayurvedic formulation "
+        "regulatory classification"
+    )
 # ============================================================
 # ROUTES
 # ============================================================
@@ -1757,62 +2128,95 @@ def chat(req: ChatRequest):
     normalized_query = normalize_multilingual(
         query
     )
-    
 
     hits = retrieve(
-        req.query,
+        query,
         jurisdiction=jurisdiction,
         k=4,
     )
 
+    # Build the complete answer in English first
     answer = choose_answer(
-    normalized_query,
-    "en",
-    hits,
-    jurisdiction
-)
+        normalized_query,
+        "en",
+        hits,
+        jurisdiction
+    )
 
-# ------------------------------------------------------------
-# GEMINI TRANSLATION
-# ------------------------------------------------------------
+    # ============================================================
+    # ONE GEMINI CALL FOR ANSWER + ALL EVIDENCE
+    # ============================================================
 
-    translated_answer = translate_text(
-        answer,
+    translation_texts = [
+        answer
+    ]
+
+    for hit in hits:
+        translation_texts.append(
+            str(hit.get("text", "")).strip()
+        )
+
+    translated_texts = translate_texts_batch(
+        translation_texts,
         language
     )
 
+    translated_answer = (
+        translated_texts[0]
+        if translated_texts
+        else answer
+    )
+
+    # ============================================================
+    # BUILD LOCALIZED SOURCES
+    # ============================================================
+
     localized_sources = []
 
-    for hit in hits:
+    for index, hit in enumerate(hits):
 
         item = dict(hit)
 
-        # Existing predefined localized explanation
-        existing_localized = get_localized_explanation(
-            hit.get("section", ""),
-            language
+        item["localized_explanation"] = (
+            get_localized_explanation(
+                hit.get("section", ""),
+                language
+            )
         )
 
-        # Translate the actual retrieved evidence passage
-        translated_evidence = translate_text(
-            str(hit.get("text", "")).strip(),
-            language
-        )
+        evidence_index = index + 1
 
-        item["localized_explanation"] = existing_localized
-        item["translated_evidence"] = translated_evidence
+        item["translated_evidence"] = (
+            translated_texts[evidence_index]
+            if evidence_index < len(translated_texts)
+            else hit.get("text", "")
+        )
 
         localized_sources.append(item)
 
     return {
+
         "answer": translated_answer,
+
         "detected_language": language,
-        "language_name": SUPPORTED_LANGUAGES[language],
-        "jurisdiction": jurisdiction,
-        "jurisdiction_name": SUPPORTED_JURISDICTIONS[jurisdiction],
-        "mode": "RAG-MVP",
-        "normalized_query": normalized_query,
-        "sources": localized_sources,
+
+        "language_name":
+            SUPPORTED_LANGUAGES[language],
+
+        "jurisdiction":
+            jurisdiction,
+
+        "jurisdiction_name":
+            SUPPORTED_JURISDICTIONS[jurisdiction],
+
+        "mode":
+            "RAG-MVP",
+
+        "normalized_query":
+            normalized_query,
+
+        "sources":
+            localized_sources,
     }
 
 
@@ -1842,16 +2246,160 @@ def patent_search(req: PatentSearchRequest):
         jurisdiction=jurisdiction,
         top_k=req.top_k,
     )
+    tk_query = (
+        innovation
+        + " traditional knowledge section 3(p) "
+        + "traditional formulation indigenous knowledge"
+    )
+
+    tk_documents = retrieve(
+        tk_query,
+        jurisdiction=jurisdiction,
+        k=10,
+    )
+
+    tk_matches = [
+        doc
+        for doc in tk_documents
+        if is_tk_related_document(doc)
+    ]
+
+    tk_matches = tk_matches[:3]
+    return {
+    "innovation": innovation,
+    "jurisdiction": jurisdiction,
+    "jurisdiction_name": SUPPORTED_JURISDICTIONS[jurisdiction],
+    "concepts": extract_concepts(innovation),
+    "results": results,
+
+    "tk_signal": {
+        "detected": bool(tk_matches),
+        "count": len(tk_matches),
+        "sources": tk_matches,
+    },
+
+    "metric": "Semantic Similarity (prototype: TF-IDF cosine similarity)",
+    "disclaimer": (
+        "Similarity indicates textual/conceptual relevance in this prototype "
+        "and does not determine patentability."
+    ),
+}
+
+@app.post("/api/classification")
+def classify_formulation(req: ClassificationRequest):
+
+    description = req.description.strip()
+
+    jurisdiction = (
+        req.jurisdiction
+        if req.jurisdiction in SUPPORTED_JURISDICTIONS
+        else "IN"
+    )
+
+    language = (
+        req.language
+        if req.language in SUPPORTED_LANGUAGES
+        else "en"
+    )
+
+    if not description:
+
+        return {
+            "classification": "Insufficient information",
+            "confidence": "Preliminary",
+            "reasons": [
+                "Please provide a description of the formulation."
+            ],
+            "sources": [],
+        }
+
+    # -------------------------------------------------
+    # 1. Rule-based preliminary classification
+    # -------------------------------------------------
+
+    result = classify_formulation_rule_based(
+        intended_use=req.intended_use,
+        classical_basis=req.classical_basis,
+        novel=req.novel,
+        therapeutic_claims=req.therapeutic_claims,
+    )
+
+    # -------------------------------------------------
+    # 2. Retrieve supporting evidence using existing RAG
+    # -------------------------------------------------
+
+    retrieval_query = get_classification_evidence_query(
+    result["classification"],
+    description,
+    )
+
+    hits = retrieve(
+        retrieval_query,
+        jurisdiction=jurisdiction,
+        k=6,
+    )
+
+    localized_sources = []
+
+    for hit in hits:
+
+        item = dict(hit)
+        item["evidence_context"] = result["classification"]
+
+        translated_evidence = translate_text(
+            str(hit.get("text", "")).strip(),
+            language,
+        )
+
+        item["translated_evidence"] = translated_evidence
+
+        localized_sources.append(item)
+
+    # -------------------------------------------------
+    # 3. Translate classification result
+    # -------------------------------------------------
+
+    translated_classification = translate_text(
+        result["classification"],
+        language,
+    )
+
+    translated_reasons = [
+        translate_text(reason, language)
+        for reason in result["reasons"]
+    ]
 
     return {
-        "innovation": innovation,
-        "jurisdiction": jurisdiction,
-        "jurisdiction_name": SUPPORTED_JURISDICTIONS[jurisdiction],
-        "concepts": extract_concepts(innovation),
-        "results": results,
-        "metric": "Semantic Similarity (prototype: TF-IDF cosine similarity)",
-        "disclaimer": (
-            "Similarity indicates textual/conceptual relevance in this prototype "
-            "and does not determine patentability."
+
+        "classification":
+            translated_classification,
+
+        "classification_en":
+            result["classification"],
+
+        "confidence":
+            result["confidence"],
+
+        "reasons":
+            translated_reasons,
+
+        "reasons_en":
+            result["reasons"],
+
+        "jurisdiction":
+            jurisdiction,
+
+        "jurisdiction_name":
+            SUPPORTED_JURISDICTIONS[jurisdiction],
+
+        "sources":
+            localized_sources,
+
+        "disclaimer": translate_text(
+            "This is a preliminary prototype screening result "
+            "and not a legal or regulatory determination. "
+            "Verify the applicable requirements using the "
+            "supporting legal and regulatory sources.",
+            language,
         ),
     }

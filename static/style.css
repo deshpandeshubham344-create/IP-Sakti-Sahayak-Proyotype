@@ -345,30 +345,24 @@
         margin-top:14px;
     }
 
-    .jurisdiction{
-        display:flex;
-        align-items:center;
-        gap:7px;
-        color:var(--muted);
-    }
+   .global-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+}
 
-    .jurisdiction select{
-        border:1px solid var(--line);
-        border-radius:8px;
-        padding:8px 10px;
-        background:white;
-    }
+#globalJurisdiction {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: white;
+    cursor: pointer;
+}
 
-    .jurisdiction-scope{
-        margin-top:10px;
-        color:var(--muted);
-        font-size:12px;
-        line-height:1.45;
-        padding:9px 11px;
-        background:#F8FAF8;
-        border-left:3px solid #B8CDBD;
-        border-radius:6px;
-    }
+#jurisdictionLabel {
+    margin-right: 2px;
+}
 
     .suggestions{
         margin-top:20px;
@@ -881,7 +875,210 @@
         color:var(--muted);
         line-height:1.55;
     }
+    /* ============================================================
+   FORMULATION CLASSIFICATION
+   ============================================================ */
 
+.classification-card {
+    margin-top: 20px;
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #DCE4E0;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(18,52,91,.08);
+    box-sizing: border-box;
+}
+
+.classification-card h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+#classificationSubheading {
+    margin-top: 0;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+
+/* ------------------------------------------------------------
+   FORMULATION INPUT
+   ------------------------------------------------------------ */
+
+#classificationInput {
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    box-sizing: border-box;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(120, 120, 120, 0.25);
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.035);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#classificationInput:focus {
+    border-color: rgba(120, 120, 120, 0.55);
+    box-shadow: 0 0 0 3px rgba(120, 120, 120, 0.08);
+}
+
+
+/* ------------------------------------------------------------
+   QUESTIONS
+   ------------------------------------------------------------ */
+
+.classification-question {
+    margin-top: 20px;
+    padding: 18px;
+    background: #F8FAF9;
+    border: 1px solid #DCE4E0;
+    border-radius: 12px;
+}
+
+.classification-question strong {
+    display: block;
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+
+/* ------------------------------------------------------------
+   RADIO OPTIONS
+   ------------------------------------------------------------ */
+
+.classification-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.classification-options label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 13px;
+
+    background: #FFFFFF;
+    border: 1px solid #DCE4E0;
+    border-radius: 9px;
+
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+}
+
+.classification-options label:hover {
+    background: #EEF5F0;
+    border-color: #2E7D4F;
+}
+
+.classification-options input[type="radio"] {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+
+/* ------------------------------------------------------------
+   CLASSIFY BUTTON
+   ------------------------------------------------------------ */
+
+#classifyFormulationButton {
+    margin-top: 24px;
+    width: auto;
+}
+
+
+/* ------------------------------------------------------------
+   RESULT
+   ------------------------------------------------------------ */
+
+#classificationResult {
+    margin-top: 28px;
+    padding: 22px;
+    border-radius: 17px;
+    border: 1px solid rgba(120, 120, 120, 0.20);
+    background: rgba(255, 255, 255, 0.035);
+    box-sizing: border-box;
+}
+
+#classificationResultHeading {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+#classificationResultContent {
+    line-height: 1.7;
+}
+
+
+/* ------------------------------------------------------------
+   CLASSIFICATION RESULT ITEMS
+   ------------------------------------------------------------ */
+
+.classification-result-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.classification-result-section {
+    margin-top: 18px;
+}
+
+.classification-result-section strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.classification-result-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.classification-result-list li {
+    margin-bottom: 6px;
+}
+
+.classification-source {
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.classification-source strong {
+    color: var(--navy);
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE
+   ------------------------------------------------------------ */
+
+@media (max-width: 700px) {
+
+    .classification-card {
+        padding: 20px;
+    }
+
+    .classification-options {
+        grid-template-columns: 1fr;
+    }
+
+    #classifyFormulationButton {
+        width: 100%;
+    }
+
+}
     /* =========================
        KNOWLEDGE BASE
        ========================= */
@@ -1065,4 +1262,81 @@
     overflow-x: hidden;
     padding-right: 8px;
     box-sizing: border-box;
+}
+.radar-card {
+    margin: 18px 0;
+    padding: 18px;
+    border: 1px solid rgba(120, 120, 120, 0.25);
+    border-radius: 16px;
+}
+
+.radar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.radar-header h3 {
+    margin: 0;
+}
+
+.radar-signal {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.radar-signal.high {
+    border: 1px solid rgba(200, 60, 60, 0.45);
+}
+
+.radar-signal.moderate {
+    border: 1px solid rgba(200, 150, 40, 0.45);
+}
+
+.radar-signal.low {
+    border: 1px solid rgba(70, 160, 100, 0.45);
+}
+
+.radar-reasons {
+    margin-top: 14px;
+    line-height: 1.7;
+}
+.classification-source-preview {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* ============================================================
+   CLASSIFICATION SOURCE MODAL
+   ============================================================ */
+
+#classificationSourceModal .modal {
+    max-height: 85vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Optional scrollbar styling */
+
+#classificationSourceModal .modal::-webkit-scrollbar {
+    width: 7px;
+}
+
+#classificationSourceModal .modal::-webkit-scrollbar-thumb {
+    background: #B7C6BD;
+    border-radius: 8px;
+}
+
+#classificationSourceModal .modal::-webkit-scrollbar-track {
+    background: transparent;
 }

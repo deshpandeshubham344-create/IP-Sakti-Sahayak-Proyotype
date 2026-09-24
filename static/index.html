@@ -51,6 +51,22 @@
                 <option value="sa">संस्कृतम्</option>
 
             </select>
+            <div class="global-controls">
+
+    <label for="globalJurisdiction" id="jurisdictionLabel">
+        Jurisdiction
+    </label>
+
+    <select
+        id="globalJurisdiction"
+        onchange="changeJurisdiction(this.value)">
+        <option value="IN">India</option>
+        <option value="US">United States</option>
+        <option value="UK">United Kingdom</option>
+        <option value="WIPO">International (WIPO/PCT)</option>
+    </select>
+
+</div>
 
         </div>
 
@@ -164,7 +180,12 @@
                 onclick="openApp('patents')">
                 Patents
             </button>
-
+            <button
+                id="navClassification"
+                class="nav-btn"
+                onclick="openApp('classification')">
+                Classification
+            </button>
             <button
                 id="navKB"
                 class="nav-btn"
@@ -221,22 +242,7 @@
 
                         <div class="composer-row">
 
-                            <div class="jurisdiction">
-
-                                <span id="jurisdictionLabel">
-                                    Jurisdiction:
-                                </span>
-
-                                <select id="jurisdiction" onchange="changeJurisdiction()">
-                                    <option value="IN">India</option>
-                                    <option value="US">United States</option>
-                                    <option value="UK">United Kingdom</option>
-                                    <option value="WIPO">International (WIPO/PCT)</option>
-                                </select>
-
-                            </div>
-
-                            <div id="jurisdictionScope" class="jurisdiction-scope"></div>
+                            
 
                             <button
                                 class="primary"
@@ -599,8 +605,9 @@
                             class="innovation-input"
                             placeholder="Describe the formulation, process, ingredients, intended use, or technical innovation..."></textarea>
 
-
-                        <div style="margin-top:12px;">
+                                                               
+    
+                                <div style="margin-top:12px;">
 
                             <button
                                 class="primary"
@@ -631,13 +638,71 @@
                             </h3>
 
                             <div
-                                id="patentMetricNote"
-                                class="jurisdiction-scope">
-                                Prototype similarity uses TF-IDF cosine similarity. It indicates textual/conceptual relevance and does not determine patentability.
-                            </div>
+    id="patentMetricNote"
+    class="jurisdiction-scope">
+    Prototype similarity uses TF-IDF cosine similarity. It indicates textual/conceptual relevance and does not determine patentability.
+</div>
 
-                            <div id="patentList">
-                            </div>
+
+<!-- ==================================================
+     PRIOR-ART RADAR
+     ================================================== -->
+
+<div
+    id="priorArtRadar"
+    class="radar-card hidden">
+
+    <div class="radar-header">
+
+        <h3 id="radarHeading">
+            🔎 Prior-Art Radar
+        </h3>
+
+        <span
+            id="radarSignal"
+            class="radar-signal">
+        </span>
+
+    </div>
+
+
+    <div
+    id="radarSummary"
+    class="patent-meta">
+</div>
+
+
+<!-- Traditional Knowledge Signal -->
+<div
+    id="radarTK"
+    class="radar-tk">
+</div>
+
+
+<div>
+
+    <strong id="radarConceptHeading">
+        Matching concepts
+    </strong>
+
+    <div
+        id="radarConcepts"
+        class="concept-row">
+    </div>
+
+</div>
+
+
+    <div
+        id="radarReasons"
+        class="radar-reasons">
+    </div>
+
+</div>
+
+
+<div id="patentList">
+</div>
 
                         </div>
 
@@ -645,6 +710,254 @@
 
                 </section>
 
+                <!-- ==================================================
+                FORMULATION CLASSIFICATION
+                ================================================== -->
+
+            <section id="screenClassification" class="hidden">
+
+                <div class="page-heading">
+
+                    <h2 id="classificationHeading">
+                        🧩 Formulation Classification
+                    </h2>
+
+                    <p id="classificationSubheading">
+                        Identify the likely formulation and regulatory route.
+                    </p>
+
+                </div>
+
+
+                <div class="card classification-card">
+
+                    <h3 id="classificationDescribe">
+                        Describe your formulation
+                    </h3>
+
+                    <textarea
+                        id="classificationInput"
+                        class="innovation-input"
+                        placeholder="Describe your formulation, ingredients, intended use, preparation method, or product claims...">
+                    </textarea>
+
+
+                    <!-- Question 1 -->
+
+                    <div class="classification-question">
+
+                        <strong id="classificationQ1">
+                            1. What is the primary intended use?
+                        </strong>
+
+                        <div class="classification-options">
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationUse"
+                                    value="therapeutic">
+                                <span id="classificationTherapeutic">
+                                    Therapeutic / medicinal
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationUse"
+                                    value="wellness">
+                                <span id="classificationWellness">
+                                    Health / wellness / food
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationUse"
+                                    value="cosmetic">
+                                <span id="classificationCosmetic">
+                                    Cosmetic
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationUse"
+                                    value="other">
+                                <span id="classificationOther">
+                                    Other
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Question 2 -->
+
+                    <div class="classification-question">
+
+                        <strong id="classificationQ2">
+                            2. Is it based on an authoritative Ayurvedic/classical text?
+                        </strong>
+
+                        <div class="classification-options">
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationClassical"
+                                    value="yes">
+                                <span id="classificationClassicalYes">
+                                    Yes
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationClassical"
+                                    value="no">
+                                <span id="classificationClassicalNo">
+                                    No
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationClassical"
+                                    value="unknown">
+                                <span id="classificationClassicalUnknown">
+                                    Not sure
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Question 3 -->
+
+                    <div class="classification-question">
+
+                        <strong id="classificationQ3">
+                            3. Is it newly developed or materially modified?
+                        </strong>
+
+                        <div class="classification-options">
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationNovel"
+                                    value="yes">
+                                <span id="classificationNovelYes">
+                                    Yes
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationNovel"
+                                    value="no">
+                                <span id="classificationNovelNo">
+                                    No
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationNovel"
+                                    value="unknown">
+                                <span id="classificationNovelUnknown">
+                                    Not sure
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Question 4 -->
+
+                    <div class="classification-question">
+
+                        <strong id="classificationQ4">
+                            4. Does it make therapeutic or disease-treatment claims?
+                        </strong>
+
+                        <div class="classification-options">
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationClaims"
+                                    value="yes">
+                                <span id="classificationClaimsYes">
+                                    Yes
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationClaims"
+                                    value="no">
+                                <span id="classificationClaimsNo">
+                                    No
+                                </span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="classificationClaims"
+                                    value="unknown">
+                                <span id="classificationClaimsUnknown">
+                                    Not sure
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="primary"
+                        id="classifyFormulationButton"
+                        onclick="classifyFormulation()">
+
+                        Classify Formulation →
+                    </button>
+
+
+                    <div
+                        id="classificationResult"
+                        class="result-section hidden">
+
+                        <h3 id="classificationResultHeading">
+                            Preliminary Classification
+                        </h3>
+
+                        <div id="classificationResultContent">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
 
                 <!-- ==================================================
                      KNOWLEDGE BASE
@@ -987,6 +1300,62 @@
 
 </div>
 
+<!-- ==================================================
+     CLASSIFICATION SOURCE VIEWER
+     ================================================== -->
+
+<div
+    id="classificationSourceModal"
+    class="modal-overlay hidden">
+
+    <div class="modal">
+
+        <div class="drawer-head">
+
+            <h3 id="classificationSourceTitle">
+                Source
+            </h3>
+
+            <button
+                type="button"
+                class="close"
+                onclick="closeClassificationSource()">
+
+                ✕
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="classificationSourceMeta"
+            class="patent-meta"
+            style="margin-top:12px;">
+        </div>
+
+
+        <div
+            id="classificationSourceOriginal"
+            class="passage"
+            style="margin-top:15px;">
+        </div>
+
+
+        <div
+            id="classificationSourceTranslated"
+            class="localized">
+        </div>
+
+
+        <div
+            id="classificationSourceExternal"
+            class="source-actions">
+        </div>
+
+    </div>
+
+</div>
 
 <script src="static/app.js" defer></script>
 
