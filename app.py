@@ -143,6 +143,10 @@ class PatentSearchRequest(BaseModel):
     jurisdiction: str = "IN"
     top_k: int = 5
 
+class TranslationRequest(BaseModel):
+    texts: List[str]
+    language: str
+
 class ClassificationRequest(BaseModel):
     description: str
     intended_use: str
@@ -2116,6 +2120,7 @@ def chat(req: ChatRequest):
 
         return {
             "answer": "Please enter a question.",
+            "answer_original": "Please enter a question.",
             "detected_language": language,
             "language_name": SUPPORTED_LANGUAGES[language],
             "jurisdiction": jurisdiction,
@@ -2135,7 +2140,10 @@ def chat(req: ChatRequest):
         k=4,
     )
 
-    # Build the complete answer in English first
+    # ============================================================
+    # BUILD CANONICAL ANSWER IN ENGLISH
+    # ============================================================
+
     answer = choose_answer(
         normalized_query,
         "en",
@@ -2144,36 +2152,13 @@ def chat(req: ChatRequest):
     )
 
     # ============================================================
-    # ONE GEMINI CALL FOR ANSWER + ALL EVIDENCE
+    # BUILD CANONICAL SOURCES
+    # Translation is handled later by the frontend.
     # ============================================================
 
-    translation_texts = [
-        answer
-    ]
+    sources = []
 
     for hit in hits:
-        translation_texts.append(
-            str(hit.get("text", "")).strip()
-        )
-
-    translated_texts = translate_texts_batch(
-        translation_texts,
-        language
-    )
-
-    translated_answer = (
-        translated_texts[0]
-        if translated_texts
-        else answer
-    )
-
-    # ============================================================
-    # BUILD LOCALIZED SOURCES
-    # ============================================================
-
-    localized_sources = []
-
-    for index, hit in enumerate(hits):
 
         item = dict(hit)
 
@@ -2184,19 +2169,18 @@ def chat(req: ChatRequest):
             )
         )
 
-        evidence_index = index + 1
-
+        # Keep original English evidence.
         item["translated_evidence"] = (
-            translated_texts[evidence_index]
-            if evidence_index < len(translated_texts)
-            else hit.get("text", "")
+            hit.get("text", "")
         )
 
-        localized_sources.append(item)
+        sources.append(item)
 
     return {
 
-        "answer": translated_answer,
+        "answer": answer,
+
+        "answer_original": answer,
 
         "detected_language": language,
 
@@ -2216,9 +2200,27 @@ def chat(req: ChatRequest):
             normalized_query,
 
         "sources":
-            localized_sources,
+            sources,
     }
 
+@app.post("/api/translate-batch")
+def translate_batch_endpoint(req: TranslationRequest):
+
+    language = (
+        req.language
+        if req.language in SUPPORTED_LANGUAGES
+        else "en"
+    )
+
+    translations = translate_texts_batch(
+        req.texts,
+        language
+    )
+
+    return {
+        "language": language,
+        "translations": translations
+    }
 
 @app.post("/api/patents/search")
 def patent_search(req: PatentSearchRequest):

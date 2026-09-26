@@ -341,6 +341,32 @@ let lastQuestion = "";
 let currentJurisdiction = "IN";
 let lastSelectedSuggestionIndex = null;
 let classificationSources = [];
+let lastResultData = null;
+let dynamicTranslationCache = {};
+let lastMeta = null;
+let lastClassificationData = null;
+let classificationTranslationCache = {};
+
+document.addEventListener(
+    "input",
+    function(event){
+
+        if(
+            event.target &&
+            event.target.id === "classificationInput"
+        ){
+
+            classificationCanonicalQuery =
+                event.target.value;
+
+            classificationDisplayedQuery =
+                event.target.value;
+
+            classificationQueryTranslationCache = {};
+        }
+
+    }
+);
 
 /* ============================================================
    CLASSIFICATION UI TRANSLATIONS
@@ -1053,35 +1079,176 @@ function getLocalizedMeta(meta){
     };
 }
 
+async function translateCurrentResult(language) {
+
+    if (!lastResultData) return;
+
+    if (language === "en") {
+
+        document.getElementById("answerText").textContent =
+            lastResultData.answer_original ||
+            lastResultData.answer ||
+            "";
+
+        lastSources =
+            lastResultData.sources || [];
+
+        renderSources(lastSources);
+        updateEvidencePanel(activeSourceIndex);
+
+        return;
+    }
+
+    if (dynamicTranslationCache[language]) {
+
+        const cached =
+            dynamicTranslationCache[language];
+
+        document.getElementById("answerText").textContent =
+            cached.answer;
+
+        lastSources =
+            cached.sources || [];
+
+        renderSources(lastSources);
+        updateEvidencePanel(activeSourceIndex);
+
+        return;
+    }
+
+    const texts = [
+        lastResultData.answer_original ||
+        lastResultData.answer ||
+        ""
+    ];
+
+    (lastResultData.sources || []).forEach(
+        source => {
+            texts.push(
+                source.text || ""
+            );
+        }
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/translate-batch",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body: JSON.stringify({
+                        texts,
+                        language
+                    })
+                }
+            );
+
+        if(!response.ok){
+            throw new Error(
+                "Translation request failed"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        const translated =
+            data.translations || [];
+
+        const translatedAnswer =
+            translated[0] ||
+            lastResultData.answer_original ||
+            lastResultData.answer ||
+            "";
+
+        const translatedSources =
+            (lastResultData.sources || []).map(
+                (source, index) => ({
+                    ...source,
+                    translated_evidence:
+                        translated[index + 1] ||
+                        source.text ||
+                        ""
+                })
+            );
+
+        dynamicTranslationCache[language] = {
+            answer: translatedAnswer,
+            sources: translatedSources
+        };
+
+        document.getElementById("answerText").textContent =
+            translatedAnswer;
+
+        lastSources =
+            translatedSources;
+
+        renderSources(translatedSources);
+
+        updateEvidencePanel(
+            activeSourceIndex
+        );
+
+    } catch(error){
+
+        console.error(
+            "Live translation failed:",
+            error
+        );
+
+        document.getElementById("answerText").textContent =
+            lastResultData.answer_original ||
+            lastResultData.answer ||
+            "";
+    }
+}
+
 /* ============================================================
    TRANSLATION / UI
    ============================================================ */
 
-function changeLanguage(){ 
- 
-    currentLanguage = 
-        document.getElementById("lang").value; 
- 
-    localStorage.setItem( 
-        "ipSaktiLanguage", 
-        currentLanguage 
-    ); 
- 
-    applyTranslations(); 
- 
-    const jurisdictionSelect = 
-        document.getElementById("globalJurisdiction"); 
- 
-    if(jurisdictionSelect){ 
-        jurisdictionSelect.value = 
-            ["IN","US","UK","WIPO"].includes(currentJurisdiction) 
-            ? currentJurisdiction 
-            : "IN"; 
-    } 
- 
-    updateJurisdictionPreview(); 
-    changeJurisdiction();
+async function changeLanguage(){
 
+    currentLanguage =
+        document.getElementById("lang").value;
+
+    localStorage.setItem(
+        "ipSaktiLanguage",
+        currentLanguage
+    );
+
+    // Update normal UI text
+    applyTranslations();
+    updateResultMetadataLanguage();
+
+    // Keep the currently selected jurisdiction
+    const jurisdictionSelect =
+        document.getElementById("globalJurisdiction");
+
+    if(jurisdictionSelect){
+
+        jurisdictionSelect.value =
+            ["IN","US","UK","WIPO"].includes(
+                currentJurisdiction
+            )
+            ? currentJurisdiction
+            : "IN";
+    }
+
+    updateJurisdictionPreview();
+
+    // Update jurisdiction-specific suggestions
+    changeJurisdiction();
+    if(lastMeta){
+    updateResultMetadataLanguage();
+}
+
+    // Keep selected suggestion text
     if(lastSelectedSuggestionIndex !== null){
 
         const buttons =
@@ -1096,15 +1263,392 @@ function changeLanguage(){
                 selectedButton.dataset.suggestion || "";
         }
     }
- 
-    // If results already exist, only rerender labels around them. 
-    if(lastSources.length){ 
-        renderSources(lastSources); 
-        updateEvidencePanel(activeSourceIndex); 
-    } 
- 
-    // Keep current screen; changing language should not navigate. 
+
+    // ============================================================
+    // LIVE TRANSLATION OF EXISTING RESULT
+    // ============================================================
+                if(
+            currentScreen === "classification"
+        ){
+
+            await translateClassificationInput(
+                currentLanguage
+            );
+
+            if(lastClassificationData){
+
+                await translateCurrentClassification(
+                    currentLanguage
+                );
+
+            }
+
+            return;
+        }
+        if(
+            currentScreen === "result" &&
+            lastResultData
+        ){
+            await translateCurrentResult(
+                currentLanguage
+            );
+            return;
+        }
+        if(
+    currentScreen === "patents" &&
+    patentCanonicalResults.length
+){
+
+    await translatePatentResults(
+        currentLanguage
+    );
+
+    await translatePatentQuery(
+        currentLanguage
+    );
+
+    renderPriorArtRadar(
+        patentResults,
+        patentSearchConcepts,
+        patentSearchTkSignal
+    );
+
+    return;
 }
+    }
+    // If no dynamic result exists,
+    // just refresh source labels if needed.
+    if(lastSources.length){
+
+        renderSources(lastSources);
+
+        updateEvidencePanel(
+            activeSourceIndex
+        );
+    }
+
+async function translateCurrentClassification(language){
+
+    if(!lastClassificationData){
+        return;
+    }
+
+    const data =
+        lastClassificationData;
+
+    /*
+     * English = canonical data from backend.
+     */
+    if(language === "en"){
+
+        renderClassificationTranslated(
+            data.classification || "",
+            data.reasons || [],
+            data.disclaimer || "",
+            data.sources || []
+        );
+
+        return;
+    }
+
+    /*
+     * Use cached translation if available.
+     */
+    if(classificationTranslationCache[language]){
+
+        const cached =
+            classificationTranslationCache[language];
+
+        renderClassificationTranslated(
+            cached.classification,
+            cached.reasons,
+            cached.disclaimer,
+            cached.sources
+        );
+
+        return;
+    }
+
+    /*
+     * Build one batch translation request.
+     */
+    const texts = [
+        data.classification || "",
+        ...(data.reasons || []),
+        data.disclaimer || ""
+    ];
+
+    const sourceStartIndex =
+        texts.length;
+
+    (data.sources || []).forEach(source => {
+
+        texts.push(
+            source.text || ""
+        );
+
+    });
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/translate-batch",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        texts,
+                        language
+                    })
+                }
+            );
+
+        if(!response.ok){
+
+            throw new Error(
+                "Classification translation failed"
+            );
+
+        }
+
+        const result =
+            await response.json();
+
+        const translated =
+            result.translations || [];
+
+        const translatedClassification =
+            translated[0] ||
+            data.classification ||
+            "";
+
+        const reasonCount =
+            (data.reasons || []).length;
+
+        const translatedReasons =
+            (data.reasons || []).map(
+                (reason, index) =>
+                    translated[index + 1] ||
+                    reason
+            );
+
+        const disclaimerIndex =
+            1 + reasonCount;
+
+        const translatedDisclaimer =
+            translated[disclaimerIndex] ||
+            data.disclaimer ||
+            "";
+
+        const translatedSources =
+            (data.sources || []).map(
+                (source, index) => {
+
+                    const translatedText =
+                        translated[
+                            sourceStartIndex + index
+                        ] ||
+                        source.text ||
+                        "";
+
+                    return {
+                        ...source,
+
+                        translated_evidence:
+                            translatedText
+                    };
+
+                }
+            );
+
+        classificationTranslationCache[language] = {
+
+            classification:
+                translatedClassification,
+
+            reasons:
+                translatedReasons,
+
+            disclaimer:
+                translatedDisclaimer,
+
+            sources:
+                translatedSources
+        };
+
+        renderClassificationTranslated(
+            translatedClassification,
+            translatedReasons,
+            translatedDisclaimer,
+            translatedSources
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Classification translation error:",
+            error
+        );
+
+    }
+}
+async function translateClassificationInput(language){
+
+    const input =
+        document.getElementById(
+            "classificationInput"
+        );
+
+    if(!input){
+        return;
+    }
+
+    if(!classificationCanonicalQuery){
+
+        classificationCanonicalQuery =
+            input.value.trim();
+
+        classificationDisplayedQuery =
+            input.value.trim();
+    }
+
+    if(!classificationCanonicalQuery){
+        return;
+    }
+
+    /*
+     * English = restore original user input
+     */
+    if(language === "en"){
+
+        input.value =
+            classificationCanonicalQuery;
+
+        classificationDisplayedQuery =
+            classificationCanonicalQuery;
+
+        return;
+    }
+
+    /*
+     * Use cached translation
+     */
+    if(
+        classificationQueryTranslationCache[
+            language
+        ]
+    ){
+
+        input.value =
+            classificationQueryTranslationCache[
+                language
+            ];
+
+        classificationDisplayedQuery =
+            input.value;
+
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/translate-batch",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        texts:[
+                            classificationCanonicalQuery
+                        ],
+                        language
+                    })
+                }
+            );
+
+        if(!response.ok){
+
+            throw new Error(
+                "Classification input translation failed"
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+        const translated =
+            data.translations || [];
+
+        const translatedQuery =
+            translated[0] ||
+            classificationCanonicalQuery;
+
+        classificationQueryTranslationCache[
+            language
+        ] =
+            translatedQuery;
+
+        input.value =
+            translatedQuery;
+
+        classificationDisplayedQuery =
+            translatedQuery;
+
+    }
+    catch(error){
+
+        console.error(
+            "Classification input translation failed:",
+            error
+        );
+
+    }
+}
+
+function updateResultMetadataLanguage(){
+
+    if(!lastMeta){
+        console.log("No metadata available for language update.");
+        return;
+    }
+
+    const x = t();
+
+    const localizedMeta =
+        getLocalizedMeta(lastMeta);
+
+    const chips = [
+        `${x.language}: ${getLocalizedLanguageName(
+            currentLanguage
+        )}`,
+
+        `${x.intent}: ${localizedMeta.intent}`,
+
+        `${x.ipType}: ${localizedMeta.ipType}`,
+
+        `${x.jurisdiction2}: ${getSelectedJurisdictionLabel()}`
+    ];
+
+    document.getElementById("understoodChips").innerHTML =
+        chips.map(c =>
+            `<span class="mini-chip">${esc(c)}</span>`
+        ).join("");
+}
+
 function applyTranslations(){
     const x=t();
     document.documentElement.lang=currentLanguage;
@@ -2647,6 +3191,7 @@ async function submitQuestion(){
     lastQuestion = query;
 
     const meta = classifyQuestion(query);
+    lastMeta = meta;
 
     document.getElementById("processingQuery").textContent =
         `"${query}"`;
@@ -2696,7 +3241,7 @@ document.getElementById("chipIPType").textContent =
         const data =
             await response.json();
 
-        lastSources = data.sources || [];
+        lastResultData = data;
 
         setProcessingStep(6);
         await wait(450);
@@ -2705,6 +3250,10 @@ document.getElementById("chipIPType").textContent =
         await wait(450);
 
         renderResult(data, meta);
+
+        if(currentLanguage !== "en"){
+    await translateCurrentResult(currentLanguage);
+}
 
         openApp("result");
 
@@ -2739,23 +3288,26 @@ function wait(ms){
 
 function renderResult(data, meta){
 
+    lastResultData = data;
+    lastMeta = meta;
+
     const x = t();
 
     document.getElementById("resultMode").textContent =
         data.mode || "RAG-MVP";
 
     document.getElementById("answerText").textContent =
-        data.answer || "";
+        data.answer || data.answer_original || "";
 
-   const localizedMeta =
-    getLocalizedMeta(meta);
+    const localizedMeta =
+        getLocalizedMeta(meta);
 
-const chips = [
-    `${x.language}: ${languageName(data.detected_language || currentLanguage)}`,
-    `${x.intent}: ${localizedMeta.intent}`,
-    `${x.ipType}: ${localizedMeta.ipType}`,
-    `${x.jurisdiction2}: ${getSelectedJurisdictionLabel()}`
-];
+    const chips = [
+        `${x.language}: ${getLocalizedLanguageName(currentLanguage)}`,
+        `${x.intent}: ${localizedMeta.intent}`,
+        `${x.ipType}: ${localizedMeta.ipType}`,
+        `${x.jurisdiction2}: ${getSelectedJurisdictionLabel()}`
+    ];
 
     document.getElementById("understoodChips").innerHTML =
         chips.map(c =>
@@ -2770,7 +3322,6 @@ const chips = [
         updateEvidencePanel(0);
     }
 }
-
 
 function renderSources(sources){
 
@@ -3007,6 +3558,16 @@ function submitFollowup(){
    ============================================================ */
 
 let patentResults = [];
+let patentCanonicalResults = [];
+
+let patentCanonicalQuery = "";
+let patentDisplayedQuery = "";
+let patentQueryTranslationCache = {};
+
+let patentSearchConcepts = [];
+let patentSearchTkSignal = null;
+
+let patentTranslationCache = {};
 
 function formatSimilarity(value){
     const n = Number(value);
@@ -3310,15 +3871,38 @@ if(radarTK){
 
 async function findSimilarPatents(){
 
-    const description =
-        document.getElementById("innovationInput")
-            .value
-            .trim();
+    const input =
+        document.getElementById("innovationInput");
 
-    if(!description){
-        document.getElementById("innovationInput").focus();
+    const enteredQuery =
+        input.value.trim();
+
+    if(!enteredQuery){
+        input.focus();
         return;
     }
+
+    /*
+     * If the user typed/edited a new query,
+     * make that the new canonical query.
+     *
+     * If the text was only translated by the UI,
+     * keep the original canonical query.
+     */
+    if(enteredQuery !== patentDisplayedQuery){
+
+        patentCanonicalQuery =
+            enteredQuery;
+
+        patentQueryTranslationCache = {};
+    }
+
+    const description =
+        patentCanonicalQuery ||
+        enteredQuery;
+
+    patentDisplayedQuery =
+        enteredQuery;
 
     const button =
         document.getElementById("findPatentsButton");
@@ -3367,11 +3951,27 @@ async function findSimilarPatents(){
         }
 
         const data =
-            await response.json();
+    await response.json();
+
+    patentSearchConcepts =
+    data.concepts || [];
+
+patentSearchTkSignal =
+    data.tk_signal || null;
+
+        patentCanonicalResults =
+            (data.results || []).map(
+                p => ({ ...p })
+            );
 
         patentResults =
-            data.results || [];
-            renderPriorArtRadar(
+            patentCanonicalResults.map(
+                p => ({ ...p })
+            );
+
+        patentTranslationCache = {};
+
+        renderPriorArtRadar(
             patentResults,
             data.concepts || [],
             data.tk_signal || null
@@ -3493,6 +4093,370 @@ async function findSimilarPatents(){
 
     }
 }
+
+async function translatePatentResults(language){
+
+    if(!patentCanonicalResults.length){
+        return;
+    }
+
+    // English = canonical source data
+    if(language === "en"){
+
+        patentResults =
+            patentCanonicalResults.map(
+                p => ({
+                    ...p,
+                    displayTitle: p.title || "",
+                    displayText: p.text || ""
+                })
+            );
+
+        renderPatentResults();
+        return;
+    }
+
+    // Cached translation
+    if(patentTranslationCache[language]){
+
+        patentResults =
+            patentTranslationCache[language].map(
+                p => ({ ...p })
+            );
+
+        renderPatentResults();
+        return;
+    }
+
+    const texts = [];
+
+    patentCanonicalResults.forEach(
+        patent => {
+
+            texts.push(
+                patent.title || ""
+            );
+
+            texts.push(
+                patent.text || ""
+            );
+
+        }
+    );
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/translate-batch",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        texts,
+                        language
+                    })
+                }
+            );
+
+        if(!response.ok){
+            throw new Error(
+                "Patent translation failed"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        const translated =
+            data.translations || [];
+
+        const localizedResults =
+            patentCanonicalResults.map(
+                (patent, index) => {
+
+                    return {
+                        ...patent,
+
+                        displayTitle:
+                            translated[index * 2]
+                            || patent.title
+                            || "",
+
+                        displayText:
+                            translated[index * 2 + 1]
+                            || patent.text
+                            || ""
+                    };
+                }
+            );
+
+        patentTranslationCache[language] =
+            localizedResults.map(
+                p => ({ ...p })
+            );
+
+        patentResults =
+            localizedResults;
+
+        renderPatentResults();
+
+    }
+    catch(error){
+
+        console.error(
+            "Patent translation failed:",
+            error
+        );
+
+        patentResults =
+            patentCanonicalResults.map(
+                p => ({
+                    ...p,
+                    displayTitle:
+                        p.title || "",
+                    displayText:
+                        p.text || ""
+                })
+            );
+
+        renderPatentResults();
+    }
+}
+
+async function translatePatentQuery(language){
+
+    const input =
+        document.getElementById(
+            "innovationInput"
+        );
+
+    if(!input || !patentCanonicalQuery){
+        return;
+    }
+
+    if(language === "en"){
+
+        input.value =
+            patentCanonicalQuery;
+
+        patentDisplayedQuery =
+            patentCanonicalQuery;
+
+        return;
+    }
+
+    if(patentQueryTranslationCache[language]){
+
+        input.value =
+            patentQueryTranslationCache[language];
+
+        patentDisplayedQuery =
+            input.value;
+
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/translate-batch",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        texts:[
+                            patentCanonicalQuery
+                        ],
+                        language
+                    })
+                }
+            );
+
+        if(!response.ok){
+            throw new Error(
+                "Patent query translation failed"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        const translated =
+            data.translations || [];
+
+        const translatedQuery =
+            translated[0] ||
+            patentCanonicalQuery;
+
+        patentQueryTranslationCache[language] =
+            translatedQuery;
+
+        input.value =
+            translatedQuery;
+
+        patentDisplayedQuery =
+            translatedQuery;
+
+    }
+    catch(error){
+
+        console.error(
+            "Patent query translation failed:",
+            error
+        );
+
+        input.value =
+            patentCanonicalQuery;
+
+        patentDisplayedQuery =
+            patentCanonicalQuery;
+    }
+}
+
+function renderPatentResults(){
+
+    const list =
+        document.getElementById("patentList");
+
+    if(!list){
+        return;
+    }
+
+    if(!patentResults.length){
+
+        const messages = {
+
+            en:
+                "No matching patent records found for the selected jurisdiction.",
+
+            hi:
+                "चयनित अधिकार क्षेत्र के लिए कोई मिलते-जुलते पेटेंट रिकॉर्ड नहीं मिले।",
+
+            mr:
+                "निवडलेल्या अधिकार क्षेत्रासाठी समान पेटंट रेकॉर्ड सापडले नाहीत.",
+
+            bn:
+                "নির্বাচিত অধিক্ষেত্রের জন্য কোনো মিলযুক্ত পেটেন্ট রেকর্ড পাওয়া যায়নি।",
+
+            ta:
+                "தேர்ந்தெடுக்கப்பட்ட சட்டஅதிகாரத்திற்கு ஒத்த காப்புரிமை பதிவுகள் கிடைக்கவில்லை।",
+
+            te:
+                "ఎంచుకున్న చట్ట పరిధికి సరిపోలే పేటెంట్ రికార్డులు కనుగొనబడలేదు।",
+
+            kn:
+                "ಆಯ್ಕೆಮಾಡಿದ ಅಧಿಕಾರ ವ್ಯಾಪ್ತಿಗೆ ಹೊಂದುವ ಪೇಟೆಂಟ್ ದಾಖಲೆಗಳು ಸಿಗಲಿಲ್ಲ.",
+
+            gu:
+                "પસંદ કરેલા અધિકારક્ષેત્ર માટે સમાન પેટન્ટ રેકોર્ડ મળ્યા નથી.",
+
+            ml:
+                "തിരഞ്ഞെടുത്ത നിയമപരിധിക്ക് അനുയോജ്യമായ പേറ്റന്റ് രേഖകൾ കണ്ടെത്താനായില്ല.",
+
+            pa:
+                "ਚੁਣੇ ਅਧਿਕਾਰ-ਖੇਤਰ ਲਈ ਕੋਈ ਮਿਲਦੇ ਪੇਟੈਂਟ ਰਿਕਾਰਡ ਨਹੀਂ ਮਿਲੇ।",
+
+            sa:
+                "चयनिते अधिकारक्षेत्रे समानाः पेटेण्ट्-अभिलेखाः न प्राप्ताः।"
+        };
+
+        list.innerHTML = `
+            <div class="patent-card">
+                <div class="patent-title">
+                    ${esc(
+                        messages[currentLanguage]
+                        || messages.en
+                    )}
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        patentResults.map(
+            (p,index) => `
+
+                <div class="patent-card">
+
+                    <div class="patent-top">
+
+                        <div class="patent-title">
+                            ${esc(
+                                p.displayTitle
+                                || p.title
+                                || ""
+                            )}
+                        </div>
+
+                        <div class="similarity">
+                            ${formatSimilarity(
+                                p.similarity
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div class="patent-meta">
+                        ${esc(
+                            p.publication || ""
+                        )}
+                        ·
+                        ${esc(
+                            p.jurisdiction || ""
+                        )}
+                    </div>
+
+                    <div class="concept-row">
+
+                        ${(p.relevant_concepts || [])
+                            .slice(0,3)
+                            .map(
+                                c =>
+                                    `<span class="mini-chip">
+                                        ${esc(c)}
+                                    </span>`
+                            )
+                            .join("")}
+
+                    </div>
+
+                    <div>
+
+                        <button
+                            class="source-button"
+                            onclick="openPatentDrawer(${index})">
+
+                            ${esc(
+                                t().viewDetails
+                            )}
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `
+        ).join("");
+
+    document.getElementById(
+        "patentResults"
+    ).classList.remove("hidden");
+}
+
 
 function getPatentDrawerLocalizedText() {
 
@@ -4352,10 +5316,31 @@ applyPatentDrawerTranslation();
 
 async function classifyFormulation(){
 
-    const description =
-        document.getElementById("classificationInput")
-            .value
-            .trim();
+    const input =
+    document.getElementById(
+        "classificationInput"
+    );
+
+const enteredDescription =
+    input.value.trim();
+
+if(
+    !classificationCanonicalQuery ||
+    enteredDescription !== classificationDisplayedQuery
+){
+
+    classificationCanonicalQuery =
+        enteredDescription;
+
+    classificationQueryTranslationCache = {};
+}
+
+const description =
+    classificationCanonicalQuery ||
+    enteredDescription;
+
+classificationDisplayedQuery =
+    enteredDescription;
 
 
     const intendedUse =
@@ -4470,6 +5455,18 @@ async function classifyFormulation(){
 
         const data =
             await response.json();
+        
+        lastClassificationData = data;
+
+        classificationTranslationCache = {};
+
+        if(currentLanguage !== "en"){
+
+    await translateClassificationInput(
+        currentLanguage
+    );
+
+}
         
         classificationSources =
         data.sources || [];
@@ -4599,6 +5596,11 @@ async function classifyFormulation(){
 
 
         result.classList.remove("hidden");
+        if(currentLanguage !== "en"){
+        await translateCurrentClassification(
+            currentLanguage
+        );
+    }
 
 
     }
@@ -4622,6 +5624,135 @@ async function classifyFormulation(){
             "Classify Formulation →";
     }
 }
+
+function renderClassificationTranslated(
+    classification,
+    reasons,
+    disclaimer,
+    sources
+){
+
+    classificationSources =
+        sources || [];
+
+    const content =
+        document.getElementById(
+            "classificationResultContent"
+        );
+
+    const reasonsHTML =
+        (reasons || [])
+            .map(
+                reason =>
+                    `<li>${esc(reason)}</li>`
+            )
+            .join("");
+
+    const sourcesHTML =
+        (sources || [])
+            .map(
+                (source, index) => `
+
+                    <div class="classification-source">
+
+                        <strong>
+                            ${esc(source.title || "")}
+                        </strong>
+
+                        <div class="patent-meta">
+                            ${esc(source.section || "")}
+                        </div>
+
+                        <div class="classification-source-preview">
+                            ${esc(
+                                source.translated_evidence ||
+                                source.text ||
+                                ""
+                            )}
+                        </div>
+
+                        <div class="source-actions">
+
+                            <button
+                                type="button"
+                                class="source-button"
+                                onclick="openClassificationSource(${index})">
+
+                                View Source
+
+                            </button>
+
+                        </div>
+
+                    </div>
+                `
+            )
+            .join("");
+
+    content.innerHTML = `
+
+        <div class="classification-result-title">
+
+            ${esc(
+                classification ||
+                "Further Classification Required"
+            )}
+
+        </div>
+
+        <div class="classification-result-section">
+
+            <strong>
+                Assessment
+            </strong>
+
+            <ul class="classification-result-list">
+
+                ${reasonsHTML}
+
+            </ul>
+
+        </div>
+
+        ${
+            sourcesHTML
+            ? `
+                <div class="classification-result-section">
+
+                    <strong>
+                        Supporting Evidence
+                    </strong>
+
+                    ${sourcesHTML}
+
+                </div>
+              `
+            : ""
+        }
+
+        <div class="classification-result-section">
+
+            <strong>
+                Note
+            </strong>
+
+            <p>
+                ${esc(
+                    disclaimer ||
+                    "This is a preliminary screening result."
+                )}
+            </p>
+
+        </div>
+    `;
+
+    document
+        .getElementById("classificationResult")
+        .classList
+        .remove("hidden");
+}
+
+
 function openClassificationSource(index){
 
     const source =
