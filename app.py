@@ -6,6 +6,7 @@ import shutil
 from typing import List, Dict, Any
 import os
 from supabase import create_client, Client
+import time
 
 from fastapi import (
     FastAPI,
@@ -1249,74 +1250,12 @@ LANGUAGE_NAMES = {
 }
 
 
-def translate_text(
-    text: str,
-    target_language: str,
-) -> str:
-
-    if not text:
-        return ""
-
-    if target_language == "en":
-        return text
-
-    language_name = LANGUAGE_NAMES.get(
-        target_language,
-        "English"
-    )
-
-    prompt = f"""
-Translate the following text into {language_name}.
-
-Rules:
-- Translate only.
-- Do not summarize.
-- Do not explain.
-- Do not add facts.
-- Do not remove facts.
-- Preserve legal meaning.
-- Preserve section numbers, subsection numbers, citations,
-  patent numbers, names, dates, percentages, URLs and technical terms.
-- Do not change or invent legal terminology.
-- If the text is already in {language_name}, return it unchanged.
-- Return ONLY the translated text.
-
-Text:
-{text}
-"""
-
-    try:
-
-        response = gemini_client.models.generate_content(
-        model="gemini-3.5-flash-lite",
-        contents=prompt,
-    )
-
-        translated = (response.text or "").strip()
-        print("TARGET LANGUAGE:", target_language)
-        print("GEMINI RESPONSE:", translated)
-
-
-        if translated:
-            return translated
-
-        return text
-
-    except Exception as exc:
-
-        print(
-            f"Gemini translation failed "
-            f"for {target_language}: {exc}"
-        )
-
-        # Never break the existing prototype
-        # if the translation service is unavailable.
-        return text
-
 def translate_texts_batch(
     texts: List[str],
     target_language: str,
 ) -> List[str]:
+
+    print("✅ RETRY VERSION OF translate_texts_batch IS RUNNING")
 
     if not texts:
         return []
@@ -1364,10 +1303,53 @@ Rules:
 
     try:
 
-        response = gemini_client.models.generate_content(
-            model="gemini-3.5-flash-lite",
-            contents=prompt,
-        )
+        response = None
+
+        for attempt in range(4):
+
+            try:
+
+                response = gemini_client.models.generate_content(
+                    model="gemini-3.1-flash-lite",
+                    contents=prompt,
+                )
+
+                break
+
+            except Exception as exc:
+
+                error_text = str(exc)
+
+                if (
+                    "503" not in error_text
+                    and "UNAVAILABLE" not in error_text
+                ):
+                    raise
+
+                if attempt == 3:
+                    break
+
+                delay = 2 ** attempt
+
+                print(
+                    f"Gemini translation temporarily unavailable. "
+                    f"Retrying in {delay}s..."
+                )
+
+                time.sleep(delay)
+
+        # Fallback model
+        if response is None:
+
+            print(
+                "⚠️ Gemini 3.5 Flash Lite unavailable. "
+                "Trying Gemini 3.8 Flash..."
+            )
+
+            response = gemini_client.models.generate_content(
+                model="gemini-3.8-flash",
+                contents=prompt,
+            )
 
         output = (response.text or "").strip()
 
@@ -1411,6 +1393,17 @@ Rules:
         )
 
         return texts
+
+def translate_text(
+    text: str,
+    target_language: str,
+) -> str:
+    translations = translate_texts_batch(
+        [text],
+        target_language,
+    )
+
+    return translations[0] if translations else text
         
 def search_patents(
     innovation: str,
@@ -2405,3 +2398,18 @@ def classify_formulation(req: ClassificationRequest):
             language,
         ),
     }
+
+def test_gemini_38():
+
+    try:
+
+        response = gemini_client.models.generate_content(
+            model="gemini-3.8-flash",
+            contents="Reply with exactly: TEST OK",
+        )
+
+        print("✅ 3.8 TEST:", response.text)
+
+    except Exception as exc:
+
+        print("❌ 3.8 TEST FAILED:", exc)
