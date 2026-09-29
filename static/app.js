@@ -1730,6 +1730,19 @@ async function translateClassificationInput(language){
         );
 
     }
+
+    finally{
+
+    const status =
+        document.getElementById(
+            "classificationTranslateStatus"
+        );
+
+    if(status){
+        status.style.display = "none";
+    }
+
+}
 }
 
 function updateResultMetadataLanguage(){
